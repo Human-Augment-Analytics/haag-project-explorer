@@ -1,0 +1,22 @@
+id: nahpu
+name: NAtural History Project Utility (NAHPU)
+status: active      # active | completed | pending | archived
+visibility: private # public | private
+faculty:
+  - Heru Handika
+researchers:
+  - 
+  - 
+advisors:
+  - 
+  - 
+summary: >
+  NAHPU (NAtural History Project Utility) is a cross-platform application designed for cataloging natural history specimens. It modernizes data recording and management for field and museum work.
+tags:
+  - 
+links:
+  github: https://github.com/nahpu/nahpu # placeholder, if public
+  docs: https://nahpu.app # Could be README, wiki, github pages, etc.
+  publication: https://doi.org/... # If exists/completed
+  forum: https://example.com/forum # link to forum - @James Hennessy
+  contact: mailto:lab@example.edu # Contact to reach out to for interested parties (lab-level email distribution)

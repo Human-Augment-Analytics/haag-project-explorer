@@ -1,0 +1,22 @@
+id: 3d-fossils
+name: 3D Fossils
+status: active      # active | completed | pending | archived
+visibility: private # public | private
+faculty:
+  - Arthur Porto
+researchers:
+  - 
+  - 
+advisors:
+  - 
+  - 
+summary: >
+  Summary here.
+tags:
+  - 3D
+links:
+  github: https://github.com/3D-fossils-Haag # placeholder, if public
+  docs: https://example.com/docs # Could be README, wiki, github pages, etc.
+  publication: https://doi.org/... # If exists/completed
+  forum: https://example.com/forum # link to forum - @James Hennessy
+  contact: mailto:lab@example.edu # Contact to reach out to for interested parties (lab-level email distribution)

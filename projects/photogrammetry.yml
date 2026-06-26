@@ -1,0 +1,24 @@
+id: photogrammetry
+name: Photogrammetry
+status: active      # active | completed | pending | archived
+visibility: private # public | private
+faculty:
+  - Arthur Porto
+researchers:
+  - James Hennessy
+  - Ihor Vilkhovyi
+  - Tianshu Wu
+  - Syed Fahad Rizvi
+advisors:
+  - Tuan-Anh Vu
+  - Yasha Iravantchi
+summary: >
+  The goal of this project is to deliver an end-to-end pipeline that takes 2D images captured at labs and museums and convert them to high-quality, museum-grade models with rich color information.
+tags:
+  - 3D
+links:
+  github: https://github.com/Human-Augment-Analytics/Porto-photogrammetry- # placeholder, if public
+  docs: https://example.com/docs   # Placeholder, could be README, wiki, github pages, etc.
+  publication: https://doi.org/... # If exists/completed
+  forum: https://example.com/forum # link to forum - @James Hennessy
+  contact: mailto:lab@example.edu  # Contact to reach out to for interested parties (lab-level email distribution)

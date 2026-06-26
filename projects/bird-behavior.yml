@@ -1,0 +1,22 @@
+id: bird-behavior
+name: Bird Behavior
+status: active      # active | completed | pending | archived
+visibility: private # public | private
+faculty:
+  - Benjamin Freeman
+researchers:
+  - 
+  - 
+advisors:
+  - 
+  - 
+summary: >
+  Summary here.
+tags:
+  - 
+links:
+  github: https://github.com/ncanna/freeman-bird-detection # placeholder, if public
+  docs: https://example.com/docs # Could be README, wiki, github pages, etc.
+  publication: https://doi.org/... # If exists/completed
+  forum: https://example.com/forum # link to forum - @James Hennessy
+  contact: mailto:lab@example.edu # Contact to reach out to for interested parties (lab-level email distribution)
