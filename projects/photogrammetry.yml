@@ -1,6 +1,6 @@
 id: photogrammetry
 name: Photogrammetry
-status: active      # active | completed | pending | archived
+status: active      # active | completed | preprint | archived
 visibility: private # public | private
 faculty:
   - Arthur Porto
@@ -18,7 +18,7 @@ tags:
   - 3D
 links:
   github: https://github.com/Human-Augment-Analytics/Porto-photogrammetry- # placeholder, if public
-  docs: https://example.com/docs   # Placeholder, could be README, wiki, github pages, etc.
-  publication: https://doi.org/... # If exists/completed
-  forum: https://example.com/forum # link to forum - @James Hennessy
-  contact: mailto:lab@example.edu  # Contact to reach out to for interested parties (lab-level email distribution)
+  docs: null  # Placeholder, could be README, wiki, github pages, etc.
+  publication: null # If exists/completed
+  forum: null # link to forum - @James Hennessy
+  contact: null # Contact to reach out to for interested parties (lab-level email distribution)

@@ -1,6 +1,6 @@
 id: ai-for-mental-health
 name: AI for Mental Health
-status: active      # active | completed | pending | archived
+status: active      # active | completed | preprint | archived
 visibility: private # public | private
 faculty:
   - Anind Dey

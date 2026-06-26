@@ -1,6 +1,6 @@
 id: vector-quantization
 name: Vector Quantization
-status: active      # active | completed | pending | archived
+status: active      # active | completed | preprint | archived
 visibility: private # public | private
 faculty:
   - Steve Mussmann
