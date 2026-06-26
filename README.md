@@ -15,7 +15,7 @@ researchers: # List research contributors here
 advisors: # List computational advisors if any exist on the project
   - 
   - 
-summary: # Summarize the project >
+summary: > # Summarize the project
   Summary here.
 tags: # Optional for now, but will be used to categorize the projects into groupings (such as unit groups)
   - 
