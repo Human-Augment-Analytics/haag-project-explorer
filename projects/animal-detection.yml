@@ -1,6 +1,6 @@
 id: animal-detection
 name: Animal Detection - Stone Mountain
-status: active      # active | completed | pending | archived
+status: active      # active | completed | preprint | archived
 visibility: private # public | private
 faculty:
   - Jenny McGuire

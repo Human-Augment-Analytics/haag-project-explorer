@@ -1,6 +1,6 @@
 id: 3d-generative-models
 name: 3D Generative Models
-status: active      # active | completed | pending | archived
+status: active      # active | completed | preprint | archived
 visibility: private # public | private
 faculty:
   - Supratik Mukhopadhyay

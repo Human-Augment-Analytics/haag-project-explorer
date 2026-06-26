@@ -1,6 +1,6 @@
 id: nahpu
 name: NAtural History Project Utility (NAHPU)
-status: active      # active | completed | pending | archived
+status: active      # active | completed | preprint | archived
 visibility: private # public | private
 faculty:
   - Heru Handika

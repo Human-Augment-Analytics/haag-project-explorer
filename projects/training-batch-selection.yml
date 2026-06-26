@@ -1,6 +1,6 @@
 id: training-batch-selection
 name: Training Batch Selection
-status: active      # active | completed | pending | archived
+status: active      # active | completed | preprint | archived
 visibility: private # public | private
 faculty:
   - Steve Mussmann

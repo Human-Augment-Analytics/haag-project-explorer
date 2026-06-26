@@ -1,6 +1,6 @@
 id: lizard-toe-pad
 name: Lizard Toe Pad
-status: active      # active | completed | pending | archived
+status: active      # active | completed | preprint | archived
 visibility: private # public | private
 faculty:
   - James Stroud

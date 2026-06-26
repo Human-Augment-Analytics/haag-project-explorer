@@ -1,6 +1,6 @@
 id: 3d-color-modeling
 name: 3D Color Modeling
-status: active      # active | completed | pending | archived
+status: active      # active | completed | preprint | archived
 visibility: private # public | private
 faculty:
   - Arthur Porto
