@@ -33,3 +33,14 @@ links:
 ## Example
 
 See `projects/photogrammetry.yml` as an example.
+
+## Adding a new project
+
+1. Create a new YAML file under `projects/` using the template above.
+2. Give the project a unique filename, for example `projects/my-new-project.yml`.
+3. Add your new filename to `projects/manifest.json` under the `projects` array.
+4. Set `visibility: public` in the YAML if you want the project to appear in the explorer.
+5. Keep `visibility: private` for work that should remain hidden from the public explorer.
+6. Save and commit both the new YAML file and the updated `projects/manifest.json`.
+
+> The explorer reads `projects/manifest.json` first and then loads each listed YAML file. The manifest is the source of truth for which project files are included.

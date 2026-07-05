@@ -1,7 +1,7 @@
 id: photogrammetry
 name: Photogrammetry
 status: active      # active | completed | preprint | archived
-visibility: private # public | private
+visibility: public # public | private
 faculty:
   - Arthur Porto
 researchers:
