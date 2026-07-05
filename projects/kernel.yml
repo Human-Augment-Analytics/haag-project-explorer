@@ -1,7 +1,7 @@
 id: inaturalist
 name: iNaturalist
 status: active      # active | completed | preprint | archived
-visibility: private # public | private
+visibility: public # public | private
 faculty:
   - Supratik Mukhopadhyay
 researchers:

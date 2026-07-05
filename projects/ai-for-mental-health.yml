@@ -1,7 +1,7 @@
 id: ai-for-mental-health
 name: AI for Mental Health
 status: active      # active | completed | preprint | archived
-visibility: private # public | private
+visibility: public # public | private
 faculty:
   - Anind Dey
 researchers:
@@ -13,8 +13,7 @@ advisors:
 summary: >
   Summary here.
 tags:
-  - ai
-  - healthcare
+  - AI
 links:
   github: https://github.com/senseray-io/senseray.git # placeholder, if public
   docs: https://example.com/docs # Could be README, wiki, github pages, etc.
