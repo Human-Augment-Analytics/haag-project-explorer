@@ -289,7 +289,6 @@
   <body>
     <main class="page">
       <div id="tag-row" class="tag-row"></div>
-      <div id="results-meta" class="results-meta"></div>
       <div id="project-grid" class="project-grid"></div>
     </main>
 
@@ -304,7 +303,6 @@
       const manifestPath = './projects/manifest.json';
       const projectsGrid = document.getElementById('project-grid');
       const tagRow = document.getElementById('tag-row');
-      const resultsMeta = document.getElementById('results-meta');
       const modal = document.getElementById('project-modal');
       const modalContent = document.getElementById('modal-content');
 
@@ -467,7 +465,6 @@
 
       function renderTagFilters(projects) {
         const tags = [...new Set(projects.flatMap((project) => project.tags))].sort();
-        const hasUntagged = projects.some((project) => project.tags.length === 0);
         tagRow.innerHTML = '';
         const allChip = document.createElement('button');
         allChip.className = `tag-chip ${activeTag ? '' : 'active'}`;
@@ -475,46 +472,70 @@
         allChip.textContent = 'All';
         allChip.addEventListener('click', () => {
           activeTag = '';
+          renderTagFilters(allProjects);
           renderProjects();
         });
         tagRow.appendChild(allChip);
 
-        tags.forEach((tag) => {
-          const chip = document.createElement('button');
-          chip.className = `tag-chip ${activeTag === tag ? 'active' : ''}`;
-          chip.type = 'button';
-          chip.textContent = tag;
-          chip.addEventListener('click', () => {
-            activeTag = activeTag === tag ? '' : tag;
+        if (!activeTag) {
+          // show every tag when no active tag selected
+          tags.forEach((tag) => {
+            const chip = document.createElement('button');
+            chip.className = `tag-chip ${activeTag === tag ? 'active' : ''}`;
+            chip.type = 'button';
+            chip.textContent = tag;
+            chip.addEventListener('click', () => {
+              activeTag = activeTag === tag ? '' : tag;
+              renderTagFilters(allProjects);
+              renderProjects();
+            });
+            tagRow.appendChild(chip);
+          });
+        } else {
+          // when a tag is active, show it first and then any co-occurring tags
+          const activeChip = document.createElement('button');
+          activeChip.className = `tag-chip active`;
+          activeChip.type = 'button';
+          activeChip.textContent = activeTag;
+          activeChip.addEventListener('click', () => {
+            activeTag = '';
+            renderTagFilters(allProjects);
             renderProjects();
           });
-          tagRow.appendChild(chip);
-        });
+          tagRow.appendChild(activeChip);
 
-        if (hasUntagged) {
-          const untaggedChip = document.createElement('button');
-          untaggedChip.className = `tag-chip ${activeTag === '__untagged__' ? 'active' : ''}`;
-          untaggedChip.type = 'button';
-          untaggedChip.textContent = 'Untagged';
-          untaggedChip.addEventListener('click', () => {
-            activeTag = activeTag === '__untagged__' ? '' : '__untagged__';
-            renderProjects();
+          const coTags = [...new Set(projects.filter(p => p.tags.includes(activeTag)).flatMap(p => p.tags))]
+            .filter(t => t !== activeTag)
+            .sort();
+
+          coTags.forEach((tag) => {
+            const chip = document.createElement('button');
+            chip.className = `tag-chip ${activeTag === tag ? 'active' : ''}`;
+            chip.type = 'button';
+            chip.textContent = tag;
+            chip.addEventListener('click', () => {
+              activeTag = activeTag === tag ? '' : tag;
+              renderTagFilters(allProjects);
+              renderProjects();
+            });
+            tagRow.appendChild(chip);
           });
-          tagRow.appendChild(untaggedChip);
         }
+        // Defensive: remove any literal 'Untagged' chip (was previously used as a special filter)
+        Array.from(tagRow.querySelectorAll('.tag-chip')).forEach((btn) => {
+          if (btn.textContent && btn.textContent.trim().toLowerCase() === 'untagged') btn.remove();
+        });
       }
 
       function getFilteredProjects() {
         return allProjects.filter((project) => {
-          const matchesTag = !activeTag
-            || (activeTag === '__untagged__' ? project.tags.length === 0 : project.tags.includes(activeTag));
-          return matchesTag;
+          if (!activeTag) return true;
+          return project.tags.includes(activeTag);
         });
       }
 
       function renderProjects() {
         const filtered = getFilteredProjects();
-        resultsMeta.textContent = `${filtered.length} public project${filtered.length === 1 ? '' : 's'} shown`;
         projectsGrid.innerHTML = '';
 
         if (!filtered.length) {
@@ -568,6 +589,25 @@
         `;
       }
 
+      function setActiveTag(tag) {
+        activeTag = activeTag === tag ? '' : tag;
+        renderTagFilters(allProjects);
+        renderProjects();
+        modal.hidden = true;
+      }
+
+      function renderModalTags(tags) {
+        if (!tags || !tags.length) return '';
+        return `
+          <div class="detail-group">
+            <h3>Tags</h3>
+            <div class="link-list">
+              ${tags.map((tag) => `<button type="button" class="tag-chip" onclick="setActiveTag('${String(tag).replace(/'/g, "\\'" )}')">${tag}</button>`).join('')}
+            </div>
+          </div>
+        `;
+      }
+
       function openModal(project) {
         modal.hidden = false;
         const summaryBlock = project.summary ? `<p>${project.summary}</p>` : '';
@@ -578,7 +618,7 @@
           ${renderDetailGroup('Faculty', project.faculty)}
           ${renderDetailGroup('Researchers', project.researchers)}
           ${renderDetailGroup('Advisors', project.advisors)}
-          ${renderDetailGroup('Tags', project.tags)}
+          ${renderModalTags(project.tags)}
           ${renderLinks(project.links)}
         `;
       }
@@ -619,7 +659,6 @@
           renderProjects();
         } catch (error) {
           console.error(error);
-          resultsMeta.textContent = 'Unable to load project metadata right now.';
           projectsGrid.innerHTML = '<div class="empty-state">The project explorer could not load the YAML metadata. Please confirm the repo files are available.</div>';
         }
       }
