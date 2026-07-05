@@ -1,0 +1,28 @@
+{
+  "projects": [
+    "3d-color-modeling.yml",
+    "3d-fossils.yml",
+    "3d-generative-models.yml",
+    "ai-for-mental-health.yml",
+    "animal-detection-spatial.yml",
+    "animal-detection.yml",
+    "bird-audio.yml",
+    "bird-behavior.yml",
+    "charleston-train.yml",
+    "inaturalist.yml",
+    "kernel.yml",
+    "knowledge-traceability.yml",
+    "lidar-stroud.yml",
+    "lizard-classification.yml",
+    "lizard-movement.yml",
+    "lizard-toe-pad.yml",
+    "llm-interpretability.yml",
+    "nahpu.yml",
+    "pfas-absorbent-search.yml",
+    "photogrammetry.yml",
+    "r-for-evolution.yml",
+    "training-batch-selection.yml",
+    "vector-db.yml",
+    "vector-quantization.yml"
+  ]
+}

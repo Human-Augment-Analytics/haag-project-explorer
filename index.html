@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HAAG Project Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        color-scheme: light;
+        --accent: #7c5a22;
+        --accent-2: #b1864b;
+        --surface: #f4efe6;
+        --surface-muted: #e8dfd1;
+        --border: rgba(76, 63, 50, 0.18);
+        --text: #2b2722;
+        --text-muted: #6f6658;
+        --shadow: 0 24px 60px rgba(37, 31, 24, 0.12);
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: 'Roboto', Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--text);
+        background: #ffffff;
+        line-height: 1.6;
+      }
+
+      .page {
+        max-width: 1220px;
+        margin: 0 auto;
+        padding: 2.2rem 1rem 3rem;
+      }
+
+      .toolbar {
+        display: none;
+      }
+
+      .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .tag-chip {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--surface);
+        padding: 0.45rem 0.8rem;
+        cursor: pointer;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      .tag-chip.active {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: white;
+        border-color: transparent;
+      }
+
+      .results-meta {
+        color: var(--text-muted);
+        margin-bottom: 0.9rem;
+      }
+
+      .project-grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+
+      .project-card {
+        border: none;
+        border-radius: 1.2rem;
+        overflow: hidden;
+        background: #16130f;
+        box-shadow: 0 30px 70px rgba(37, 31, 24, 0.12);
+        cursor: pointer;
+        padding: 0;
+        text-align: left;
+        min-height: 0;
+      }
+
+      .project-card:hover {
+        transform: translateY(-4px);
+        transition: transform 220ms ease;
+      }
+
+      .project-image {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1.05 / 1;
+        display: flex;
+        align-items: flex-end;
+        padding: 1rem;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        transition: transform 220ms ease;
+      }
+
+      .project-image::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(14, 10, 7, 0.08) 0%, rgba(7, 4, 2, 0.7) 100%);
+      }
+
+      .project-title {
+        position: relative;
+        z-index: 1;
+        color: white;
+        font-size: clamp(1.15rem, 1.9vw, 1.5rem);
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: -0.02em;
+        font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+      }
+
+      .project-meta {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+      }
+
+      .open-icon {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 2;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.2rem;
+        height: 2.2rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.12);
+        color: white;
+        font-size: 0.95rem;
+      }
+
+      .project-body {
+        padding: 0.8rem 1rem 1rem;
+      }
+
+      .project-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        margin-top: 0.9rem;
+      }
+
+      .mini-tag {
+        background: rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.9);
+        padding: 0.32rem 0.65rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .status-pill {
+        display: inline-block;
+        margin-top: 0.6rem;
+        margin-bottom: 0.85rem;
+        font-size: 0.8rem;
+        border-radius: 999px;
+        padding: 0.28rem 0.65rem;
+        background: rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+
+      .card-hover {
+        position: absolute;
+        inset: 0;
+        background: rgba(2, 6, 23, 0.85);
+        color: white;
+        padding: 1.2rem;
+        display: flex;
+        align-items: flex-end;
+        opacity: 0;
+        transition: opacity 180ms ease;
+        z-index: 2;
+      }
+
+      .project-card:hover .card-hover {
+        opacity: 1;
+      }
+
+      .card-hover p {
+        margin: 0;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        font-family: 'Roboto', sans-serif;
+      }
+
+      .status-pill {
+        display: inline-block;
+        margin-top: 0.6rem;
+        font-size: 0.8rem;
+        border-radius: 999px;
+        padding: 0.28rem 0.65rem;
+        background: rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+
+      .empty-state {
+        border: 1px dashed var(--border);
+        border-radius: 1rem;
+        padding: 2rem;
+        text-align: center;
+        color: var(--text-muted);
+        background: var(--surface);
+      }
+
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(2, 6, 23, 0.65);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        z-index: 30;
+      }
+
+      .modal[hidden] { display: none; }
+
+      .modal-card {
+        width: min(760px, 100%);
+        max-height: 85vh;
+        overflow: auto;
+        background: var(--surface);
+        border-radius: 1rem;
+        padding: 1.3rem;
+        box-shadow: var(--shadow);
+        position: relative;
+      }
+
+      .modal-card .status-pill {
+        background: var(--surface-muted);
+        color: var(--text);
+      }
+
+      .modal-status {
+        background: var(--surface-muted);
+        color: var(--text);
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        border: 0;
+        background: var(--surface-muted);
+        color: var(--text);
+        border-radius: 999px;
+        width: 2rem;
+        height: 2rem;
+        cursor: pointer;
+      }
+
+      .modal-card h2 { margin: 0 0 0.4rem; }
+      .modal-card p { color: var(--text-muted); font-family: 'Roboto', sans-serif; }
+      .detail-list { margin: 0.6rem 0 0; padding-left: 1rem; }
+      .detail-list li { margin-bottom: 0.35rem; }
+      .detail-group { margin-top: 1rem; }
+      .detail-group h3 { margin-bottom: 0.35rem; font-size: 1rem; }
+      .link-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.55rem; }
+      .link-list a {
+        text-decoration: none;
+        padding: 0.45rem 0.7rem;
+        border-radius: 999px;
+        background: var(--surface-muted);
+        color: var(--accent);
+      }
+
+      @media (max-width: 700px) {
+        .page { padding: 1rem 0.8rem 2rem; }
+        .hero { padding: 1rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div id="tag-row" class="tag-row"></div>
+      <div id="results-meta" class="results-meta"></div>
+      <div id="project-grid" class="project-grid"></div>
+    </main>
+
+    <div id="project-modal" class="modal" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button class="modal-close" type="button" aria-label="Close popup">×</button>
+        <div id="modal-content"></div>
+      </div>
+    </div>
+
+    <script>
+      const manifestPath = './projects/manifest.json';
+      const projectsGrid = document.getElementById('project-grid');
+      const tagRow = document.getElementById('tag-row');
+      const resultsMeta = document.getElementById('results-meta');
+      const modal = document.getElementById('project-modal');
+      const modalContent = document.getElementById('modal-content');
+
+      let allProjects = [];
+      let activeTag = '';
+
+      function normalizeText(value) {
+        return String(value || '').replace(/\s+/g, ' ').trim();
+      }
+
+      function toList(value) {
+        if (!Array.isArray(value)) return [];
+        return value.filter((item) => normalizeText(item).length > 0);
+      }
+
+      function isPublicProject(project) {
+        return String(project.visibility || '').toLowerCase() === 'public';
+      }
+
+      function createAccent(projectName) {
+        const palette = [
+          ['#0f766e', '#2563eb'],
+          ['#7c3aed', '#ec4899'],
+          ['#ea580c', '#f59e0b'],
+          ['#2563eb', '#06b6d4'],
+          ['#15803d', '#4ade80'],
+          ['#7c2d12', '#fb923c']
+        ];
+        let hash = 0;
+        for (let i = 0; i < projectName.length; i += 1) {
+          hash = (hash * 31 + projectName.charCodeAt(i)) % palette.length;
+        }
+        return palette[hash];
+      }
+
+      function stripInlineComment(value) {
+        const hashIndex = value.indexOf('#');
+        return hashIndex >= 0 ? value.slice(0, hashIndex) : value;
+      }
+
+      function parseScalar(value) {
+        const cleaned = stripInlineComment(value).trim();
+        if (!cleaned || cleaned === 'null') return null;
+        return cleaned;
+      }
+
+      function parseSimpleYaml(yamlText) {
+        const result = {};
+        let currentListKey = null;
+        let currentObjectKey = null;
+        let blockKey = null;
+        let blockLines = [];
+
+        const lines = yamlText.replace(/\r\n/g, '\n').split('\n');
+        lines.forEach((rawLine) => {
+          const line = rawLine.replace(/\t/g, '    ');
+          if (blockKey) {
+            const indent = line.match(/^\s*/)[0].length;
+            if (line.trim() && indent > 0) {
+              blockLines.push(line.trim());
+              return;
+            }
+            result[blockKey] = blockLines.join(' ').trim();
+            blockKey = null;
+            blockLines = [];
+          }
+
+          if (!line.trim()) return;
+          if (blockKey) return;
+
+          const trimmed = line.trim();
+          if (trimmed.startsWith('- ')) {
+            if (currentListKey) {
+              result[currentListKey].push(parseScalar(trimmed.slice(2)));
+            }
+            return;
+          }
+
+          const indent = line.match(/^\s*/)[0].length;
+          if (indent > 0 && currentObjectKey && trimmed.includes(':')) {
+            const [key, rawValue] = trimmed.split(/:\s*/, 2);
+            if (rawValue !== undefined) {
+              result[currentObjectKey][key] = parseScalar(rawValue);
+            }
+            return;
+          }
+
+          const match = trimmed.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
+          if (!match) return;
+
+          const [, key, rawValue] = match;
+          if (key === 'summary' && rawValue === '>') {
+            blockKey = 'summary';
+            blockLines = [];
+            currentListKey = null;
+            currentObjectKey = null;
+            return;
+          }
+
+          if (key === 'faculty' || key === 'researchers' || key === 'advisors' || key === 'tags') {
+            result[key] = [];
+            currentListKey = key;
+            currentObjectKey = null;
+            return;
+          }
+
+          if (key === 'links') {
+            result.links = {};
+            currentObjectKey = 'links';
+            currentListKey = null;
+            return;
+          }
+
+          if (rawValue === '') {
+            result[key] = null;
+            currentListKey = null;
+            currentObjectKey = null;
+            return;
+          }
+
+          result[key] = parseScalar(rawValue);
+          currentListKey = null;
+          currentObjectKey = null;
+        });
+
+        if (blockKey) {
+          result[blockKey] = blockLines.join(' ').trim();
+        }
+
+        return result;
+      }
+
+      function buildProject(projectData) {
+        const summary = normalizeText(projectData.summary || '');
+        const tags = toList(projectData.tags).map((tag) => normalizeText(tag));
+        const faculty = toList(projectData.faculty).map((person) => normalizeText(person));
+        const researchers = toList(projectData.researchers).map((person) => normalizeText(person));
+        const advisors = toList(projectData.advisors).map((person) => normalizeText(person));
+        const links = projectData.links && typeof projectData.links === 'object'
+          ? Object.entries(projectData.links)
+              .filter(([, value]) => normalizeText(value).length > 0)
+              .map(([label, value]) => ({ label, value }))
+          : [];
+        const [startColor, endColor] = createAccent(projectData.name || 'Project');
+
+        return {
+          id: projectData.id || (projectData.name || 'project').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+          name: normalizeText(projectData.name || 'Untitled project'),
+          status: normalizeText(projectData.status || ''),
+          visibility: normalizeText(projectData.visibility || ''),
+          summary,
+          tags,
+          faculty,
+          researchers,
+          advisors,
+          links,
+          accent: [startColor, endColor]
+        };
+      }
+
+      function renderTagFilters(projects) {
+        const tags = [...new Set(projects.flatMap((project) => project.tags))].sort();
+        const hasUntagged = projects.some((project) => project.tags.length === 0);
+        tagRow.innerHTML = '';
+        const allChip = document.createElement('button');
+        allChip.className = `tag-chip ${activeTag ? '' : 'active'}`;
+        allChip.type = 'button';
+        allChip.textContent = 'All';
+        allChip.addEventListener('click', () => {
+          activeTag = '';
+          renderProjects();
+        });
+        tagRow.appendChild(allChip);
+
+        tags.forEach((tag) => {
+          const chip = document.createElement('button');
+          chip.className = `tag-chip ${activeTag === tag ? 'active' : ''}`;
+          chip.type = 'button';
+          chip.textContent = tag;
+          chip.addEventListener('click', () => {
+            activeTag = activeTag === tag ? '' : tag;
+            renderProjects();
+          });
+          tagRow.appendChild(chip);
+        });
+
+        if (hasUntagged) {
+          const untaggedChip = document.createElement('button');
+          untaggedChip.className = `tag-chip ${activeTag === '__untagged__' ? 'active' : ''}`;
+          untaggedChip.type = 'button';
+          untaggedChip.textContent = 'Untagged';
+          untaggedChip.addEventListener('click', () => {
+            activeTag = activeTag === '__untagged__' ? '' : '__untagged__';
+            renderProjects();
+          });
+          tagRow.appendChild(untaggedChip);
+        }
+      }
+
+      function getFilteredProjects() {
+        return allProjects.filter((project) => {
+          const matchesTag = !activeTag
+            || (activeTag === '__untagged__' ? project.tags.length === 0 : project.tags.includes(activeTag));
+          return matchesTag;
+        });
+      }
+
+      function renderProjects() {
+        const filtered = getFilteredProjects();
+        resultsMeta.textContent = `${filtered.length} public project${filtered.length === 1 ? '' : 's'} shown`;
+        projectsGrid.innerHTML = '';
+
+        if (!filtered.length) {
+          const empty = document.createElement('div');
+          empty.className = 'empty-state';
+          empty.innerHTML = '<strong>No public projects match your search yet.</strong><div>Try another keyword or tag.</div>';
+          projectsGrid.appendChild(empty);
+          return;
+        }
+
+        filtered.forEach((project) => {
+          const card = document.createElement('button');
+          card.className = 'project-card';
+          card.type = 'button';
+          card.innerHTML = `
+            <div class="project-image" style="background: linear-gradient(135deg, ${project.accent[0]}, ${project.accent[1]});">
+              <div class="card-hover"><p>${project.summary || 'See the full metadata in the popup.'}</p></div>
+              <div class="project-meta">
+                <span class="status-pill">${project.status || 'Status available'}</span>
+                <h3 class="project-title">${project.name}</h3>
+              </div>
+              <span class="open-icon">↗</span>
+            </div>
+          `;
+          card.addEventListener('click', () => openModal(project));
+          projectsGrid.appendChild(card);
+        });
+      }
+
+      function renderDetailGroup(title, items) {
+        if (!items.length) return '';
+        return `
+          <div class="detail-group">
+            <h3>${title}</h3>
+            <ul class="detail-list">
+              ${items.map((item) => `<li>${item}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      }
+
+      function renderLinks(links) {
+        if (!links.length) return '';
+        return `
+          <div class="detail-group">
+            <h3>Links</h3>
+            <div class="link-list">
+              ${links.map((link) => `<a href="${link.value}" target="_blank" rel="noreferrer">${link.label}</a>`).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      function openModal(project) {
+        modal.hidden = false;
+        const summaryBlock = project.summary ? `<p>${project.summary}</p>` : '';
+        modalContent.innerHTML = `
+          <h2 id="modal-title">${project.name}</h2>
+          ${summaryBlock}
+          ${project.status ? `<div class="status-pill modal-status">${project.status}</div>` : ''}
+          ${renderDetailGroup('Faculty', project.faculty)}
+          ${renderDetailGroup('Researchers', project.researchers)}
+          ${renderDetailGroup('Advisors', project.advisors)}
+          ${renderDetailGroup('Tags', project.tags)}
+          ${renderLinks(project.links)}
+        `;
+      }
+
+      modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+          modal.hidden = true;
+        }
+      });
+
+      document.querySelector('.modal-close').addEventListener('click', () => {
+        modal.hidden = true;
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          modal.hidden = true;
+        }
+      });
+
+      async function loadProjects() {
+        try {
+          const manifestResponse = await fetch(manifestPath);
+          if (!manifestResponse.ok) throw new Error('Manifest not found');
+          const manifest = await manifestResponse.json();
+          const projectFiles = Array.isArray(manifest.projects) ? manifest.projects : [];
+
+          const loadedProjects = await Promise.all(projectFiles.map(async (fileName) => {
+            const response = await fetch(`./projects/${fileName}`);
+            if (!response.ok) return null;
+            const yamlText = await response.text();
+            const parsed = parseSimpleYaml(yamlText);
+            return parsed;
+          }));
+
+          allProjects = loadedProjects.filter(Boolean).map(buildProject).filter(isPublicProject).sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
+          renderTagFilters(allProjects);
+          renderProjects();
+        } catch (error) {
+          console.error(error);
+          resultsMeta.textContent = 'Unable to load project metadata right now.';
+          projectsGrid.innerHTML = '<div class="empty-state">The project explorer could not load the YAML metadata. Please confirm the repo files are available.</div>';
+        }
+      }
+
+      loadProjects();
+    </script>
+  </body>
+</html>
