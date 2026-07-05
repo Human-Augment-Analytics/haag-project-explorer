@@ -1,5 +1,5 @@
-id: inaturalist
-name: iNaturalist
+id: kernel
+name: Kernel
 status: active      # active | completed | preprint | archived
 visibility: public # public | private
 faculty:
