@@ -44,6 +44,52 @@
         margin-bottom: 1rem;
       }
 
+      /* Layout for sidebar + main content */
+      .explorer {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+
+      #filter-sidebar {
+        width: 260px;
+        flex: 0 0 260px;
+      }
+
+      .main-area {
+        flex: 1 1 0;
+        min-width: 0;
+      }
+
+      .filter-section {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 0.75rem;
+        padding: 0.75rem;
+        margin-bottom: 0.8rem;
+      }
+
+      .filter-title {
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        font-size: 0.95rem;
+        color: var(--text);
+      }
+
+      .filter-list { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+
+      .filter-item {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--surface);
+        padding: 0.4rem 0.7rem;
+        cursor: pointer;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      .filter-item.active { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: white; border-color: transparent; }
+
       .tag-chip {
         border: 1px solid var(--border);
         border-radius: 999px;
@@ -283,13 +329,18 @@
       @media (max-width: 700px) {
         .page { padding: 1rem 0.8rem 2rem; }
         .hero { padding: 1rem; }
+        #filter-sidebar { display: none; }
       }
     </style>
   </head>
   <body>
     <main class="page">
-      <div id="tag-row" class="tag-row"></div>
-      <div id="project-grid" class="project-grid"></div>
+      <div class="explorer">
+        <aside id="filter-sidebar"></aside>
+        <div class="main-area">
+          <div id="project-grid" class="project-grid"></div>
+        </div>
+      </div>
     </main>
 
     <div id="project-modal" class="modal" hidden>
@@ -302,12 +353,14 @@
     <script>
       const manifestPath = './projects/manifest.json';
       const projectsGrid = document.getElementById('project-grid');
-      const tagRow = document.getElementById('tag-row');
       const modal = document.getElementById('project-modal');
       const modalContent = document.getElementById('modal-content');
 
       let allProjects = [];
       let activeTag = '';
+      let selectedFaculties = []; // multi-select faculty
+      let selectedTags = []; // multi-select categories/tags
+      let recruitFilter = null; // null = any, true = open, false = closed
 
       function normalizeText(value) {
         return String(value || '').replace(/\s+/g, ' ').trim();
@@ -453,6 +506,7 @@
           name: normalizeText(projectData.name || 'Untitled project'),
           status: normalizeText(projectData.status || ''),
           visibility: normalizeText(projectData.visibility || ''),
+          recruiting: String(projectData.recruiting || '').toLowerCase() === 'true',
           summary,
           tags,
           faculty,
@@ -463,74 +517,106 @@
         };
       }
 
-      function renderTagFilters(projects) {
-        const tags = [...new Set(projects.flatMap((project) => project.tags))].sort();
-        tagRow.innerHTML = '';
-        const allChip = document.createElement('button');
-        allChip.className = `tag-chip ${activeTag ? '' : 'active'}`;
-        allChip.type = 'button';
-        allChip.textContent = 'All';
-        allChip.addEventListener('click', () => {
-          activeTag = '';
-          renderTagFilters(allProjects);
-          renderProjects();
-        });
-        tagRow.appendChild(allChip);
+        function renderSidebarFilters(projects) {
+          const sidebar = document.getElementById('filter-sidebar');
+          const faculties = [...new Set(projects.flatMap(p => p.faculty))].sort();
+          sidebar.innerHTML = '';
 
-        if (!activeTag) {
-          // show every tag when no active tag selected
-          tags.forEach((tag) => {
-            const chip = document.createElement('button');
-            chip.className = `tag-chip ${activeTag === tag ? 'active' : ''}`;
-            chip.type = 'button';
-            chip.textContent = tag;
-            chip.addEventListener('click', () => {
-              activeTag = activeTag === tag ? '' : tag;
-              renderTagFilters(allProjects);
-              renderProjects();
+          const facultySection = document.createElement('div');
+          facultySection.className = 'filter-section';
+          facultySection.innerHTML = `<div class="filter-title">Faculty</div><div class="filter-list" id="faculty-list"></div>`;
+          sidebar.appendChild(facultySection);
+
+          const facultyList = facultySection.querySelector('#faculty-list');
+          const allBtn = document.createElement('button');
+          allBtn.type = 'button';
+          allBtn.className = `filter-item ${selectedFaculties.length ? '' : 'active'}`;
+          allBtn.textContent = 'All';
+          allBtn.addEventListener('click', () => { selectedFaculties = []; updateAndRender(); });
+          facultyList.appendChild(allBtn);
+
+          faculties.forEach((f) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `filter-item ${selectedFaculties.includes(f) ? 'active' : ''}`;
+            btn.textContent = f;
+            btn.addEventListener('click', () => {
+              if (selectedFaculties.includes(f)) selectedFaculties = selectedFaculties.filter(x => x !== f);
+              else selectedFaculties.push(f);
+              updateAndRender();
             });
-            tagRow.appendChild(chip);
+            facultyList.appendChild(btn);
           });
-        } else {
-          // when a tag is active, show it first and then any co-occurring tags
-          const activeChip = document.createElement('button');
-          activeChip.className = `tag-chip active`;
-          activeChip.type = 'button';
-          activeChip.textContent = activeTag;
-          activeChip.addEventListener('click', () => {
-            activeTag = '';
-            renderTagFilters(allProjects);
-            renderProjects();
-          });
-          tagRow.appendChild(activeChip);
 
-          const coTags = [...new Set(projects.filter(p => p.tags.includes(activeTag)).flatMap(p => p.tags))]
-            .filter(t => t !== activeTag)
-            .sort();
+          const recruitSection = document.createElement('div');
+          recruitSection.className = 'filter-section';
+          recruitSection.innerHTML = `<div class="filter-title">Recruitment</div><div class="filter-list" id="recruit-list"></div>`;
+          sidebar.appendChild(recruitSection);
 
-          coTags.forEach((tag) => {
-            const chip = document.createElement('button');
-            chip.className = `tag-chip ${activeTag === tag ? 'active' : ''}`;
-            chip.type = 'button';
-            chip.textContent = tag;
-            chip.addEventListener('click', () => {
-              activeTag = activeTag === tag ? '' : tag;
-              renderTagFilters(allProjects);
-              renderProjects();
+          const recruitList = recruitSection.querySelector('#recruit-list');
+          const anyBtn = document.createElement('button');
+          anyBtn.type = 'button';
+          anyBtn.className = `filter-item ${recruitFilter === null ? 'active' : ''}`;
+          anyBtn.textContent = 'Any';
+          anyBtn.addEventListener('click', () => { recruitFilter = null; updateAndRender(); });
+          recruitList.appendChild(anyBtn);
+
+          const openBtn = document.createElement('button');
+          openBtn.type = 'button';
+          openBtn.className = `filter-item ${recruitFilter === true ? 'active' : ''}`;
+          openBtn.textContent = 'Open';
+          openBtn.addEventListener('click', () => { recruitFilter = recruitFilter === true ? null : true; updateAndRender(); });
+          recruitList.appendChild(openBtn);
+
+          const closedBtn = document.createElement('button');
+          closedBtn.type = 'button';
+          closedBtn.className = `filter-item ${recruitFilter === false ? 'active' : ''}`;
+          closedBtn.textContent = 'Closed';
+          closedBtn.addEventListener('click', () => { recruitFilter = recruitFilter === false ? null : false; updateAndRender(); });
+          recruitList.appendChild(closedBtn);
+
+          // Categories (tags) - derived from projects after applying faculty & recruit filters
+          const tagPool = projects.filter(p => (!selectedFaculties.length || p.faculty.some(f => selectedFaculties.includes(f))) && (recruitFilter === null || p.recruiting === recruitFilter));
+          const tags = [...new Set(tagPool.flatMap(p => p.tags))].sort();
+
+          const tagSection = document.createElement('div');
+          tagSection.className = 'filter-section';
+          tagSection.innerHTML = `<div class="filter-title">Categories</div><div class="filter-list" id="tag-list"></div>`;
+          sidebar.appendChild(tagSection);
+
+          const tagList = tagSection.querySelector('#tag-list');
+          const allTagBtn = document.createElement('button');
+          allTagBtn.type = 'button';
+          allTagBtn.className = `filter-item ${selectedTags.length ? '' : 'active'}`;
+          allTagBtn.textContent = 'All';
+          allTagBtn.addEventListener('click', () => { selectedTags = []; updateAndRender(); });
+          tagList.appendChild(allTagBtn);
+
+          tags.forEach((t) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `filter-item ${selectedTags.includes(t) ? 'active' : ''}`;
+            btn.textContent = t;
+            btn.addEventListener('click', () => {
+              if (selectedTags.includes(t)) selectedTags = selectedTags.filter(x => x !== t);
+              else selectedTags.push(t);
+              updateAndRender();
             });
-            tagRow.appendChild(chip);
+            tagList.appendChild(btn);
           });
         }
-        // Defensive: remove any literal 'Untagged' chip (was previously used as a special filter)
-        Array.from(tagRow.querySelectorAll('.tag-chip')).forEach((btn) => {
-          if (btn.textContent && btn.textContent.trim().toLowerCase() === 'untagged') btn.remove();
-        });
-      }
+
+        function updateAndRender() {
+          renderSidebarFilters(allProjects);
+          renderProjects();
+        }
 
       function getFilteredProjects() {
         return allProjects.filter((project) => {
-          if (!activeTag) return true;
-          return project.tags.includes(activeTag);
+          if (selectedTags.length && !project.tags.some(t => selectedTags.includes(t))) return false;
+          if (selectedFaculties.length && !project.faculty.some(f => selectedFaculties.includes(f))) return false;
+          if (recruitFilter !== null && project.recruiting !== recruitFilter) return false;
+          return true;
         });
       }
 
@@ -591,8 +677,14 @@
 
       function setActiveTag(tag) {
         activeTag = activeTag === tag ? '' : tag;
-        renderTagFilters(allProjects);
-        renderProjects();
+        updateAndRender();
+        modal.hidden = true;
+      }
+
+      function toggleTagSelection(tag) {
+        if (selectedTags.includes(tag)) selectedTags = selectedTags.filter(x => x !== tag);
+        else selectedTags.push(tag);
+        updateAndRender();
         modal.hidden = true;
       }
 
@@ -602,7 +694,7 @@
           <div class="detail-group">
             <h3>Tags</h3>
             <div class="link-list">
-              ${tags.map((tag) => `<button type="button" class="tag-chip" onclick="setActiveTag('${String(tag).replace(/'/g, "\\'" )}')">${tag}</button>`).join('')}
+              ${tags.map((tag) => `<button type="button" class="tag-chip" onclick="toggleTagSelection('${String(tag).replace(/'/g, "\\'" )}')">${tag}</button>`).join('')}
             </div>
           </div>
         `;
@@ -655,8 +747,12 @@
           }));
 
           allProjects = loadedProjects.filter(Boolean).map(buildProject).filter(isPublicProject).sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
-          renderTagFilters(allProjects);
-          renderProjects();
+          // initialize filters and render
+          selectedFaculties = [];
+          selectedTags = [];
+          recruitFilter = null;
+          activeTag = '';
+          updateAndRender();
         } catch (error) {
           console.error(error);
           projectsGrid.innerHTML = '<div class="empty-state">The project explorer could not load the YAML metadata. Please confirm the repo files are available.</div>';

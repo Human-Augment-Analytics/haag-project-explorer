@@ -5,10 +5,11 @@ The goal of this project explorer is to provide visibility into the projects und
 This is the template to be used to structure the metadata. For fields (such as links) that you want to leave blank, please populate with `null`.
 
 ```yaml
-id: project-id
+id: project-id # choose a simple id for the project
 name: Project Title
-status: active      # Research status. active | completed | preprint | archived
-visibility: private # For code visibility. public (for open-source projects) | private (if not to be publicly visible at this time)
+status: active      # Research status. new | active | completed | preprint | archived
+visibility: private # For project visibility. public | private (if not to be publicly visible at this time)
+recruiting: false # boolean - set to true if the project is currently recruiting
 faculty: # PI / Faculty
   - 
 researchers: # List research contributors here
