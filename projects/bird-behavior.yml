@@ -6,18 +6,20 @@ recruiting: false
 faculty:
   - Benjamin Freeman
 researchers:
-  - 
-  - 
+  - Heba Elwazzan
+  - Rebecca Rivera
+  - Rabah Ouldnoughi
+  - Alexander Brown
+  - Wanying Zhu
 advisors:
-  - 
-  - 
+  - Navya Annapareddy
 summary: >
-  Summary here.
+  A framework for running and comparing bird detection experiments on camera trap footage. Supports multiple detection models through a unified adapter interface, with experiment tracking, artifact management, and visualization.
 tags:
-  - 
+  - Computer Vision
 links:
-  github: https://github.com/ncanna/freeman-bird-detection # placeholder, if public
-  docs: https://example.com/docs # Could be README, wiki, github pages, etc.
-  publication: https://doi.org/... # If exists/completed
-  forum: https://example.com/forum # link to forum - @James Hennessy
-  contact: mailto:lab@example.edu # Contact to reach out to for interested parties (lab-level email distribution)
+  github: https://github.com/ncanna/freeman-bird-detection
+  docs: https://humanaugmentedanalyticsgroup.miraheze.org/wiki/Leaf_Warbler_Bird_Behavior
+  publication: null 
+  forum: null 
+  contact: null
