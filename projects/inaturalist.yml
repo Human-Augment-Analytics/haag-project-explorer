@@ -6,18 +6,36 @@ recruiting: false
 faculty:
   - Steve Mussmann
 researchers:
-  - 
-  - 
+  - Munir Nur
+  - Nora Yang
+  - Swati Dusane
+  - Jossue Medina Ramos
 advisors:
-  - 
-  - 
-summary: >
-  Summary here.
+  - Emily Weigel
+summary:
+> This project applies computer vision and machine learning to iNaturalist
+  citizen science data to improve species identification quality, targeting
+  the large share of observations stuck in "needs ID" status. The team is
+  developing automated pipelines to classify species from images, model
+  annotator reliability, and expand the pool of research grade observations
+  available to ecologists and biodiversity researchers. Work centers on two
+  taxonomic groups (Amanita fungi and Bombus bumblebees), fine tuning
+  pre trained vision models (BioCLIP, DINOv3, ConvNext, EfficientNet) and
+  building tools for candidate validation, annotator reliability analysis,
+  and multi image aggregation. The project is scoped as a post processing
+  tool built on publicly released iNat data rather than an integration into
+  iNat's own platform, given community sensitivity around AI tools.
 tags:
-  - 
+    - iNaturalist
+    - citizen-science
+    - computer-vision
+    - machine-learning
+    - species-identification
+    - biodiversity
+    - annotator-reliability
 links:
-  github: https://github.com/org/... # placeholder, if public
-  docs: https://example.com/docs # Could be README, wiki, github pages, etc.
-  publication: https://doi.org/... # If exists/completed
-  forum: https://example.com/forum # link to forum - @James Hennessy
-  contact: mailto:lab@example.edu # Contact to reach out to for interested parties (lab-level email distribution)
+  github: https://github.gatech.edu/Mussmann-INaturalist
+  docs: null
+  publication: null
+  forum: null
+  contact: mailto:mussmann@gatech.edu
