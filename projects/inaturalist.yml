@@ -12,8 +12,8 @@ researchers:
   - Jossue Medina Ramos
 advisors:
   - Emily Weigel
-summary:
-> This project applies computer vision and machine learning to iNaturalist
+summary: > 
+  This project applies computer vision and machine learning to iNaturalist
   citizen science data to improve species identification quality, targeting
   the large share of observations stuck in "needs ID" status. The team is
   developing automated pipelines to classify species from images, model

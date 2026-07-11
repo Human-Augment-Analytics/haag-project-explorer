@@ -232,6 +232,17 @@
         z-index: 2;
       }
 
+      .card-hover::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 3rem;
+        pointer-events: none;
+        background: linear-gradient(transparent, rgba(2, 6, 23, 0.95));
+      }
+
       .project-card:hover .card-hover {
         opacity: 1;
       }
@@ -239,8 +250,12 @@
       .card-hover p {
         margin: 0;
         font-size: 0.95rem;
-        line-height: 1.5;
+        line-height: 1.6;
         font-family: 'Roboto', sans-serif;
+        display: -webkit-box;
+        -webkit-line-clamp: 7;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
 
       .status-pill {
