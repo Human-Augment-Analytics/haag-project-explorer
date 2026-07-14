@@ -6,18 +6,18 @@ recruiting: false
 faculty:
   - James Stroud
 researchers:
-  - 
-  - 
-advisors:
-  - 
-  - 
+  - Nikhil Sulay
+  - Jianwei (Kevin) Hu
+  - Asma Ahmed
+  - Ali (Sean) Khan
+advisors: null
 summary: >
-  Summary here.
+  A tool that maps out Dr. Stroud's lizard island to aid in lizard evolution research. The tool should take in a point in space a return information about the vegetation in the area. The island is mapped using LiDAR scan data.
 tags:
-  - 
+  - LiDAR, QSM
 links:
   github: https://github.com/Landscape-CV/PyTLidar # placeholder, if public
-  docs: https://example.com/docs # Could be README, wiki, github pages, etc.
-  publication: https://doi.org/... # If exists/completed
-  forum: https://example.com/forum # link to forum - @James Hennessy
-  contact: mailto:lab@example.edu # Contact to reach out to for interested parties (lab-level email distribution)
+  docs: null
+  publication: null
+  forum: null
+  contact: null
