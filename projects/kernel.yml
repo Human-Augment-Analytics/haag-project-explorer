@@ -15,12 +15,11 @@ researchers:
 advisors:
   - Imon Banerjee
 summary: >
-  This research introduces Kernel Attention OOD, an unsupervised, post-hoc method for distinguishing in-distribution inputs from both near- and far-out-of-distribution inputs using only in-distribution data for fitting and calibration, without retaining raw training samples or feature banks at inference time. 
-  Its central insight is that prediction in a reproducing kernel Hilbert space can be interpreted as query–key–value attention, allowing OOD detection to be reframed as measuring how strongly the in-distribution attends to a test input. 
-  The framework provides two distinct compact approximations of this kernel attention mass: one uses random Fourier features to store an empirical mean embedding, while the other represents the distribution through a weighted set of learned anchor points. 
-  The estimated attention mass can also gate a classifier’s confidence, suppressing highly confident predictions that lack in-distribution support. 
-  Theoretically, the method provides finite-sample bounds on false-positive and missed-detection rates under a score-separation condition; for shift-invariant kernels, attention mass also provably decays as an input moves away from the in-distribution support, providing an especially strong foundation for far-OOD detection. 
-  Experiments across CIFAR and ImageNet benchmarks indicate that these methods are competitive with established OOD detectors while offering lower memory requirements and more practical deployment assumptions.
+  This research explores a compact, theoretically grounded approach to unsupervised, post-hoc out-of-distribution detection using only in-distribution data for fitting and calibration. 
+  The central idea connects classical kernel methods with modern attention mechanisms to measure how strongly a learned in-distribution supports a test input. 
+  The resulting framework is designed to identify both near- and far-out-of-distribution inputs without retaining raw training samples or large feature banks at inference time. 
+  It also incorporates confidence-aware scoring to reduce overconfident predictions on unsupported inputs and provides theoretical guarantees characterizing its detection behavior. 
+  Experiments across CIFAR and ImageNet benchmarks demonstrate competitive performance while offering lower memory requirements and more practical deployment assumptions.
 tags:
   - Kernel
   - Distribution detection
