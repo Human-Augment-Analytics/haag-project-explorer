@@ -6,18 +6,27 @@ recruiting: false
 faculty:
   - Supratik Mukhopadhyay
 researchers:
-  - 
-  - 
+  - Balaji Anandganesh
+  - David Huynh
+  - Tejassvi Kasturi
+  - Keith Salzman
+  - Yoonseok Oh
+  - Affan Shaikh
 advisors:
-  - 
-  - 
+  - Imon Banerjee
 summary: >
-  Summary here.
+  This research explores a compact, theoretically grounded approach to unsupervised, post-hoc out-of-distribution detection using only in-distribution data for fitting and calibration. 
+  The central idea connects classical kernel methods with modern attention mechanisms to measure how strongly a learned in-distribution supports a test input. 
+  The resulting framework is designed to identify both near- and far-out-of-distribution inputs without retaining raw training samples or large feature banks at inference time. 
+  It also incorporates confidence-aware scoring to reduce overconfident predictions on unsupported inputs and provides theoretical guarantees characterizing its detection behavior. 
+  Experiments across CIFAR and ImageNet benchmarks demonstrate competitive performance while offering lower memory requirements and more practical deployment assumptions.
 tags:
-  - 
+  - Kernel
+  - Distribution detection
+  - OOD
 links:
-  github: https://github.com/Ibanerj750/Out-of-distribution-Mukhopadhyay-gatech # placeholder, if public
-  docs: https://example.com/docs # Could be README, wiki, github pages, etc.
-  publication: https://doi.org/... # If exists/completed
-  forum: https://example.com/forum # link to forum - @James Hennessy
-  contact: mailto:lab@example.edu # Contact to reach out to for interested parties (lab-level email distribution)
+  github: null # placeholder, if public
+  docs: null # Could be README, wiki, github pages, etc.
+  publication: null # If exists/completed
+  forum: null # link to forum - @James Hennessy
+  contact: null # Contact to reach out to for interested parties (lab-level email distribution)
