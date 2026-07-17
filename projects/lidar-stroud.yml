@@ -18,7 +18,11 @@ researchers:
   - Alex Hinds
   - Andrew Wilder
   - Amir Hossein Alikhah Mishamandani
-advisors: null
+advisors:
+  - Dr. Shruti Motiwale
+  - Dr. Yasha Iravantchi
+  - Dory Peters
+  - Baidik Chandera
 summary: >
   A tool that maps out Dr. Stroud's lizard island to aid in lizard evolution research. The tool should take in a point in space a return information about the vegetation in the area. The island is mapped using LiDAR scan data.
 tags:
