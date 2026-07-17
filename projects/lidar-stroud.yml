@@ -10,13 +10,21 @@ researchers:
   - Jianwei (Kevin) Hu
   - Asma Ahmed
   - Ali (Sean) Khan
+  - Guillaume Batungwanayo
+  - John HaGood
+  - Fan Yang
+  - Avish Parmar
+  - Luis Rodriguez
+  - Alex Hinds
+  - Andrew Wilder
+  - Amir Hossein Alikhah Mishamandani
 advisors: null
 summary: >
   A tool that maps out Dr. Stroud's lizard island to aid in lizard evolution research. The tool should take in a point in space a return information about the vegetation in the area. The island is mapped using LiDAR scan data.
 tags:
   - LiDAR, QSM
 links:
-  github: https://github.com/Landscape-CV/PyTLidar # placeholder, if public
+  github: https://github.com/Landscape-CV/Ecomodel
   docs: null
   publication: null
   forum: null
