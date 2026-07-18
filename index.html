@@ -429,11 +429,16 @@
           const line = rawLine.replace(/\t/g, '    ');
           if (blockKey) {
             const indent = line.match(/^\s*/)[0].length;
-            if (line.trim() && indent > 0) {
+            if (line.trim() === '') {
+              // preserve empty lines inside a folded block as paragraph separators
+              blockLines.push('');
+              return;
+            }
+            if (indent > 0) {
               blockLines.push(line.trim());
               return;
             }
-            result[blockKey] = blockLines.join(' ').trim();
+            result[blockKey] = blockLines.join('\n').trim();
             blockKey = null;
             blockLines = [];
           }
@@ -497,14 +502,14 @@
         });
 
         if (blockKey) {
-          result[blockKey] = blockLines.join(' ').trim();
+          result[blockKey] = blockLines.join('\n').trim();
         }
 
         return result;
       }
 
       function buildProject(projectData) {
-        const summary = normalizeText(projectData.summary || '');
+        const summary = projectData.summary ? String(projectData.summary).trim() : '';
         const tags = toList(projectData.tags).map((tag) => normalizeText(tag));
         const faculty = toList(projectData.faculty).map((person) => normalizeText(person));
         const researchers = toList(projectData.researchers).map((person) => normalizeText(person));
@@ -717,7 +722,11 @@
 
       function openModal(project) {
         modal.hidden = false;
-        const summaryBlock = project.summary ? `<p>${project.summary}</p>` : '';
+        let summaryBlock = '';
+        if (project.summary) {
+          const paras = String(project.summary).split(/\n\s*\n/).map(p => `<p>${p}</p>`).join('');
+          summaryBlock = paras;
+        }
         modalContent.innerHTML = `
           <h2 id="modal-title">${project.name}</h2>
           ${summaryBlock}
