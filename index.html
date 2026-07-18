@@ -375,6 +375,7 @@
       let activeTag = '';
       let selectedFaculties = []; // multi-select faculty
       let selectedTags = []; // multi-select categories/tags
+      let selectedStatus = ''; // filter by project status
       let recruitFilter = null; // null = any, true = open, false = closed
 
       function normalizeText(value) {
@@ -595,8 +596,35 @@
           closedBtn.addEventListener('click', () => { recruitFilter = recruitFilter === false ? null : false; updateAndRender(); });
           recruitList.appendChild(closedBtn);
 
-          // Categories (tags) - derived from projects after applying faculty & recruit filters
-          const tagPool = projects.filter(p => (!selectedFaculties.length || p.faculty.some(f => selectedFaculties.includes(f))) && (recruitFilter === null || p.recruiting === recruitFilter));
+          const statusSection = document.createElement('div');
+          statusSection.className = 'filter-section';
+          statusSection.innerHTML = `<div class="filter-title">Project Status</div><div class="filter-list" id="status-list"></div>`;
+          sidebar.appendChild(statusSection);
+
+          const statusList = statusSection.querySelector('#status-list');
+          const statusAllBtn = document.createElement('button');
+          statusAllBtn.type = 'button';
+          statusAllBtn.className = `filter-item ${selectedStatus === '' ? 'active' : ''}`;
+          statusAllBtn.textContent = 'All';
+          statusAllBtn.addEventListener('click', () => { selectedStatus = ''; updateAndRender(); });
+          statusList.appendChild(statusAllBtn);
+
+          const activeStatusBtn = document.createElement('button');
+          activeStatusBtn.type = 'button';
+          activeStatusBtn.className = `filter-item ${selectedStatus === 'active' ? 'active' : ''}`;
+          activeStatusBtn.textContent = 'Active';
+          activeStatusBtn.addEventListener('click', () => { selectedStatus = selectedStatus === 'active' ? '' : 'active'; updateAndRender(); });
+          statusList.appendChild(activeStatusBtn);
+
+          const newStatusBtn = document.createElement('button');
+          newStatusBtn.type = 'button';
+          newStatusBtn.className = `filter-item ${selectedStatus === 'new' ? 'active' : ''}`;
+          newStatusBtn.textContent = 'New';
+          newStatusBtn.addEventListener('click', () => { selectedStatus = selectedStatus === 'new' ? '' : 'new'; updateAndRender(); });
+          statusList.appendChild(newStatusBtn);
+
+          // Categories (tags) - derived from projects after applying faculty, status, & recruit filters
+          const tagPool = projects.filter(p => (!selectedFaculties.length || p.faculty.some(f => selectedFaculties.includes(f))) && (recruitFilter === null || p.recruiting === recruitFilter) && (!selectedStatus || p.status.toLowerCase() === selectedStatus));
           const tags = [...new Set(tagPool.flatMap(p => p.tags))].sort();
 
           const tagSection = document.createElement('div');
@@ -636,6 +664,7 @@
           if (selectedTags.length && !project.tags.some(t => selectedTags.includes(t))) return false;
           if (selectedFaculties.length && !project.faculty.some(f => selectedFaculties.includes(f))) return false;
           if (recruitFilter !== null && project.recruiting !== recruitFilter) return false;
+          if (selectedStatus && project.status.toLowerCase() !== selectedStatus) return false;
           return true;
         });
       }
@@ -774,6 +803,7 @@
           // initialize filters and render
           selectedFaculties = [];
           selectedTags = [];
+          selectedStatus = '';
           recruitFilter = null;
           activeTag = '';
           updateAndRender();

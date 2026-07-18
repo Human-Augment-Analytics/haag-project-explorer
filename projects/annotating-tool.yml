@@ -8,7 +8,7 @@ faculty:
 researchers: null
 advisors: null
 summary: > 
-  This project will develop an open-source annotation tool for use by the McGrath Lab. The lab studies the genomic and neural basis of the evolution of social and feeding behaviors using *C. elegans* and East African cichlid fishes, and its research methods include machine learning and automated behavioral analysis.
+  This project will develop an open-source annotation tool for use by the McGrath Lab. The lab studies the genomic and neural basis of the evolution of social and feeding behaviors using C. elegans and East African cichlid fishes, and its research methods include machine learning and automated behavioral analysis.
   The project will use the Computer Vision Annotation Tool (CVAT) as a reference, a platform for annotating visual datasets, including images, video, and 3D data.
 tags:
   - Open-Source
