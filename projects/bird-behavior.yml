@@ -2,7 +2,7 @@ id: bird-behavior
 name: Bird Behavior
 status: active      # active | completed | preprint | archived
 visibility: public # public | private
-recruiting: false
+recruiting: true
 faculty:
   - Benjamin Freeman
 researchers:
