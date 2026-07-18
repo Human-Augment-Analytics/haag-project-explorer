@@ -15,9 +15,13 @@ advisors:
   - Yasha Iravantchi
 summary: >
   Contained in the vaults of museums and labs across the world, billions of specimens lie stacked in endless rows of trays and jars, their insights locked away to all but a few curious researchers who dare to brave the archives. The digital revolution brought with it the ability to bring these vast collections to life through photogrammetric techniques that allow research labs to scan physical specimens into 3D models. With this came endless opportunity for science, whether through morphological analysis, simulation, or even public education through animations and interactive exhibits.
+  
   The daunting task ahead of photogrammetry labs is now to find a way to process the decades, if not centuries, of specimens in their collections. Traditional photogrammetry techniques are historically very time and labor intensive, requiring extensive manual intervention for model rectification, calibration, and cleanup, in addition to complex photography and scanning setups that require careful manipulation of often fragile objects. The result is a never-ending backlog of objects to scan, and a constant cost-benefit analysis behind what gets priority.
+  
   In recent years, major advances in machine learning-assisted computer vision open new doors for high-quality, automated, efficient 3D reconstruction processes. Transformer models from major AI studios such as Meta allow for rapid point cloud generation and novel-view synthesis. Neural network-based approaches can be used for high-quality convergence of SDF representations of objects. GPU-enabled compute using CUDA unlocks massive efficiency gains.
+  
   The goal of this project is to deliver an end-to-end pipeline that takes 2D images captured at labs and museums and convert them to high-quality, museum-grade models with rich color information, for use in anything from morphological analysis to CGI animation. 
+  
   A collaboration between Georgia Tech, the University of Florida, and the Florida Natural History Museum.
 tags:
   - 3D

@@ -13,6 +13,7 @@ advisors:
   - 
 summary: >
   Large language models (LLMs) have achieved remarkable performance across diverse tasks, yet their opacity presents significant challenges for deployment in high-stakes domains such as medicine and law, where explainability is essential. Traditional interpretability methods that examine model internals—including attention mechanisms and gradient analyses—are unavailable for closed APIs and often inadequately capture the complex, emergent behaviors characteristic of large-scale models. Currently, we lack robust tools to predict when or why an LLM will exhibit specific behaviors.
+  
   This project addresses these limitations through a comprehensive model-agnostic interpretability framework that operates without access to internal architecture or weights.
 tags:
   - Machine Learning
