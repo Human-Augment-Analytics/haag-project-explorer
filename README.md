@@ -27,7 +27,7 @@ links:
   github: https://github.com/...   # placeholder, if public
   docs: https://example.com/docs   # Could be README, wiki, github pages, project website, etc.
   publication: https://doi.org/... # If exists/preprint/completed
-  forum: https://example.com/forum # link to forum - @James Hennessy - leave null for now
+  forum: null # link to forum - @James Hennessy - leave null for now
   contact: mailto:lab@example.edu  # Contact to reach out to for interested parties (lab-level email distribution), or leave null at this time if there isn't an email distribution that is setup at this time
 ```
 
