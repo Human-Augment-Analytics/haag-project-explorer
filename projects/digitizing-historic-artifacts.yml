@@ -1,0 +1,19 @@
+id: digitizing-historic-artifacts
+name: Digitizing Historic Artifacts
+status: new        # active | completed | preprint | archived | new
+visibility: public # public | private
+recruiting: true
+faculty:
+  - Breanna Shi
+researchers: null
+advisors: null
+summary: > 
+  The Georgia Trust for Historic Preservation works to preserve and revitalize Georgia’s historic resources and to increase public appreciation, protection, and use of historic places. The organization also operates historic house museums and develops educational and preservation resources.
+  This project will support the digitization of historic artifacts associated with the Georgia Trust. Researchers will help develop a consistent process for creating, organizing, and documenting digital representations of collection materials so they can be preserved, studied, and made more accessible. 
+tags: null
+links:
+  github: null
+  docs: null
+  publication: null
+  forum: null
+  contact: null

@@ -1,0 +1,21 @@
+id: hpc-training
+name: HPC Training
+status: active     # active | completed | preprint | archived | new
+visibility: public # public | private
+recruiting: true
+faculty:
+  - Breanna Shi
+researchers:
+  - Syed Ahsan Subzwari
+advisors: null
+summary: > 
+  High-performance computing is essential to research that relies on large-scale data processing, computational modeling, reproducible workflows, and specialized CPU or GPU resources. Within HAAG, PACE ICE supports these activities through Slurm-based computing, interactive environments, research storage, and applications such as Jupyter, RStudio, and VS Code. Effective HPC training is therefore not simply a matter of teaching commands; it must also help researchers understand how to access the system, select appropriate tools, and use shared resources responsibly and confidently.
+  This project examines how HPC training can be designed and managed to support consistent adoption across research teams. The researcher will study the technical and organizational factors that shape the training experience, including access requirements, user readiness, support structures, and coordination between researchers, advisors, and technical staff. The aim is to develop a practical, evidence-based framework for reducing barriers to entry, improving researcher preparedness, and strengthening the effective use of shared computational infrastructure.
+tags:
+  - Project Management
+links:
+  github: null
+  docs: null
+  publication: null
+  forum: null
+  contact: null
