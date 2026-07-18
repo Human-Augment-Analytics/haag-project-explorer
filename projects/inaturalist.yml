@@ -27,12 +27,12 @@ summary: >
   iNat's own platform, given community sensitivity around AI tools.
 tags:
     - iNaturalist
-    - citizen-science
-    - computer-vision
-    - machine-learning
-    - species-identification
-    - biodiversity
-    - annotator-reliability
+    - Citizen Science
+    - Computer Vision
+    - Machine Learning
+    - Species Identification
+    - Biodiversity
+    - Annotator Reliability
 links:
   github: https://github.gatech.edu/Mussmann-INaturalist
   docs: null

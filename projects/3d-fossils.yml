@@ -2,22 +2,24 @@ id: 3d-fossils
 name: 3D Fossils
 status: active      # active | completed | preprint | archived
 visibility: public # public | private
-recruiting: false
+recruiting: true
 faculty:
   - Arthur Porto
 researchers:
   - 
   - 
 advisors:
-  - 
-  - 
+  - Dr. Katherine Wolcott
 summary: >
-  Summary here.
+  The goal of this project is to leverage 3D generative AI for exploring vertebrae of both fossil and modern lizards. This project utilizes a Neural Shape Model (NSM), built on Meta AI’s DeepSDF (Deep Signed Distance Function). Our dataset consists of 3D surface models of over 2,000 vertebrae from a phylogenetically-diverse set of lizard species.
 tags:
   - 3D
+  - Machine Learning
+  - Image Processing
+  - Computer Graphics
 links:
   github: https://github.com/3D-fossils-Haag # placeholder, if public
-  docs: https://example.com/docs # Could be README, wiki, github pages, etc.
-  publication: https://doi.org/... # If exists/completed
-  forum: https://example.com/forum # link to forum - @James Hennessy
-  contact: mailto:lab@example.edu # Contact to reach out to for interested parties (lab-level email distribution)
+  docs: null # Could be README, wiki, github pages, etc.
+  publication: null # If exists/completed
+  forum: null # link to forum - @James Hennessy
+  contact: null # Contact to reach out to for interested parties (lab-level email distribution)

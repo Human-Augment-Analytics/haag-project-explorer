@@ -12,9 +12,11 @@ advisors:
   - 
   - 
 summary: >
-  Summary here.
+  This project aims to develop a state-of-the-art predictive tool that, given a partial or sparse 3D scan of a biological specimen, can generate a complete and anatomically coherent 3D structure. Moving beyond the linear limitations of traditional Statistical Shape Models (SSM) and PCA-based registration, this work will leverage the power of Conditional Denoising Diffusion Models (CDDMs).
+  The core of the project involves training a CDDM to learn the complex, non-linear deformation patterns required to warp a mean template shape to any complete sample in our dataset. By conditioning this process on a partial input scan, the model will learn to generate the most probable full deformation field, resulting in a high-fidelity shape completion. This generative approach is designed to produce reconstructions that are not only consistent with the provided data but are also more biologically plausible than those from methods constrained by linear assumptions.
 tags:
   - 3D
+  - Deep Generative Models
 links:
   github: https://github.com/alannadels/CDDM_Point_Set_Registration # placeholder, if public
   docs: https://example.com/docs # Could be README, wiki, github pages, etc.
