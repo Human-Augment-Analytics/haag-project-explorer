@@ -1,0 +1,21 @@
+id: unit-research-collaboration
+name: Unit Research Collaboration
+status: active     # active | completed | preprint | archived | new
+visibility: public # public | private
+recruiting: true
+faculty:
+  - Breanna Shi
+researchers:
+  - Kevin Lemus-Medrano
+advisors: null
+summary: > 
+  Research programs frequently contain multiple projects that share intellectual themes, methodological challenges, and dependencies while continuing to operate as distinct teams. Without effective coordination, potentially valuable knowledge can remain isolated, risks may become visible too late, and faculty or advisors may receive an incomplete picture of progress across the broader research portfolio.
+  This project investigates HAAG’s unit-based coordination model, in which related projects participate in recurring cross-project discussions, exchange feedback, and share responsibility for maintaining information flow. The researcher will examine how coordination structures, representative roles, feedback cycles, accountability mechanisms, and cross-team working sessions influence knowledge integration and collective project delivery. The project will develop a rigorous framework for understanding how lightweight governance can strengthen visibility, learning, and coordination across a portfolio of research projects while preserving team-level autonomy.
+tags:
+  - Project Management
+links:
+  github: null
+  docs: null
+  publication: null
+  forum: null
+  contact: null

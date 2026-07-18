@@ -23,6 +23,11 @@
     "r-for-evolution.yml",
     "training-batch-selection.yml",
     "vector-db.yml",
-    "vector-quantization.yml"
+    "vector-quantization.yml",
+    "annotating-tool.yml",
+    "digitizing-historic-artifacts.yml",
+    "joints.yml",
+    "unit-research-collaboration.yml",
+    "hpc-training.yml"
   ]
 }
