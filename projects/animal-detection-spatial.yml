@@ -13,9 +13,10 @@ advisors:
   - 
 summary: >
   This project focuses on the identification of species from camera trapping images using computer vision. 5 motion activated camera traps have been set up in different ecosystems across Stone Mountain. Previously, a team of researchers have tried using publicly available ML processes for species identification of individual animals. However, they found their solution to be more time consuming and less accurate than manual identification. Our objective is to find a regionally specific training data set and come up with a more effective strategy to identify species in the camera trap images. 
-  The current pipeline follows a two-stage architecture--identify animal vs. empty frame and then species classification.
+  The current pipeline follows a two-stage architecture—identify animal vs. empty frame and then species classification.
 tags:
-  - 
+  - Machine Learning
+  - Deep Learning
 links:
   github: https://github.com/cliff003/HAAG_Spatial_Camera_Trap_Fall2025 # placeholder, if public
   docs: null # Could be README, wiki, github pages, etc.

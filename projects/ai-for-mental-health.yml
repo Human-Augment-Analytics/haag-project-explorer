@@ -1,7 +1,7 @@
 id: ai-for-mental-health
 name: AI for Mental Health
 status: active      # active | completed | preprint | archived
-visibility: private # public | private
+visibility: public # public | private
 recruiting: false
 faculty:
   - Anind Dey
@@ -12,12 +12,16 @@ advisors:
   - 
   - 
 summary: >
-  Summary here.
+  Mobile phones and wearable devices are increasingly used to model human behavior and predict health outcomes. While classical machine learning has shown success in predicting behaviors, routines, depression, and sleep from passive sensing data, it often requires time-consuming manual feature extraction. Deep-CNN architectures, however, have revolutionized computer vision by learning features automatically.
+  This project aims to bridge this gap by encoding multi-variate time-series data from sensors into image representations (e.g., using Gramian Angular Fields or Markov Transition Fields). These images will then train robust Deep CNN models to predict well-being indicators like depression, sleep quality, and stress, as well as outcomes like GPA.
+  Our goal is to develop a "CT scan" for mental health—a non-invasive, accurate tool for diagnosis using passive sensing data.
 tags:
   - AI
+  - Machine Learning
+  - Deep Learning
 links:
   github: https://github.com/senseray-io/senseray.git # placeholder, if public
-  docs: https://example.com/docs # Could be README, wiki, github pages, etc.
-  publication: https://doi.org/... # If exists/completed
+  docs: null # Could be README, wiki, github pages, etc.
+  publication: null # If exists/completed
   forum: null # link to forum - @James Hennessy
-  contact: mailto:lab@example.edu # Contact to reach out to for interested parties (lab-level email distribution)
+  contact: null # Contact to reach out to for interested parties (lab-level email distribution)
