@@ -1,7 +1,7 @@
 id: bird-audio
 name: Bird Audio
 status: active      # active | completed | preprint | archived
-visibility: public # public | private
+visibility: private # public | private
 recruiting: true
 faculty:
   - Benjamin Freeman

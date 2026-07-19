@@ -1,7 +1,7 @@
 id: 3d-generative-models
 name: 3D Generative Models
 status: active      # active | completed | preprint | archived
-visibility: public # public | private
+visibility: public  # public | private
 recruiting: false
 faculty:
   - Supratik Mukhopadhyay
@@ -18,8 +18,8 @@ tags:
   - 3D
   - Deep Generative Models
 links:
-  github: https://github.com/alannadels/CDDM_Point_Set_Registration # placeholder, if public
-  docs: https://example.com/docs # Could be README, wiki, github pages, etc.
-  publication: https://doi.org/... # If exists/completed
+  github: null # placeholder, if public
+  docs: null # Could be README, wiki, github pages, etc.
+  publication: null # If exists/completed
   forum: null # link to forum - @James Hennessy
-  contact: mailto:lab@example.edu # Contact to reach out to for interested parties (lab-level email distribution)
+  contact: null # Contact to reach out to for interested parties (lab-level email distribution)

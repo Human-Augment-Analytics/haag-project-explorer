@@ -1,7 +1,7 @@
 id: lizard-movement
 name: Lizard Movement
 status: active      # active | completed | preprint | archived
-visibility: public # public | private
+visibility: private # public | private
 recruiting: false
 faculty:
   - James Stroud

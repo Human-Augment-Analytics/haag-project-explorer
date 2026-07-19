@@ -1,7 +1,7 @@
 id: knowledge-traceability
 name: Knowledge Traceability
 status: active      # active | completed | preprint | archived
-visibility: public # public | private
+visibility: private  # public | private
 recruiting: false
 faculty:
   - Anind Dey

@@ -1,7 +1,7 @@
 id: r-for-evolution
 name: R for Evolution
 status: active      # active | completed | preprint | archived
-visibility: public # public | private
+visibility: private # public | private
 recruiting: false
 faculty:
   - James Stroud
