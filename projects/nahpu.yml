@@ -14,7 +14,10 @@ advisors:
 summary: >
   NAHPU (NAtural History Project Utility) is a cross-platform application designed for cataloging natural history specimens. It modernizes data recording and management for field and museum work.
 tags:
-  - 
+  - Mobile App Development
+  - UI/UX
+  - Machine Learning
+  - Computer Vision
 links:
   github: https://github.com/nahpu/nahpu # placeholder, if public
   docs: https://nahpu.app # Could be README, wiki, github pages, etc.
