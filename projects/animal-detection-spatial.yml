@@ -1,7 +1,7 @@
 id: animal-detection-spatial
 name: Animal Detection - Spatial Camera Trap
 status: active      # active | completed | preprint | archived
-visibility: public # public | private
+visibility: private # public | private
 recruiting: false
 faculty:
   - Jenny McGuire

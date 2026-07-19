@@ -24,7 +24,7 @@
     "training-batch-selection.yml",
     "vector-db.yml",
     "vector-quantization.yml",
-    "annotating-tool.yml",
+    "annotation-tool.yml",
     "digitizing-historic-artifacts.yml",
     "joints.yml",
     "unit-research-collaboration.yml",
