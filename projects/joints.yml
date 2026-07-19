@@ -1,5 +1,5 @@
 id: joints
-name: Joints Collaboration
+name: Vertebrate Joints
 status: new        # active | completed | preprint | archived | new
 visibility: public # public | private
 recruiting: true
@@ -11,7 +11,8 @@ advisors: null
 summary: > 
   The lab studies one of the most fundamental questions in vertebrate biology: how joints work and where they come from, both evolutionarily and developmentally.
   Slithering, sprinting, swimming, and soaring all depend on the joints that connect vertebrate skeletons. Yet despite major advances in human medicine, the basic relationship between joint structure and joint function remains poorly understood across much of animal diversity. Clarifying that relationship is essential for explaining the anatomical basis of adaptation, distinguishing the effects of morphology from behavioral plasticity, and anticipating how animals may move through changing and potentially risky environments.
-  A major part of the lab’s research uses X-Ray Reconstruction of Moving Morphology (XROMM), a technology that makes it possible to visualize the internal movement of living animals and reconstruct skeletal motion in four dimensions with sub-millimeter precision. This collaborative project will contribute to research that extends XROMM and integrates it with comparative anatomy to investigate the morphological foundations of vertebrate motion.
+  A major part of the lab’s research uses X-Ray Reconstruction of Moving Morphology (XROMM), a technology that makes it possible to visualize the internal movement of living animals and reconstruct skeletal motion in four dimensions with sub-millimeter precision. 
+  This collaborative project with the Manafzadeh Lab will contribute to research that extends XROMM and integrates it with comparative anatomy to investigate the morphological foundations of vertebrate motion.
 tags:
   - XROMM
 links:
