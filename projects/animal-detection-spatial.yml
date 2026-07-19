@@ -1,8 +1,8 @@
 id: animal-detection-spatial
 name: Animal Detection - Spatial Camera Trap
 status: active      # active | completed | preprint | archived
-visibility: private # public | private
-recruiting: false
+visibility: public # public | private
+recruiting: true
 faculty:
   - Jenny McGuire
 researchers:
@@ -12,12 +12,13 @@ advisors:
   - 
   - 
 summary: >
-  Summary here.
+  This project focuses on the identification of species from camera trapping images using computer vision. 5 motion activated camera traps have been set up in different ecosystems across Stone Mountain. Previously, a team of researchers have tried using publicly available ML processes for species identification of individual animals. However, they found their solution to be more time consuming and less accurate than manual identification. Our objective is to find a regionally specific training data set and come up with a more effective strategy to identify species in the camera trap images. 
+  The current pipeline follows a two-stage architecture--identify animal vs. empty frame and then species classification.
 tags:
   - 
 links:
   github: https://github.com/cliff003/HAAG_Spatial_Camera_Trap_Fall2025 # placeholder, if public
-  docs: https://example.com/docs # Could be README, wiki, github pages, etc.
-  publication: https://doi.org/... # If exists/completed
+  docs: null # Could be README, wiki, github pages, etc.
+  publication: null # If exists/completed
   forum: null # link to forum - @James Hennessy
-  contact: mailto:lab@example.edu # Contact to reach out to for interested parties (lab-level email distribution)
+  contact: null # Contact to reach out to for interested parties (lab-level email distribution)
