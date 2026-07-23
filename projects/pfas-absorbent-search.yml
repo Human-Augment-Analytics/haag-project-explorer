@@ -1,7 +1,7 @@
 id: pfas-absorbent-search
 name: PFAS Absorbent Search
 status: active      # active | completed | preprint | archived
-visibility: private # public | private
+visibility:  public
 recruiting: false
 faculty:
   - Steve Mussmann
@@ -11,13 +11,21 @@ researchers:
 advisors:
   - 
   - 
-summary: >
-  Summary here.
+summary: PFAS are a ubiquitous environmental contaminant. A GTRI analytical chemist is looking to
+design and test new materials to absorb this contaminant. Chemical simulation software
+exists to test properties of compounds, such as binding affinity to PFAS, which can be used
+to screen candidates for lab tests. While large libraries (10^8) of chemical compounds
+exist, this is far too many to simulate (each simulation takes hours).
+The goal of this project is to use ML predictive chemical modelling and Bayesian
+Optimization to interactively simulate and find good chemical candidates while avoiding an
+exhaustive search. The first semester will be spent building and integrating the
+experimental pipeline, designing and analyzing multiple fidelity levels of ML chemical
+modelling, and exploring related work.
 tags:
-  - 
+  - PFAS
 links:
   github: https://github.com/Human-Augment-Analytics/pfas-environment-cleanup # placeholder, if public
-  docs: https://example.com/docs # Could be README, wiki, github pages, etc.
-  publication: https://doi.org/... # If exists/completed
+  docs: null # Could be README, wiki, github pages, etc.
+  publication: null # If exists/completed
   forum: null # link to forum - @James Hennessy
-  contact: mailto:lab@example.edu # Contact to reach out to for interested parties (lab-level email distribution)
+  contact: null
