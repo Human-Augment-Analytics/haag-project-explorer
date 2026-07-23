@@ -1,0 +1,118 @@
+# HAAG People Directory
+# Single source of truth for the researcher directory on people.html.
+# Add, edit, or remove entries below and push - no code changes required.
+#
+# Fields:
+#   name          - full display name
+#   role          - one of: Faculty | PhD | Postdoc | Undergraduate  (used by the role filter)
+#   role_label    - text shown under the name (can be more descriptive than `role`)
+#   tags          - list of research-area tags shown as pills and used by search
+#   profile_url   - link for "View Profile" (use "#" if not yet published)
+
+researchers:
+  - name: Dr. Sarah Chen
+    role: Faculty
+    role_label: Faculty Advisor &middot; Computer Science
+    tags: [NLP, Human-AI Trust]
+    profile_url: "#"
+
+  - name: Marcus Webb
+    role: PhD
+    role_label: PhD Researcher &middot; OMSCS
+    tags: [Computer Vision, Ethics]
+    profile_url: "#"
+
+  - name: Dr. Amara Osei
+    role: Faculty
+    role_label: Faculty Advisor &middot; HCI
+    tags: [HCI, Accessibility]
+    profile_url: "#"
+
+  - name: Priya Patel
+    role: Postdoc
+    role_label: Postdoc &middot; Machine Learning
+    tags: [ML Systems, Fairness]
+    profile_url: "#"
+
+  - name: Dr. James Wu
+    role: Faculty
+    role_label: Faculty Advisor &middot; Data Viz
+    tags: [Data Viz, Education]
+    profile_url: "#"
+
+  - name: Elena Rodriguez
+    role: PhD
+    role_label: PhD Researcher &middot; Robotics
+    tags: [Robotics, Human-AI]
+    profile_url: "#"
+
+  - name: Dr. Kwame Asante
+    role: Faculty
+    role_label: Faculty Advisor &middot; Public Policy
+    tags: [NLP, Social Good]
+    profile_url: "#"
+
+  - name: Olivia Brooks
+    role: PhD
+    role_label: PhD Researcher &middot; UX
+    tags: [UX Research, Trust]
+    profile_url: "#"
+
+  - name: Dr. Noah Kim
+    role: Faculty
+    role_label: Faculty Advisor &middot; Bioinformatics
+    tags: [Bioinformatics, AI]
+    profile_url: "#"
+
+  - name: Fatima Al-Sayed
+    role: Postdoc
+    role_label: Postdoc &middot; Management
+    tags: [Leadership, Mgmt]
+    profile_url: "#"
+
+  - name: Dr. Liang Zhao
+    role: Faculty
+    role_label: Faculty Advisor &middot; Systems
+    tags: [Systems, Scalability]
+    profile_url: "#"
+
+  - name: Grace Thompson
+    role: PhD
+    role_label: PhD Researcher &middot; Education
+    tags: [Teaching, Pedagogy]
+    profile_url: "#"
+
+  - name: Dr. Rafael Torres
+    role: Faculty
+    role_label: Faculty Advisor &middot; Community Engagement
+    tags: [Community, TOPIC]
+    profile_url: "#"
+
+  - name: Aisha Bello
+    role: Undergraduate
+    role_label: Undergraduate &middot; Certificate Program
+    tags: [Certificate, Teaching]
+    profile_url: "#"
+
+  - name: Dr. Ingrid Larsen
+    role: Faculty
+    role_label: Faculty Advisor &middot; Research Ops
+    tags: [Research Ops, PM]
+    profile_url: "#"
+
+features:
+  - kind: Blog
+    title: Rethinking Trust in Human-AI Collaboration
+    byline: Dr. Sarah Chen &middot; June 2026
+    summary: How transparency shapes adoption in federal AI assistants.
+    url: "#"
+  - kind: Publication
+    title: Scalable Peer Review Pairing with LLM Routing
+    byline: Marcus Webb, et al. &middot; PEARC '25
+    summary: A framework for accelerating interdisciplinary CS research.
+    url: "#"
+  - kind: Blog
+    title: Teaching AI Ethics Through Practice
+    byline: Dr. Kwame Asante &middot; May 2026
+    summary: Lessons from embedding ethics review into student projects.
+    url: "#"

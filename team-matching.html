@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Team Matching Results | Human-Augmented Analytics Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #003057;
+    --navy-light: #0C4A7A;
+    --gold: #B3A369;
+    --gold-mid: #A4925A;
+    --gold-dark: #857437;
+    --paper: #FAFAF8;
+    --ink: #1B1F23;
+    --mute: #5B6670;
+    --line: #E2E5E8;
+    --card: #FFFFFF;
+    --amber-bg: #FBF3E2;
+    --amber-border: #D8A73D;
+    --amber-ink: #6B5217;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+
+  .gt-utility {
+    background: var(--navy); padding: 7px 24px; font-size: 11.5px; color: #BFD1DE;
+    display: flex; justify-content: flex-end; gap: 18px; letter-spacing: 0.02em;
+  }
+  .gt-utility a { text-decoration: none; color: #BFD1DE; }
+  .gt-utility a:hover { color: var(--gold); }
+
+  .masthead {
+    background: linear-gradient(120deg, #002544 0%, #003057 55%, #0C4A7A 100%);
+    padding: 34px 24px 30px; position: relative; overflow: hidden;
+  }
+  .masthead::after {
+    content: ""; position: absolute; right: -60px; top: -60px;
+    width: 260px; height: 260px; border: 2px solid rgba(179,163,105,0.18); border-radius: 50%;
+  }
+  .masthead-inner { max-width: 1080px; margin: 0 auto; position: relative; z-index: 1; }
+  .masthead .eyebrow {
+    font-family: "IBM Plex Mono", monospace; font-size: 11.5px; letter-spacing: 0.14em;
+    color: var(--gold); text-transform: uppercase; margin-bottom: 10px; font-weight: 600;
+  }
+  .masthead h1 {
+    font-family: "Archivo", "Helvetica Neue", sans-serif; font-weight: 800; font-size: 30px;
+    color: #FFFFFF; margin: 0 0 8px; letter-spacing: -0.01em;
+  }
+  .masthead .sub { color: #C7D6E0; font-size: 14.5px; max-width: 560px; line-height: 1.5; margin: 0; }
+
+  .nav-bar { background: var(--card); border-bottom: 1px solid var(--line); box-shadow: 0 1px 0 rgba(0,0,0,0.03); }
+  .nav-inner { max-width: 1220px; margin: 0 auto; display: flex; flex-wrap: nowrap; overflow-x: auto; padding: 0 20px; }
+  .nav-inner a {
+    display: block; padding: 13px 11px; font-size: 11.5px; font-weight: 700; text-decoration: none;
+    color: var(--mute); letter-spacing: 0.01em; border-bottom: 3px solid transparent; white-space: nowrap;
+  }
+  .nav-inner a:hover { color: var(--navy); }
+  .nav-inner a.current { color: var(--navy); border-bottom-color: var(--gold); }
+
+  .breadcrumb { max-width: 1080px; margin: 0 auto; padding: 14px 24px 0; font-size: 12px; color: var(--mute); }
+  .breadcrumb a { text-decoration: none; color: var(--mute); }
+  .breadcrumb a:hover { color: var(--navy); }
+  .breadcrumb .sep { margin: 0 6px; color: #B9C1C7; }
+  .breadcrumb .here { color: var(--navy); font-weight: 700; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 24px 24px 72px; }
+
+  .page-title { font-family: "Archivo", sans-serif; font-weight: 800; font-size: 22px; color: var(--navy); margin: 22px 0 4px; }
+  .page-desc { color: var(--mute); font-size: 13.5px; margin: 0 0 18px; max-width: 660px; }
+
+  .sample-banner {
+    background: var(--amber-bg); border: 1px solid var(--amber-border);
+    border-radius: 5px; padding: 12px 18px; font-size: 12.5px; color: var(--amber-ink);
+    margin-bottom: 26px; display: flex; align-items: center; gap: 10px;
+  }
+  .sample-banner .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber-border); flex-shrink: 0; }
+
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 34px; }
+  @media (max-width: 700px) { .stat-row { grid-template-columns: repeat(2, 1fr); } }
+  .stat-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px;
+    border-top: 3px solid var(--gold);
+  }
+  .stat-card .num { font-family: "Archivo", sans-serif; font-weight: 800; font-size: 26px; color: var(--navy); }
+  .stat-card .lbl { font-size: 11.5px; color: var(--mute); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
+
+  .log-heading {
+    font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--mute); font-weight: 600; margin: 0 0 16px; display: flex; align-items: center; gap: 10px;
+  }
+  .log-heading::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+  .match-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 40px; }
+  @media (max-width: 760px) { .match-grid { grid-template-columns: 1fr; } }
+
+  .match-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px;
+    display: flex; gap: 14px; align-items: flex-start;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+  }
+  .match-card:hover { box-shadow: 0 4px 16px rgba(0,48,87,0.08); transform: translateY(-1px); }
+
+  .avatar {
+    width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+    background: var(--navy); color: var(--gold); font-family: "Archivo", sans-serif; font-weight: 800;
+    font-size: 14px; display: flex; align-items: center; justify-content: center;
+  }
+  .match-info { flex: 1; min-width: 0; }
+  .match-name { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+  .match-role { font-size: 11px; color: var(--gold-dark); font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 10px; }
+
+  .match-meta { font-size: 12.5px; color: var(--mute); line-height: 1.7; }
+  .match-meta strong { color: var(--ink); font-weight: 600; }
+
+  .status-pill {
+    display: inline-block; font-family: "IBM Plex Mono", monospace; font-size: 10px; font-weight: 600;
+    padding: 3px 9px; border-radius: 3px; background: #F2EFE7; color: var(--gold-dark);
+    text-transform: uppercase; letter-spacing: 0.04em; margin-top: 10px;
+  }
+
+  .gt-footer { background: var(--navy); color: #C7D3DB; margin-top: 40px; }
+  .gt-footer-inner { max-width: 1080px; margin: 0 auto; padding: 40px 24px 20px; display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 30px; }
+  @media (max-width: 700px) { .gt-footer-inner { grid-template-columns: 1fr; } }
+  .gt-footer h4 { font-family: "Archivo", sans-serif; color: #fff; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 12px; }
+  .gt-footer p { font-size: 12.5px; line-height: 1.7; margin: 0; color: #AFC1CE; }
+  .gt-footer ul { list-style: none; padding: 0; margin: 0; }
+  .gt-footer li { margin-bottom: 8px; }
+  .gt-footer a { font-size: 12.5px; color: #AFC1CE; text-decoration: none; }
+  .gt-footer a:hover { color: var(--gold); }
+  .gt-footer-bottom { border-top: 1px solid rgba(255,255,255,0.12); padding: 16px 24px; text-align: center; font-size: 11px; color: #7E97A8; }
+</style>
+</head>
+<body>
+
+  <div class="gt-utility">
+    <a href="#">Georgia Institute of Technology</a>
+    <a href="#">GT Directory</a>
+    <a href="#">Campus Map</a>
+  </div>
+
+  <div class="masthead">
+    <div class="masthead-inner">
+      <div class="eyebrow">HAAG &middot; Recruitment</div>
+      <h1>Human-Augmented Analytics Group</h1>
+      <p class="sub">Advancing interdisciplinary data science collaboration through applied research and education.</p>
+    </div>
+  </div>
+
+  <nav class="nav-bar">
+    <div class="nav-inner">
+      <a href="index.html">HAAG (Home)</a>
+      <a href="#">Faculty Affiliates</a>
+      <a href="#">PhD / Post-Doc</a>
+      <a href="#">Data Science Research</a>
+      <a href="#">Project Management</a>
+      <a href="projects.html">HAAG Project Explorer</a>
+      <a href="recruitment.html">Recruitment Status</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumb">
+    <a href="index.html">HAAG</a><span class="sep">/</span><a href="recruitment.html">Recruitment Status</a><span class="sep">/</span><span class="here">Team Matching Results</span>
+  </div>
+
+  <div class="wrap">
+    <h2 class="page-title">Team Matching Results</h2>
+    <p class="page-desc">Fall 2026 Recruitment: published once the cycle reaches Finalized. Each researcher below has been matched with a project, faculty lead, and computational advisor.</p>
+
+    <div class="sample-banner">
+      <span class="dot"></span>
+      <span><strong>Sample data.</strong> This page shows placeholder names and projects for demonstration purposes only, not real HAAG placements.</span>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-card"><div class="num">18</div><div class="lbl">Researchers Matched</div></div>
+      <div class="stat-card"><div class="num">7</div><div class="lbl">Projects</div></div>
+      <div class="stat-card"><div class="num">9</div><div class="lbl">Faculty Leads</div></div>
+      <div class="stat-card"><div class="num">6</div><div class="lbl">Computational Advisors</div></div>
+    </div>
+
+    <div class="log-heading">Confirmed Placements</div>
+    <div class="match-grid" id="match-grid"></div>
+  </div>
+
+  <footer class="gt-footer">
+    <div class="gt-footer-inner">
+      <div>
+        <h4>Georgia Institute of Technology</h4>
+        <p>North Avenue<br>Atlanta, GA 30332<br>+1 404.894.2000</p>
+      </div>
+      <div>
+        <h4>General</h4>
+        <ul>
+          <li><a href="#">Directory</a></li>
+          <li><a href="#">Employment</a></li>
+          <li><a href="#">Emergency Information</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>HAAG</h4>
+        <ul>
+          <li><a href="#">About HAAG</a></li>
+          <li><a href="#">Programs</a></li>
+          <li><a href="recruitment.html">Recruitment Status</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="gt-footer-bottom">&copy; 2026 Georgia Institute of Technology &middot; Human-Augmented Analytics Group</div>
+  </footer>
+
+  <script>
+    // Sample / fictional data for demonstration purposes only.
+    const matches = [
+      { name: "Jordan A.", role: "Researcher", project: "Photogrammetry for Habitat Mapping", faculty: "Dr. R. Ellison", advisor: "M. Castillo" },
+      { name: "Priya K.", role: "Researcher", project: "Photogrammetry for Habitat Mapping", faculty: "Dr. R. Ellison", advisor: "M. Castillo" },
+      { name: "Sam R.", role: "Researcher", project: "Clinical Text De-identification", faculty: "Dr. L. Fenwick", advisor: "J. Okafor" },
+      { name: "Wei T.", role: "Researcher", project: "Clinical Text De-identification", faculty: "Dr. L. Fenwick", advisor: "J. Okafor" },
+      { name: "Elena V.", role: "Researcher", project: "Wildfire Risk Forecasting", faculty: "Dr. A. Marsh", advisor: "K. Bianchi" },
+      { name: "Marcus D.", role: "Researcher", project: "Wildfire Risk Forecasting", faculty: "Dr. A. Marsh", advisor: "K. Bianchi" },
+      { name: "Aisha N.", role: "Researcher", project: "Accessible Transit Routing", faculty: "Dr. P. Nakamura", advisor: "S. Whitfield" },
+      { name: "Diego L.", role: "Researcher", project: "Accessible Transit Routing", faculty: "Dr. P. Nakamura", advisor: "S. Whitfield" },
+      { name: "Grace H.", role: "Researcher", project: "Supply Chain Anomaly Detection", faculty: "Dr. T. Reyes", advisor: "M. Castillo" },
+      { name: "Omar F.", role: "Researcher", project: "Supply Chain Anomaly Detection", faculty: "Dr. T. Reyes", advisor: "M. Castillo" },
+    ];
+
+    const initials = (name) => name.split(" ").map(p => p[0]).join("").slice(0,2).toUpperCase();
+
+    const grid = document.getElementById("match-grid");
+    grid.innerHTML = matches.map(m => `
+      <div class="match-card">
+        <div class="avatar">${initials(m.name)}</div>
+        <div class="match-info">
+          <div class="match-name">${m.name}</div>
+          <div class="match-role">${m.role}</div>
+          <div class="match-meta">
+            <strong>Project:</strong> ${m.project}<br>
+            <strong>Faculty:</strong> ${m.faculty}<br>
+            <strong>Advisor:</strong> ${m.advisor}
+          </div>
+          <div class="status-pill">Confirmed</div>
+        </div>
+      </div>
+    `).join("");
+  </script>
+</body>
+</html>

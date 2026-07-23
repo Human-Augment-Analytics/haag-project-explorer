@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HAAG Project Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        color-scheme: light;
+        --accent: #7c5a22;
+        --accent-2: #b1864b;
+        --surface: #f4efe6;
+        --surface-muted: #e8dfd1;
+        --border: rgba(76, 63, 50, 0.18);
+        --text: #2b2722;
+        --text-muted: #6f6658;
+        --shadow: 0 24px 60px rgba(37, 31, 24, 0.12);
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: 'Roboto', Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--text);
+        background: #ffffff;
+        line-height: 1.6;
+      }
+
+      .page {
+        max-width: 1220px;
+        margin: 0 auto;
+        padding: 2.2rem 1rem 3rem;
+      }
+
+      .toolbar {
+        display: none;
+      }
+
+      .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      /* Layout for sidebar + main content */
+      .explorer {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+
+      #filter-sidebar {
+        width: 260px;
+        flex: 0 0 260px;
+      }
+
+      .main-area {
+        flex: 1 1 0;
+        min-width: 0;
+      }
+
+      .filter-section {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 0.75rem;
+        padding: 0.75rem;
+        margin-bottom: 0.8rem;
+      }
+
+      .filter-title {
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        font-size: 0.95rem;
+        color: var(--text);
+      }
+
+      .filter-list { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+
+      .filter-item {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--surface);
+        padding: 0.4rem 0.7rem;
+        cursor: pointer;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      .filter-item.active { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: white; border-color: transparent; }
+
+      .tag-chip {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--surface);
+        padding: 0.45rem 0.8rem;
+        cursor: pointer;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      .tag-chip.active {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: white;
+        border-color: transparent;
+      }
+
+      .results-meta {
+        color: var(--text-muted);
+        margin-bottom: 0.9rem;
+      }
+
+      .project-grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+
+      .project-card {
+        border: none;
+        border-radius: 1.2rem;
+        overflow: hidden;
+        background: #16130f;
+        box-shadow: 0 30px 70px rgba(37, 31, 24, 0.12);
+        cursor: pointer;
+        padding: 0;
+        text-align: left;
+        min-height: 0;
+      }
+
+      .project-card:hover {
+        transform: translateY(-4px);
+        transition: transform 220ms ease;
+      }
+
+      .project-image {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1.05 / 1;
+        display: flex;
+        align-items: flex-end;
+        padding: 1rem;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        transition: transform 220ms ease;
+      }
+
+      .project-image::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(14, 10, 7, 0.08) 0%, rgba(7, 4, 2, 0.7) 100%);
+      }
+
+      .project-title {
+        position: relative;
+        z-index: 1;
+        color: white;
+        font-size: clamp(1.15rem, 1.9vw, 1.5rem);
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: -0.02em;
+        font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+      }
+
+      .project-meta {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+      }
+
+      .open-icon {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 2;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.2rem;
+        height: 2.2rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.12);
+        color: white;
+        font-size: 0.95rem;
+      }
+
+      .project-body {
+        padding: 0.8rem 1rem 1rem;
+      }
+
+      .project-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        margin-top: 0.9rem;
+      }
+
+      .mini-tag {
+        background: rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.9);
+        padding: 0.32rem 0.65rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .status-pill {
+        display: inline-block;
+        margin-top: 0.6rem;
+        margin-bottom: 0.85rem;
+        font-size: 0.8rem;
+        border-radius: 999px;
+        padding: 0.28rem 0.65rem;
+        background: rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+
+      .card-hover {
+        position: absolute;
+        inset: 0;
+        background: rgba(2, 6, 23, 0.85);
+        color: white;
+        padding: 1.2rem;
+        display: flex;
+        align-items: flex-end;
+        opacity: 0;
+        transition: opacity 180ms ease;
+        z-index: 2;
+      }
+
+      .card-hover::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 3rem;
+        pointer-events: none;
+        background: linear-gradient(transparent, rgba(2, 6, 23, 0.95));
+      }
+
+      .project-card:hover .card-hover {
+        opacity: 1;
+      }
+
+      .card-hover p {
+        margin: 0;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        font-family: 'Roboto', sans-serif;
+        display: -webkit-box;
+        -webkit-line-clamp: 7;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .status-pill {
+        display: inline-block;
+        margin-top: 0.6rem;
+        font-size: 0.8rem;
+        border-radius: 999px;
+        padding: 0.28rem 0.65rem;
+        background: rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+
+      .empty-state {
+        border: 1px dashed var(--border);
+        border-radius: 1rem;
+        padding: 2rem;
+        text-align: center;
+        color: var(--text-muted);
+        background: var(--surface);
+      }
+
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(2, 6, 23, 0.65);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        z-index: 30;
+      }
+
+      .modal[hidden] { display: none; }
+
+      .modal-card {
+        width: min(760px, 100%);
+        max-height: 85vh;
+        overflow: auto;
+        background: var(--surface);
+        border-radius: 1rem;
+        padding: 1.3rem;
+        box-shadow: var(--shadow);
+        position: relative;
+      }
+
+      .modal-card .status-pill {
+        background: var(--surface-muted);
+        color: var(--text);
+      }
+
+      .modal-status {
+        background: var(--surface-muted);
+        color: var(--text);
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        border: 0;
+        background: var(--surface-muted);
+        color: var(--text);
+        border-radius: 999px;
+        width: 2rem;
+        height: 2rem;
+        cursor: pointer;
+      }
+
+      .modal-card h2 { margin: 0 0 0.4rem; }
+      .modal-card p { color: var(--text-muted); font-family: 'Roboto', sans-serif; }
+      .detail-list { margin: 0.6rem 0 0; padding-left: 1rem; }
+      .detail-list li { margin-bottom: 0.35rem; }
+      .detail-group { margin-top: 1rem; }
+      .detail-group h3 { margin-bottom: 0.35rem; font-size: 1rem; }
+      .link-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.55rem; }
+      .link-list a {
+        text-decoration: none;
+        padding: 0.45rem 0.7rem;
+        border-radius: 999px;
+        background: var(--surface-muted);
+        color: var(--accent);
+      }
+
+      @media (max-width: 700px) {
+        .page { padding: 1rem 0.8rem 2rem; }
+        .hero { padding: 1rem; }
+        #filter-sidebar { display: none; }
+      }
+
+      /* ---------- Shared site chrome (matches homepage / people / recruitment) ---------- */
+      .gt-utility {
+        background: #003057; padding: 7px 24px; font-size: 11.5px; color: #BFD1DE;
+        display: flex; justify-content: flex-end; gap: 18px; letter-spacing: 0.02em;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+      .gt-utility a { text-decoration: none; color: #BFD1DE; }
+      .gt-utility a:hover { color: #B3A369; }
+      .nav-bar { background: #FFFFFF; border-bottom: 1px solid #E2E5E8; box-shadow: 0 1px 0 rgba(0,0,0,0.03); }
+      .nav-inner { max-width: 1220px; margin: 0 auto; display: flex; flex-wrap: nowrap; overflow-x: auto; padding: 0 20px; }
+      .nav-inner a {
+        display: block; padding: 13px 11px; font-size: 11.5px; font-weight: 700; text-decoration: none;
+        color: #5B6670; letter-spacing: 0.01em; border-bottom: 3px solid transparent; white-space: nowrap;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+      .nav-inner a:hover { color: #003057; }
+      .nav-inner a.current { color: #003057; border-bottom-color: #B3A369; }
+    </style>
+  </head>
+  <body>
+    <div class="gt-utility">
+      <a href="https://www.gatech.edu">Georgia Tech</a>
+      <a href="mailto:haag@gatech.edu">Contact</a>
+    </div>
+    <nav class="nav-bar">
+      <div class="nav-inner">
+        <a href="index.html">HAAG (Home)</a>
+        <a href="people.html">People</a>
+        <a href="#">Faculty Affiliates</a>
+        <a href="#">PhD / Post-Doc</a>
+        <a href="#">Data Science Research</a>
+        <a href="#">Project Management</a>
+        <a href="projects.html" class="current">HAAG Project Explorer</a>
+        <a href="recruitment.html">Recruitment Status</a>
+      </div>
+    </nav>
+    <main class="page">
+      <div class="explorer">
+        <aside id="filter-sidebar"></aside>
+        <div class="main-area">
+          <div id="project-grid" class="project-grid"></div>
+        </div>
+      </div>
+    </main>
+
+    <div id="project-modal" class="modal" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button class="modal-close" type="button" aria-label="Close popup">×</button>
+        <div id="modal-content"></div>
+      </div>
+    </div>
+
+    <script>
+      const manifestPath = './projects/manifest.json';
+      const projectsGrid = document.getElementById('project-grid');
+      const modal = document.getElementById('project-modal');
+      const modalContent = document.getElementById('modal-content');
+
+      let allProjects = [];
+      let activeTag = '';
+      let selectedFaculties = []; // multi-select faculty
+      let selectedTags = []; // multi-select categories/tags
+      let selectedStatus = ''; // filter by project status
+      let recruitFilter = null; // null = any, true = open, false = closed
+
+      function normalizeText(value) {
+        return String(value || '').replace(/\s+/g, ' ').trim();
+      }
+
+      function toList(value) {
+        if (!Array.isArray(value)) return [];
+        return value.filter((item) => normalizeText(item).length > 0);
+      }
+
+      function isPublicProject(project) {
+        return String(project.visibility || '').toLowerCase() === 'public';
+      }
+
+      function createAccent(projectName) {
+        const palette = [
+          ['#0f766e', '#2563eb'],
+          ['#7c3aed', '#ec4899'],
+          ['#ea580c', '#f59e0b'],
+          ['#2563eb', '#06b6d4'],
+          ['#15803d', '#4ade80'],
+          ['#7c2d12', '#fb923c']
+        ];
+        let hash = 0;
+        for (let i = 0; i < projectName.length; i += 1) {
+          hash = (hash * 31 + projectName.charCodeAt(i)) % palette.length;
+        }
+        return palette[hash];
+      }
+
+      function stripInlineComment(value) {
+        const hashIndex = value.indexOf('#');
+        return hashIndex >= 0 ? value.slice(0, hashIndex) : value;
+      }
+
+      function parseScalar(value) {
+        const cleaned = stripInlineComment(value).trim();
+        if (!cleaned || cleaned === 'null') return null;
+        return cleaned;
+      }
+
+      function parseSimpleYaml(yamlText) {
+        const result = {};
+        let currentListKey = null;
+        let currentObjectKey = null;
+        let blockKey = null;
+        let blockLines = [];
+
+        const lines = yamlText.replace(/\r\n/g, '\n').split('\n');
+        lines.forEach((rawLine) => {
+          const line = rawLine.replace(/\t/g, '    ');
+          if (blockKey) {
+            const indent = line.match(/^\s*/)[0].length;
+            if (line.trim() === '') {
+              // preserve empty lines inside a folded block as paragraph separators
+              blockLines.push('');
+              return;
+            }
+            if (indent > 0) {
+              blockLines.push(line.trim());
+              return;
+            }
+            result[blockKey] = blockLines.join('\n').trim();
+            blockKey = null;
+            blockLines = [];
+          }
+
+          if (!line.trim()) return;
+          if (blockKey) return;
+
+          const trimmed = line.trim();
+          if (trimmed.startsWith('- ')) {
+            if (currentListKey) {
+              result[currentListKey].push(parseScalar(trimmed.slice(2)));
+            }
+            return;
+          }
+
+          const indent = line.match(/^\s*/)[0].length;
+          if (indent > 0 && currentObjectKey && trimmed.includes(':')) {
+            const [key, rawValue] = trimmed.split(/:\s*/, 2);
+            if (rawValue !== undefined) {
+              result[currentObjectKey][key] = parseScalar(rawValue);
+            }
+            return;
+          }
+
+          const match = trimmed.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
+          if (!match) return;
+
+          const [, key, rawValue] = match;
+          if (key === 'summary' && rawValue === '>') {
+            blockKey = 'summary';
+            blockLines = [];
+            currentListKey = null;
+            currentObjectKey = null;
+            return;
+          }
+
+          if (key === 'faculty' || key === 'researchers' || key === 'advisors' || key === 'tags') {
+            result[key] = [];
+            currentListKey = key;
+            currentObjectKey = null;
+            return;
+          }
+
+          if (key === 'links') {
+            result.links = {};
+            currentObjectKey = 'links';
+            currentListKey = null;
+            return;
+          }
+
+          if (rawValue === '') {
+            result[key] = null;
+            currentListKey = null;
+            currentObjectKey = null;
+            return;
+          }
+
+          result[key] = parseScalar(rawValue);
+          currentListKey = null;
+          currentObjectKey = null;
+        });
+
+        if (blockKey) {
+          result[blockKey] = blockLines.join('\n').trim();
+        }
+
+        return result;
+      }
+
+      function buildProject(projectData) {
+        const summary = projectData.summary ? String(projectData.summary).trim() : '';
+        const tags = toList(projectData.tags).map((tag) => normalizeText(tag));
+        const faculty = toList(projectData.faculty).map((person) => normalizeText(person));
+        const researchers = toList(projectData.researchers).map((person) => normalizeText(person));
+        const advisors = toList(projectData.advisors).map((person) => normalizeText(person));
+        const links = projectData.links && typeof projectData.links === 'object'
+          ? Object.entries(projectData.links)
+              .filter(([, value]) => normalizeText(value).length > 0)
+              .map(([label, value]) => ({ label, value }))
+          : [];
+        const [startColor, endColor] = createAccent(projectData.name || 'Project');
+
+        return {
+          id: projectData.id || (projectData.name || 'project').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+          name: normalizeText(projectData.name || 'Untitled project'),
+          status: normalizeText(projectData.status || ''),
+          visibility: normalizeText(projectData.visibility || ''),
+          recruiting: String(projectData.recruiting || '').toLowerCase() === 'true',
+          summary,
+          tags,
+          faculty,
+          researchers,
+          advisors,
+          links,
+          accent: [startColor, endColor]
+        };
+      }
+
+        function renderSidebarFilters(projects) {
+          const sidebar = document.getElementById('filter-sidebar');
+          const faculties = [...new Set(projects.flatMap(p => p.faculty))].sort();
+          sidebar.innerHTML = '';
+
+          const facultySection = document.createElement('div');
+          facultySection.className = 'filter-section';
+          facultySection.innerHTML = `<div class="filter-title">Faculty</div><div class="filter-list" id="faculty-list"></div>`;
+          sidebar.appendChild(facultySection);
+
+          const facultyList = facultySection.querySelector('#faculty-list');
+          const allBtn = document.createElement('button');
+          allBtn.type = 'button';
+          allBtn.className = `filter-item ${selectedFaculties.length ? '' : 'active'}`;
+          allBtn.textContent = 'All';
+          allBtn.addEventListener('click', () => { selectedFaculties = []; updateAndRender(); });
+          facultyList.appendChild(allBtn);
+
+          faculties.forEach((f) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `filter-item ${selectedFaculties.includes(f) ? 'active' : ''}`;
+            btn.textContent = f;
+            btn.addEventListener('click', () => {
+              if (selectedFaculties.includes(f)) selectedFaculties = selectedFaculties.filter(x => x !== f);
+              else selectedFaculties.push(f);
+              updateAndRender();
+            });
+            facultyList.appendChild(btn);
+          });
+
+          const recruitSection = document.createElement('div');
+          recruitSection.className = 'filter-section';
+          recruitSection.innerHTML = `<div class="filter-title">Recruitment</div><div class="filter-list" id="recruit-list"></div>`;
+          sidebar.appendChild(recruitSection);
+
+          const recruitList = recruitSection.querySelector('#recruit-list');
+          const anyBtn = document.createElement('button');
+          anyBtn.type = 'button';
+          anyBtn.className = `filter-item ${recruitFilter === null ? 'active' : ''}`;
+          anyBtn.textContent = 'Any';
+          anyBtn.addEventListener('click', () => { recruitFilter = null; updateAndRender(); });
+          recruitList.appendChild(anyBtn);
+
+          const openBtn = document.createElement('button');
+          openBtn.type = 'button';
+          openBtn.className = `filter-item ${recruitFilter === true ? 'active' : ''}`;
+          openBtn.textContent = 'Open';
+          openBtn.addEventListener('click', () => { recruitFilter = recruitFilter === true ? null : true; updateAndRender(); });
+          recruitList.appendChild(openBtn);
+
+          const closedBtn = document.createElement('button');
+          closedBtn.type = 'button';
+          closedBtn.className = `filter-item ${recruitFilter === false ? 'active' : ''}`;
+          closedBtn.textContent = 'Closed';
+          closedBtn.addEventListener('click', () => { recruitFilter = recruitFilter === false ? null : false; updateAndRender(); });
+          recruitList.appendChild(closedBtn);
+
+          const statusSection = document.createElement('div');
+          statusSection.className = 'filter-section';
+          statusSection.innerHTML = `<div class="filter-title">Project Status</div><div class="filter-list" id="status-list"></div>`;
+          sidebar.appendChild(statusSection);
+
+          const statusList = statusSection.querySelector('#status-list');
+          const statusAllBtn = document.createElement('button');
+          statusAllBtn.type = 'button';
+          statusAllBtn.className = `filter-item ${selectedStatus === '' ? 'active' : ''}`;
+          statusAllBtn.textContent = 'All';
+          statusAllBtn.addEventListener('click', () => { selectedStatus = ''; updateAndRender(); });
+          statusList.appendChild(statusAllBtn);
+
+          const activeStatusBtn = document.createElement('button');
+          activeStatusBtn.type = 'button';
+          activeStatusBtn.className = `filter-item ${selectedStatus === 'active' ? 'active' : ''}`;
+          activeStatusBtn.textContent = 'Active';
+          activeStatusBtn.addEventListener('click', () => { selectedStatus = selectedStatus === 'active' ? '' : 'active'; updateAndRender(); });
+          statusList.appendChild(activeStatusBtn);
+
+          const newStatusBtn = document.createElement('button');
+          newStatusBtn.type = 'button';
+          newStatusBtn.className = `filter-item ${selectedStatus === 'new' ? 'active' : ''}`;
+          newStatusBtn.textContent = 'New';
+          newStatusBtn.addEventListener('click', () => { selectedStatus = selectedStatus === 'new' ? '' : 'new'; updateAndRender(); });
+          statusList.appendChild(newStatusBtn);
+
+          // Categories (tags) - derived from projects after applying faculty, status, & recruit filters
+          const tagPool = projects.filter(p => (!selectedFaculties.length || p.faculty.some(f => selectedFaculties.includes(f))) && (recruitFilter === null || p.recruiting === recruitFilter) && (!selectedStatus || p.status.toLowerCase() === selectedStatus));
+          const tags = [...new Set(tagPool.flatMap(p => p.tags))].sort();
+
+          const tagSection = document.createElement('div');
+          tagSection.className = 'filter-section';
+          tagSection.innerHTML = `<div class="filter-title">Categories</div><div class="filter-list" id="tag-list"></div>`;
+          sidebar.appendChild(tagSection);
+
+          const tagList = tagSection.querySelector('#tag-list');
+          const allTagBtn = document.createElement('button');
+          allTagBtn.type = 'button';
+          allTagBtn.className = `filter-item ${selectedTags.length ? '' : 'active'}`;
+          allTagBtn.textContent = 'All';
+          allTagBtn.addEventListener('click', () => { selectedTags = []; updateAndRender(); });
+          tagList.appendChild(allTagBtn);
+
+          tags.forEach((t) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `filter-item ${selectedTags.includes(t) ? 'active' : ''}`;
+            btn.textContent = t;
+            btn.addEventListener('click', () => {
+              if (selectedTags.includes(t)) selectedTags = selectedTags.filter(x => x !== t);
+              else selectedTags.push(t);
+              updateAndRender();
+            });
+            tagList.appendChild(btn);
+          });
+        }
+
+        function updateAndRender() {
+          renderSidebarFilters(allProjects);
+          renderProjects();
+        }
+
+      function getFilteredProjects() {
+        return allProjects.filter((project) => {
+          if (selectedTags.length && !project.tags.some(t => selectedTags.includes(t))) return false;
+          if (selectedFaculties.length && !project.faculty.some(f => selectedFaculties.includes(f))) return false;
+          if (recruitFilter !== null && project.recruiting !== recruitFilter) return false;
+          if (selectedStatus && project.status.toLowerCase() !== selectedStatus) return false;
+          return true;
+        });
+      }
+
+      function renderProjects() {
+        const filtered = getFilteredProjects();
+        projectsGrid.innerHTML = '';
+
+        if (!filtered.length) {
+          const empty = document.createElement('div');
+          empty.className = 'empty-state';
+          empty.innerHTML = '<strong>No public projects match your search yet.</strong><div>Try another keyword or tag.</div>';
+          projectsGrid.appendChild(empty);
+          return;
+        }
+
+        filtered.forEach((project) => {
+          const card = document.createElement('button');
+          card.className = 'project-card';
+          card.type = 'button';
+          card.innerHTML = `
+            <div class="project-image" style="background: linear-gradient(135deg, ${project.accent[0]}, ${project.accent[1]});">
+              <div class="card-hover"><p>${project.summary || 'See the full metadata in the popup.'}</p></div>
+              <div class="project-meta">
+                <span class="status-pill">${project.status || 'Status available'}</span>
+                <h3 class="project-title">${project.name}</h3>
+              </div>
+              <span class="open-icon">↗</span>
+            </div>
+          `;
+          card.addEventListener('click', () => openModal(project));
+          projectsGrid.appendChild(card);
+        });
+      }
+
+      function renderDetailGroup(title, items) {
+        if (!items.length) return '';
+        return `
+          <div class="detail-group">
+            <h3>${title}</h3>
+            <ul class="detail-list">
+              ${items.map((item) => `<li>${item}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      }
+
+      function renderLinks(links) {
+        if (!links.length) return '';
+        return `
+          <div class="detail-group">
+            <h3>Links</h3>
+            <div class="link-list">
+              ${links.map((link) => `<a href="${link.value}" target="_blank" rel="noreferrer">${link.label}</a>`).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      function setActiveTag(tag) {
+        activeTag = activeTag === tag ? '' : tag;
+        updateAndRender();
+        modal.hidden = true;
+      }
+
+      function toggleTagSelection(tag) {
+        if (selectedTags.includes(tag)) selectedTags = selectedTags.filter(x => x !== tag);
+        else selectedTags.push(tag);
+        updateAndRender();
+        modal.hidden = true;
+      }
+
+      function renderModalTags(tags) {
+        if (!tags || !tags.length) return '';
+        return `
+          <div class="detail-group">
+            <h3>Tags</h3>
+            <div class="link-list">
+              ${tags.map((tag) => `<button type="button" class="tag-chip" onclick="toggleTagSelection('${String(tag).replace(/'/g, "\\'" )}')">${tag}</button>`).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      function openModal(project) {
+        modal.hidden = false;
+        let summaryBlock = '';
+        if (project.summary) {
+          const paras = String(project.summary).split(/\n\s*\n/).map(p => `<p>${p}</p>`).join('');
+          summaryBlock = paras;
+        }
+        modalContent.innerHTML = `
+          <h2 id="modal-title">${project.name}</h2>
+          ${summaryBlock}
+          ${project.status ? `<div class="status-pill modal-status">${project.status}</div>` : ''}
+          ${renderDetailGroup('Faculty', project.faculty)}
+          ${renderDetailGroup('Researchers', project.researchers)}
+          ${renderDetailGroup('Advisors', project.advisors)}
+          ${renderModalTags(project.tags)}
+          ${renderLinks(project.links)}
+        `;
+      }
+
+      modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+          modal.hidden = true;
+        }
+      });
+
+      document.querySelector('.modal-close').addEventListener('click', () => {
+        modal.hidden = true;
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          modal.hidden = true;
+        }
+      });
+
+      async function loadProjects() {
+        try {
+          const manifestResponse = await fetch(manifestPath);
+          if (!manifestResponse.ok) throw new Error('Manifest not found');
+          const manifest = await manifestResponse.json();
+          const projectFiles = Array.isArray(manifest.projects) ? manifest.projects : [];
+
+          const loadedProjects = await Promise.all(projectFiles.map(async (fileName) => {
+            const response = await fetch(`./projects/${fileName}`);
+            if (!response.ok) return null;
+            const yamlText = await response.text();
+            const parsed = parseSimpleYaml(yamlText);
+            return parsed;
+          }));
+
+          allProjects = loadedProjects.filter(Boolean).map(buildProject).filter(isPublicProject).sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
+          // initialize filters and render
+          selectedFaculties = [];
+          selectedTags = [];
+          selectedStatus = '';
+          recruitFilter = null;
+          activeTag = '';
+          updateAndRender();
+        } catch (error) {
+          console.error(error);
+          projectsGrid.innerHTML = '<div class="empty-state">The project explorer could not load the YAML metadata. Please confirm the repo files are available.</div>';
+        }
+      }
+
+      loadProjects();
+    </script>
+  </body>
+</html>
