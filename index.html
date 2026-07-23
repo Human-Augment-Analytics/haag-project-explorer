@@ -1,819 +1,380 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HAAG Project Explorer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-      :root {
-        color-scheme: light;
-        --accent: #7c5a22;
-        --accent-2: #b1864b;
-        --surface: #f4efe6;
-        --surface-muted: #e8dfd1;
-        --border: rgba(76, 63, 50, 0.18);
-        --text: #2b2722;
-        --text-muted: #6f6658;
-        --shadow: 0 24px 60px rgba(37, 31, 24, 0.12);
-      }
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Human-Augmented Analytics Group | Georgia Tech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #003057;
+    --navy-light: #0C4A7A;
+    --gold: #B3A369;
+    --gold-mid: #A4925A;
+    --gold-dark: #857437;
+    --paper: #FAFAF8;
+    --ink: #1B1F23;
+    --mute: #5B6670;
+    --line: #E2E5E8;
+    --card: #FFFFFF;
+    --green-bg: #E9F3EA;
+    --green-ink: #2E7D4F;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+  a { color: inherit; }
 
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        font-family: 'Roboto', Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        color: var(--text);
-        background: #ffffff;
-        line-height: 1.6;
-      }
+  /* ---------- Shared chrome (matches recruitment / team-matching pages) ---------- */
+  .gt-utility {
+    background: var(--navy); padding: 7px 24px; font-size: 11.5px; color: #BFD1DE;
+    display: flex; justify-content: flex-end; gap: 18px; letter-spacing: 0.02em;
+  }
+  .gt-utility a { text-decoration: none; color: #BFD1DE; }
+  .gt-utility a:hover { color: var(--gold); }
 
-      .page {
-        max-width: 1220px;
-        margin: 0 auto;
-        padding: 2.2rem 1rem 3rem;
-      }
+  .nav-bar { background: var(--card); border-bottom: 1px solid var(--line); box-shadow: 0 1px 0 rgba(0,0,0,0.03); }
+  .nav-inner { max-width: 1220px; margin: 0 auto; display: flex; flex-wrap: nowrap; overflow-x: auto; padding: 0 20px; }
+  .nav-inner a {
+    display: block; padding: 13px 11px; font-size: 11.5px; font-weight: 700; text-decoration: none;
+    color: var(--mute); letter-spacing: 0.01em; border-bottom: 3px solid transparent; white-space: nowrap;
+  }
+  .nav-inner a:hover { color: var(--navy); }
+  .nav-inner a.current { color: var(--navy); border-bottom-color: var(--gold); }
 
-      .toolbar {
-        display: none;
-      }
+  .gt-footer { background: var(--navy); color: #C7D3DB; margin-top: 40px; }
+  .gt-footer-inner { max-width: 1080px; margin: 0 auto; padding: 40px 24px 20px; display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 30px; }
+  @media (max-width: 760px) { .gt-footer-inner { grid-template-columns: 1fr 1fr; } }
+  .gt-footer h4 { font-family: "Archivo", sans-serif; color: #fff; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 12px; }
+  .gt-footer p { font-size: 12.5px; line-height: 1.7; margin: 0; color: #AFC1CE; }
+  .gt-footer ul { list-style: none; padding: 0; margin: 0; }
+  .gt-footer li { margin-bottom: 8px; }
+  .gt-footer a { font-size: 12.5px; color: #AFC1CE; text-decoration: none; }
+  .gt-footer a:hover { color: var(--gold); }
+  .gt-footer-bottom { border-top: 1px solid rgba(255,255,255,0.12); padding: 16px 24px; text-align: center; font-size: 11px; color: #7E97A8; }
 
-      .tag-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
-      }
+  /* ---------- Hero ---------- */
+  .hero {
+    background: linear-gradient(120deg, #002544 0%, #003057 55%, #0C4A7A 100%);
+    padding: 72px 24px 100px; position: relative; overflow: hidden; text-align: center;
+  }
+  .hero::after {
+    content: ""; position: absolute; right: -80px; top: -80px;
+    width: 340px; height: 340px; border: 2px solid rgba(179,163,105,0.18); border-radius: 50%;
+  }
+  .hero::before {
+    content: ""; position: absolute; left: -60px; bottom: -100px;
+    width: 260px; height: 260px; border: 2px solid rgba(179,163,105,0.12); border-radius: 50%;
+  }
+  .hero-inner { max-width: 780px; margin: 0 auto; position: relative; z-index: 1; }
+  .hero .eyebrow {
+    font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: 0.16em;
+    color: var(--gold); text-transform: uppercase; font-weight: 600; margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: "Archivo", sans-serif; font-weight: 800; font-size: 42px; line-height: 1.15;
+    color: #fff; margin: 0 0 16px; letter-spacing: -0.01em;
+  }
+  .hero p.sub { color: #C7D6E0; font-size: 16px; line-height: 1.6; max-width: 560px; margin: 0 auto 30px; }
+  .hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; font-family: "Helvetica Neue", sans-serif; font-size: 14.5px; font-weight: 700;
+    padding: 13px 26px; border-radius: 24px; text-decoration: none;
+  }
+  .btn-gold { background: var(--gold); color: var(--navy); }
+  .btn-gold:hover { background: var(--gold-mid); }
+  .btn-outline { border: 1.5px solid var(--gold); color: #fff; }
+  .btn-outline:hover { background: rgba(179,163,105,0.1); }
 
-      /* Layout for sidebar + main content */
-      .explorer {
-        display: flex;
-        gap: 1rem;
-        align-items: flex-start;
-      }
+  /* ---------- Stat row (reused verbatim pattern from team-matching.html) ---------- */
+  .stat-wrap { max-width: 1080px; margin: -56px auto 0; padding: 0 24px; position: relative; z-index: 2; }
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media (max-width: 760px) { .stat-row { grid-template-columns: repeat(2, 1fr); } }
+  .stat-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 20px 20px 18px;
+    border-top: 3px solid var(--gold); box-shadow: 0 6px 20px rgba(0,48,87,0.06);
+  }
+  .stat-card .num { font-family: "Archivo", sans-serif; font-weight: 800; font-size: 30px; color: var(--navy); }
+  .stat-card .lbl { font-size: 11px; color: var(--mute); margin: 3px 0 10px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+  .pill { display: inline-block; font-family: "IBM Plex Mono", monospace; font-size: 10.5px; font-weight: 600; padding: 3px 10px; border-radius: 10px; background: var(--green-bg); color: var(--green-ink); }
 
-      #filter-sidebar {
-        width: 260px;
-        flex: 0 0 260px;
-      }
+  /* ---------- Section shell ---------- */
+  .section { max-width: 1080px; margin: 0 auto; padding: 70px 24px; }
+  .section-head { text-align: center; max-width: 640px; margin: 0 auto 46px; }
+  .section .eyebrow {
+    font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: 0.16em;
+    color: var(--gold-dark); text-transform: uppercase; font-weight: 600; margin-bottom: 12px;
+  }
+  .section h2 { font-family: "Archivo", sans-serif; font-weight: 800; font-size: 28px; color: var(--navy); margin: 0; }
+  .intro-text { text-align: center; color: var(--mute); font-size: 15px; line-height: 1.6; max-width: 680px; margin: 0 auto 60px; }
 
-      .main-area {
-        flex: 1 1 0;
-        min-width: 0;
-      }
+  /* ---------- Mission grid ---------- */
+  .mission-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  @media (max-width: 900px) { .mission-grid { grid-template-columns: repeat(2, 1fr); } }
+  .mission-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 22px 20px;
+    border-top: 3px solid var(--gold);
+  }
+  .mission-card .idx {
+    width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: "IBM Plex Mono", monospace; font-size: 12px; font-weight: 700; color: var(--gold-dark);
+    margin-bottom: 14px;
+  }
+  .mission-card h3 { font-family: "Archivo", sans-serif; font-weight: 700; font-size: 15.5px; color: var(--navy); margin: 0 0 8px; }
+  .mission-card p { font-size: 12.5px; color: var(--mute); line-height: 1.55; margin: 0; }
 
-      .filter-section {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 0.75rem;
-        padding: 0.75rem;
-        margin-bottom: 0.8rem;
-      }
+  /* ---------- Programs grid ---------- */
+  .programs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 900px) { .programs-grid { grid-template-columns: 1fr; } }
+  .program-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 20px 22px; border-left: 4px solid var(--gold); }
+  .program-card .eyebrow2 {
+    font-family: "IBM Plex Mono", monospace; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--mute); font-weight: 600; margin-bottom: 10px; display: block;
+  }
+  .program-card h3 { font-family: "Archivo", sans-serif; font-weight: 700; font-size: 15.5px; color: var(--navy); margin: 0 0 8px; line-height: 1.3; }
+  .program-card p { font-size: 12.5px; color: var(--mute); line-height: 1.55; margin: 0 0 14px; }
+  .cta-link {
+    display: inline-block; font-size: 12px; font-weight: 700; color: var(--navy);
+    text-decoration: none; border-bottom: 2px solid var(--gold); padding-bottom: 1px;
+  }
+  .cta-link:hover { color: var(--navy-light); }
 
-      .filter-title {
-        font-weight: 700;
-        margin: 0 0 0.5rem 0;
-        font-size: 0.95rem;
-        color: var(--text);
-      }
+  /* ---------- Timeline (same component as recruitment.html, reused) ---------- */
+  .timeline { position: relative; max-width: 760px; margin: 0 auto; }
+  .phase-row { display: flex; gap: 18px; position: relative; padding-bottom: 26px; }
+  .phase-row:last-child { padding-bottom: 0; }
+  .rail { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 40px; }
+  .dot {
+    width: 40px; height: 40px; border-radius: 6px; display: flex; align-items: center; justify-content: center;
+    font-family: "IBM Plex Mono", monospace; font-size: 11px; font-weight: 700; color: #fff;
+    background: var(--gold-dark); z-index: 1;
+  }
+  .dot.current { background: var(--navy); box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--gold); }
+  .line { width: 2px; flex: 1; background: var(--gold-dark); margin-top: 3px; }
+  .phase-content { padding-top: 5px; }
+  .phase-label { font-size: 15.5px; font-weight: 700; color: var(--gold-dark); }
+  .phase-row.current .phase-label { color: var(--navy); }
+  .phase-desc { font-size: 13px; color: var(--mute); margin-top: 4px; max-width: 480px; line-height: 1.45; }
+  .badge {
+    display: inline-block; font-family: "IBM Plex Mono", monospace; font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 3px; margin-left: 8px; vertical-align: middle; text-transform: uppercase; letter-spacing: 0.04em;
+    background: var(--gold); color: var(--navy);
+  }
+</style>
+</head>
+<body>
 
-      .filter-list { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  <div class="gt-utility">
+    <a href="#">Georgia Institute of Technology</a>
+    <a href="#">GT Directory</a>
+    <a href="#">Campus Map</a>
+  </div>
 
-      .filter-item {
-        border: 1px solid var(--border);
-        border-radius: 999px;
-        background: var(--surface);
-        padding: 0.4rem 0.7rem;
-        cursor: pointer;
-        color: var(--text-muted);
-        font-size: 0.9rem;
-      }
+  <nav class="nav-bar">
+    <div class="nav-inner">
+      <a href="index.html" class="current">HAAG (Home)</a>
+      <a href="people.html">People</a>
+      <a href="#">Faculty Affiliates</a>
+      <a href="#">PhD / Post-Doc</a>
+      <a href="#">Data Science Research</a>
+      <a href="#">Project Management</a>
+      <a href="projects.html">HAAG Project Explorer</a>
+      <a href="recruitment.html">Recruitment Status</a>
+    </div>
+  </nav>
 
-      .filter-item.active { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: white; border-color: transparent; }
-
-      .tag-chip {
-        border: 1px solid var(--border);
-        border-radius: 999px;
-        background: var(--surface);
-        padding: 0.45rem 0.8rem;
-        cursor: pointer;
-        color: var(--text-muted);
-        font-size: 0.9rem;
-      }
-
-      .tag-chip.active {
-        background: linear-gradient(135deg, var(--accent), var(--accent-2));
-        color: white;
-        border-color: transparent;
-      }
-
-      .results-meta {
-        color: var(--text-muted);
-        margin-bottom: 0.9rem;
-      }
-
-      .project-grid {
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      }
-
-      .project-card {
-        border: none;
-        border-radius: 1.2rem;
-        overflow: hidden;
-        background: #16130f;
-        box-shadow: 0 30px 70px rgba(37, 31, 24, 0.12);
-        cursor: pointer;
-        padding: 0;
-        text-align: left;
-        min-height: 0;
-      }
-
-      .project-card:hover {
-        transform: translateY(-4px);
-        transition: transform 220ms ease;
-      }
-
-      .project-image {
-        position: relative;
-        width: 100%;
-        aspect-ratio: 1.05 / 1;
-        display: flex;
-        align-items: flex-end;
-        padding: 1rem;
-        background: linear-gradient(135deg, var(--accent), var(--accent-2));
-        transition: transform 220ms ease;
-      }
-
-      .project-image::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(180deg, rgba(14, 10, 7, 0.08) 0%, rgba(7, 4, 2, 0.7) 100%);
-      }
-
-      .project-title {
-        position: relative;
-        z-index: 1;
-        color: white;
-        font-size: clamp(1.15rem, 1.9vw, 1.5rem);
-        font-weight: 700;
-        margin: 0;
-        letter-spacing: -0.02em;
-        font-family: 'Roboto Condensed', 'Roboto', sans-serif;
-      }
-
-      .project-meta {
-        position: relative;
-        z-index: 1;
-        width: 100%;
-      }
-
-      .open-icon {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        z-index: 2;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 2.2rem;
-        height: 2.2rem;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.12);
-        color: white;
-        font-size: 0.95rem;
-      }
-
-      .project-body {
-        padding: 0.8rem 1rem 1rem;
-      }
-
-      .project-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.35rem;
-        margin-top: 0.9rem;
-      }
-
-      .mini-tag {
-        background: rgba(255, 255, 255, 0.12);
-        color: rgba(255, 255, 255, 0.9);
-        padding: 0.32rem 0.65rem;
-        border-radius: 999px;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-
-      .status-pill {
-        display: inline-block;
-        margin-top: 0.6rem;
-        margin-bottom: 0.85rem;
-        font-size: 0.8rem;
-        border-radius: 999px;
-        padding: 0.28rem 0.65rem;
-        background: rgba(255, 255, 255, 0.12);
-        color: rgba(255, 255, 255, 0.9);
-        font-weight: 600;
-        letter-spacing: 0.02em;
-      }
-
-      .card-hover {
-        position: absolute;
-        inset: 0;
-        background: rgba(2, 6, 23, 0.85);
-        color: white;
-        padding: 1.2rem;
-        display: flex;
-        align-items: flex-end;
-        opacity: 0;
-        transition: opacity 180ms ease;
-        z-index: 2;
-      }
-
-      .card-hover::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 3rem;
-        pointer-events: none;
-        background: linear-gradient(transparent, rgba(2, 6, 23, 0.95));
-      }
-
-      .project-card:hover .card-hover {
-        opacity: 1;
-      }
-
-      .card-hover p {
-        margin: 0;
-        font-size: 0.95rem;
-        line-height: 1.6;
-        font-family: 'Roboto', sans-serif;
-        display: -webkit-box;
-        -webkit-line-clamp: 7;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-
-      .status-pill {
-        display: inline-block;
-        margin-top: 0.6rem;
-        font-size: 0.8rem;
-        border-radius: 999px;
-        padding: 0.28rem 0.65rem;
-        background: rgba(255, 255, 255, 0.12);
-        color: rgba(255, 255, 255, 0.9);
-        font-weight: 600;
-        letter-spacing: 0.02em;
-      }
-
-      .empty-state {
-        border: 1px dashed var(--border);
-        border-radius: 1rem;
-        padding: 2rem;
-        text-align: center;
-        color: var(--text-muted);
-        background: var(--surface);
-      }
-
-      .modal {
-        position: fixed;
-        inset: 0;
-        background: rgba(2, 6, 23, 0.65);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 1rem;
-        z-index: 30;
-      }
-
-      .modal[hidden] { display: none; }
-
-      .modal-card {
-        width: min(760px, 100%);
-        max-height: 85vh;
-        overflow: auto;
-        background: var(--surface);
-        border-radius: 1rem;
-        padding: 1.3rem;
-        box-shadow: var(--shadow);
-        position: relative;
-      }
-
-      .modal-card .status-pill {
-        background: var(--surface-muted);
-        color: var(--text);
-      }
-
-      .modal-status {
-        background: var(--surface-muted);
-        color: var(--text);
-      }
-
-      .modal-close {
-        position: absolute;
-        top: 0.75rem;
-        right: 0.75rem;
-        border: 0;
-        background: var(--surface-muted);
-        color: var(--text);
-        border-radius: 999px;
-        width: 2rem;
-        height: 2rem;
-        cursor: pointer;
-      }
-
-      .modal-card h2 { margin: 0 0 0.4rem; }
-      .modal-card p { color: var(--text-muted); font-family: 'Roboto', sans-serif; }
-      .detail-list { margin: 0.6rem 0 0; padding-left: 1rem; }
-      .detail-list li { margin-bottom: 0.35rem; }
-      .detail-group { margin-top: 1rem; }
-      .detail-group h3 { margin-bottom: 0.35rem; font-size: 1rem; }
-      .link-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.55rem; }
-      .link-list a {
-        text-decoration: none;
-        padding: 0.45rem 0.7rem;
-        border-radius: 999px;
-        background: var(--surface-muted);
-        color: var(--accent);
-      }
-
-      @media (max-width: 700px) {
-        .page { padding: 1rem 0.8rem 2rem; }
-        .hero { padding: 1rem; }
-        #filter-sidebar { display: none; }
-      }
-    </style>
-  </head>
-  <body>
-    <main class="page">
-      <div class="explorer">
-        <aside id="filter-sidebar"></aside>
-        <div class="main-area">
-          <div id="project-grid" class="project-grid"></div>
-        </div>
-      </div>
-    </main>
-
-    <div id="project-modal" class="modal" hidden>
-      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-        <button class="modal-close" type="button" aria-label="Close popup">×</button>
-        <div id="modal-content"></div>
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">Human-Augmented Analytics Group</div>
+      <h1>Advancing interdisciplinary data science through human-AI partnership</h1>
+      <p class="sub">An experimental virtual laboratory connecting researchers and domain experts to democratize AI implementation across disciplines.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-gold" href="people.html">Become a Researcher &rarr;</a>
+        <a class="btn btn-outline" href="#mission">Explore Our Mission</a>
       </div>
     </div>
+  </div>
 
-    <script>
-      const manifestPath = './projects/manifest.json';
-      const projectsGrid = document.getElementById('project-grid');
-      const modal = document.getElementById('project-modal');
-      const modalContent = document.getElementById('modal-content');
+  <!-- ============ STAT ROW (overlaps hero, same pattern as team-matching.html) ============ -->
+  <div class="stat-wrap">
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="num">125</div>
+        <div class="lbl">Active Researchers</div>
+        <span class="pill">since May 2024</span>
+      </div>
+      <div class="stat-card">
+        <div class="num">733%</div>
+        <div class="lbl">Growth Since Founding</div>
+        <span class="pill">from 15 members</span>
+      </div>
+      <div class="stat-card">
+        <div class="num">4</div>
+        <div class="lbl">Core Initiatives</div>
+        <span class="pill">fully active</span>
+      </div>
+      <div class="stat-card">
+        <div class="num">2024</div>
+        <div class="lbl">Founded</div>
+        <span class="pill">by Dr. Breanna Shi</span>
+      </div>
+    </div>
+  </div>
 
-      let allProjects = [];
-      let activeTag = '';
-      let selectedFaculties = []; // multi-select faculty
-      let selectedTags = []; // multi-select categories/tags
-      let selectedStatus = ''; // filter by project status
-      let recruitFilter = null; // null = any, true = open, false = closed
+  <!-- ============ MISSION ============ -->
+  <div class="section" id="mission">
+    <p class="intro-text">As AI transforms every field of science, partnerships between domain experts and AI practitioners are essential to ethical, impactful research that serves the greater good.</p>
+    <div class="section-head">
+      <div class="eyebrow">Our Mission</div>
+      <h2>Four ways HAAG serves the research community</h2>
+    </div>
+    <div class="mission-grid">
+      <div class="mission-card">
+        <div class="idx">01</div>
+        <h3>Applied Research Education</h3>
+        <p>Training data scientists through hands-on interdisciplinary projects for academic credit.</p>
+      </div>
+      <div class="mission-card">
+        <div class="idx">02</div>
+        <h3>Leadership &amp; Project Management Development</h3>
+        <p>Preparing future faculty and PhD researchers with experience-based training.</p>
+      </div>
+      <div class="mission-card">
+        <div class="idx">03</div>
+        <h3>Cross-Disciplinary Collaboration</h3>
+        <p>Building sustainable partnerships between computational and domain experts.</p>
+      </div>
+      <div class="mission-card">
+        <div class="idx">04</div>
+        <h3>Research Acceleration</h3>
+        <p>Expanding faculty capacity through virtual partnerships that minimize advisor fatigue.</p>
+      </div>
+    </div>
+  </div>
 
-      function normalizeText(value) {
-        return String(value || '').replace(/\s+/g, ' ').trim();
-      }
+  <!-- ============ PROGRAMS ============ -->
+  <div class="section" style="padding-top:0;">
+    <div class="section-head">
+      <div class="eyebrow">Our Programs</div>
+      <h2>Pathways for researchers at every stage</h2>
+    </div>
+    <div class="programs-grid">
+      <div class="program-card">
+        <span class="eyebrow2">OMSCS Students &middot; CS 8903 &amp; CS 6999</span>
+        <h3>Interdisciplinary Data Science Research for Social Good</h3>
+        <p>HAAG's flagship program. Earn up to 3 semesters of academic credit for interdisciplinary projects.</p>
+        <a class="cta-link" href="#">Learn more &rarr;</a>
+      </div>
+      <div class="program-card">
+        <span class="eyebrow2">Faculty &middot; Any Global Institution</span>
+        <h3>Faculty Affiliates for Transdisciplinary Expansion (FATE)</h3>
+        <p>A community of practice for faculty advancing interdisciplinary science teams.</p>
+        <a class="cta-link" href="#">Learn more &rarr;</a>
+      </div>
+      <div class="program-card">
+        <span class="eyebrow2">MBA &amp; OMSCS Students &middot; MGT 8803 &amp; CS 8903</span>
+        <h3>Research Operations Project Management Practicum</h3>
+        <p>MBA and computing students partner to manage real AI research projects.</p>
+        <a class="cta-link" href="#">Learn more &rarr;</a>
+      </div>
+      <div class="program-card">
+        <span class="eyebrow2">PhD &amp; Postdoc &middot; Any Global Institute</span>
+        <h3>Cross-Disciplinary Leadership Education for Advanced Researchers (CLEAR)</h3>
+        <p>HAAG's premier leadership program for PhDs and postdocs in a live research environment.</p>
+        <a class="cta-link" href="#">Learn more &rarr;</a>
+      </div>
+      <div class="program-card">
+        <span class="eyebrow2">Certificate Program &middot; Undergraduate</span>
+        <h3>Undergraduate Certificate in Experience-Based Teaching</h3>
+        <p>Hands-on experience in pedagogy, research methodology, and collaborative project management.</p>
+        <a class="cta-link" href="#">Learn more &rarr;</a>
+      </div>
+      <div class="program-card">
+        <span class="eyebrow2">Program &amp; Departments &middot; Community Partners</span>
+        <h3>Transformative &amp; Outcome Driven Partnerships Interfacing Communities (TOPIC)</h3>
+        <p>Promoting outreach led jointly by HAAG and community partners for mutual, lasting impact.</p>
+        <a class="cta-link" href="#">Learn more &rarr;</a>
+      </div>
+    </div>
+  </div>
 
-      function toList(value) {
-        if (!Array.isArray(value)) return [];
-        return value.filter((item) => normalizeText(item).length > 0);
-      }
+  <!-- ============ GROWTH TIMELINE (reuses recruitment.html's dot/line component) ============ -->
+  <div class="section" style="padding-top:0;">
+    <div class="section-head">
+      <div class="eyebrow">Milestone Achievement</div>
+      <h2>HAAG's growth since founding</h2>
+    </div>
+    <div class="timeline">
+      <div class="phase-row">
+        <div class="rail"><div class="dot">&#10003;</div><div class="line"></div></div>
+        <div class="phase-content">
+          <span class="phase-label">May 2024 &mdash; Founded</span>
+          <div class="phase-desc">HAAG launches as an experimental virtual laboratory with 15 founding members.</div>
+        </div>
+      </div>
+      <div class="phase-row">
+        <div class="rail"><div class="dot">&#10003;</div><div class="line"></div></div>
+        <div class="phase-content">
+          <span class="phase-label">Four Core Initiatives Established</span>
+          <div class="phase-desc">Applied Research Education, Leadership Development, Cross-Disciplinary Collaboration, and Research Acceleration formalized.</div>
+        </div>
+      </div>
+      <div class="phase-row current">
+        <div class="rail"><div class="dot current">Now</div></div>
+        <div class="phase-content">
+          <span class="phase-label">January 2025 &mdash; 125 Researchers<span class="badge">Current</span></span>
+          <div class="phase-desc">733% growth since founding &mdash; from 15 founding members to a thriving, multi-disciplinary research community.</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      function isPublicProject(project) {
-        return String(project.visibility || '').toLowerCase() === 'public';
-      }
+  <footer class="gt-footer">
+    <div class="gt-footer-inner">
+      <div>
+        <h4>Georgia Institute of Technology</h4>
+        <p>North Avenue<br>Atlanta, GA 30332<br>+1 404.894.2000</p>
+      </div>
+      <div>
+        <h4>General</h4>
+        <ul>
+          <li><a href="#">Directory</a></li>
+          <li><a href="#">Employment</a></li>
+          <li><a href="#">Emergency Information</a></li>
+          <li><a href="#">Accessibility</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal &amp; Privacy</h4>
+        <ul>
+          <li><a href="#">Legal &amp; Privacy Information</a></li>
+          <li><a href="#">Human Trafficking Notice</a></li>
+          <li><a href="#">Title IX / Sexual Misconduct</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>HAAG</h4>
+        <ul>
+          <li><a href="index.html">Our Mission</a></li>
+          <li><a href="people.html">People</a></li>
+          <li><a href="recruitment.html">Recruitment Status</a></li>
+          <li><a href="team-matching.html">Team Matching Results</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="gt-footer-bottom">&copy; 2026 Georgia Institute of Technology &middot; Human-Augmented Analytics Group</div>
+  </footer>
 
-      function createAccent(projectName) {
-        const palette = [
-          ['#0f766e', '#2563eb'],
-          ['#7c3aed', '#ec4899'],
-          ['#ea580c', '#f59e0b'],
-          ['#2563eb', '#06b6d4'],
-          ['#15803d', '#4ade80'],
-          ['#7c2d12', '#fb923c']
-        ];
-        let hash = 0;
-        for (let i = 0; i < projectName.length; i += 1) {
-          hash = (hash * 31 + projectName.charCodeAt(i)) % palette.length;
-        }
-        return palette[hash];
-      }
-
-      function stripInlineComment(value) {
-        const hashIndex = value.indexOf('#');
-        return hashIndex >= 0 ? value.slice(0, hashIndex) : value;
-      }
-
-      function parseScalar(value) {
-        const cleaned = stripInlineComment(value).trim();
-        if (!cleaned || cleaned === 'null') return null;
-        return cleaned;
-      }
-
-      function parseSimpleYaml(yamlText) {
-        const result = {};
-        let currentListKey = null;
-        let currentObjectKey = null;
-        let blockKey = null;
-        let blockLines = [];
-
-        const lines = yamlText.replace(/\r\n/g, '\n').split('\n');
-        lines.forEach((rawLine) => {
-          const line = rawLine.replace(/\t/g, '    ');
-          if (blockKey) {
-            const indent = line.match(/^\s*/)[0].length;
-            if (line.trim() === '') {
-              // preserve empty lines inside a folded block as paragraph separators
-              blockLines.push('');
-              return;
-            }
-            if (indent > 0) {
-              blockLines.push(line.trim());
-              return;
-            }
-            result[blockKey] = blockLines.join('\n').trim();
-            blockKey = null;
-            blockLines = [];
-          }
-
-          if (!line.trim()) return;
-          if (blockKey) return;
-
-          const trimmed = line.trim();
-          if (trimmed.startsWith('- ')) {
-            if (currentListKey) {
-              result[currentListKey].push(parseScalar(trimmed.slice(2)));
-            }
-            return;
-          }
-
-          const indent = line.match(/^\s*/)[0].length;
-          if (indent > 0 && currentObjectKey && trimmed.includes(':')) {
-            const [key, rawValue] = trimmed.split(/:\s*/, 2);
-            if (rawValue !== undefined) {
-              result[currentObjectKey][key] = parseScalar(rawValue);
-            }
-            return;
-          }
-
-          const match = trimmed.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
-          if (!match) return;
-
-          const [, key, rawValue] = match;
-          if (key === 'summary' && rawValue === '>') {
-            blockKey = 'summary';
-            blockLines = [];
-            currentListKey = null;
-            currentObjectKey = null;
-            return;
-          }
-
-          if (key === 'faculty' || key === 'researchers' || key === 'advisors' || key === 'tags') {
-            result[key] = [];
-            currentListKey = key;
-            currentObjectKey = null;
-            return;
-          }
-
-          if (key === 'links') {
-            result.links = {};
-            currentObjectKey = 'links';
-            currentListKey = null;
-            return;
-          }
-
-          if (rawValue === '') {
-            result[key] = null;
-            currentListKey = null;
-            currentObjectKey = null;
-            return;
-          }
-
-          result[key] = parseScalar(rawValue);
-          currentListKey = null;
-          currentObjectKey = null;
-        });
-
-        if (blockKey) {
-          result[blockKey] = blockLines.join('\n').trim();
-        }
-
-        return result;
-      }
-
-      function buildProject(projectData) {
-        const summary = projectData.summary ? String(projectData.summary).trim() : '';
-        const tags = toList(projectData.tags).map((tag) => normalizeText(tag));
-        const faculty = toList(projectData.faculty).map((person) => normalizeText(person));
-        const researchers = toList(projectData.researchers).map((person) => normalizeText(person));
-        const advisors = toList(projectData.advisors).map((person) => normalizeText(person));
-        const links = projectData.links && typeof projectData.links === 'object'
-          ? Object.entries(projectData.links)
-              .filter(([, value]) => normalizeText(value).length > 0)
-              .map(([label, value]) => ({ label, value }))
-          : [];
-        const [startColor, endColor] = createAccent(projectData.name || 'Project');
-
-        return {
-          id: projectData.id || (projectData.name || 'project').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-          name: normalizeText(projectData.name || 'Untitled project'),
-          status: normalizeText(projectData.status || ''),
-          visibility: normalizeText(projectData.visibility || ''),
-          recruiting: String(projectData.recruiting || '').toLowerCase() === 'true',
-          summary,
-          tags,
-          faculty,
-          researchers,
-          advisors,
-          links,
-          accent: [startColor, endColor]
-        };
-      }
-
-        function renderSidebarFilters(projects) {
-          const sidebar = document.getElementById('filter-sidebar');
-          const faculties = [...new Set(projects.flatMap(p => p.faculty))].sort();
-          sidebar.innerHTML = '';
-
-          const facultySection = document.createElement('div');
-          facultySection.className = 'filter-section';
-          facultySection.innerHTML = `<div class="filter-title">Faculty</div><div class="filter-list" id="faculty-list"></div>`;
-          sidebar.appendChild(facultySection);
-
-          const facultyList = facultySection.querySelector('#faculty-list');
-          const allBtn = document.createElement('button');
-          allBtn.type = 'button';
-          allBtn.className = `filter-item ${selectedFaculties.length ? '' : 'active'}`;
-          allBtn.textContent = 'All';
-          allBtn.addEventListener('click', () => { selectedFaculties = []; updateAndRender(); });
-          facultyList.appendChild(allBtn);
-
-          faculties.forEach((f) => {
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = `filter-item ${selectedFaculties.includes(f) ? 'active' : ''}`;
-            btn.textContent = f;
-            btn.addEventListener('click', () => {
-              if (selectedFaculties.includes(f)) selectedFaculties = selectedFaculties.filter(x => x !== f);
-              else selectedFaculties.push(f);
-              updateAndRender();
-            });
-            facultyList.appendChild(btn);
-          });
-
-          const recruitSection = document.createElement('div');
-          recruitSection.className = 'filter-section';
-          recruitSection.innerHTML = `<div class="filter-title">Recruitment</div><div class="filter-list" id="recruit-list"></div>`;
-          sidebar.appendChild(recruitSection);
-
-          const recruitList = recruitSection.querySelector('#recruit-list');
-          const anyBtn = document.createElement('button');
-          anyBtn.type = 'button';
-          anyBtn.className = `filter-item ${recruitFilter === null ? 'active' : ''}`;
-          anyBtn.textContent = 'Any';
-          anyBtn.addEventListener('click', () => { recruitFilter = null; updateAndRender(); });
-          recruitList.appendChild(anyBtn);
-
-          const openBtn = document.createElement('button');
-          openBtn.type = 'button';
-          openBtn.className = `filter-item ${recruitFilter === true ? 'active' : ''}`;
-          openBtn.textContent = 'Open';
-          openBtn.addEventListener('click', () => { recruitFilter = recruitFilter === true ? null : true; updateAndRender(); });
-          recruitList.appendChild(openBtn);
-
-          const closedBtn = document.createElement('button');
-          closedBtn.type = 'button';
-          closedBtn.className = `filter-item ${recruitFilter === false ? 'active' : ''}`;
-          closedBtn.textContent = 'Closed';
-          closedBtn.addEventListener('click', () => { recruitFilter = recruitFilter === false ? null : false; updateAndRender(); });
-          recruitList.appendChild(closedBtn);
-
-          const statusSection = document.createElement('div');
-          statusSection.className = 'filter-section';
-          statusSection.innerHTML = `<div class="filter-title">Project Status</div><div class="filter-list" id="status-list"></div>`;
-          sidebar.appendChild(statusSection);
-
-          const statusList = statusSection.querySelector('#status-list');
-          const statusAllBtn = document.createElement('button');
-          statusAllBtn.type = 'button';
-          statusAllBtn.className = `filter-item ${selectedStatus === '' ? 'active' : ''}`;
-          statusAllBtn.textContent = 'All';
-          statusAllBtn.addEventListener('click', () => { selectedStatus = ''; updateAndRender(); });
-          statusList.appendChild(statusAllBtn);
-
-          const activeStatusBtn = document.createElement('button');
-          activeStatusBtn.type = 'button';
-          activeStatusBtn.className = `filter-item ${selectedStatus === 'active' ? 'active' : ''}`;
-          activeStatusBtn.textContent = 'Active';
-          activeStatusBtn.addEventListener('click', () => { selectedStatus = selectedStatus === 'active' ? '' : 'active'; updateAndRender(); });
-          statusList.appendChild(activeStatusBtn);
-
-          const newStatusBtn = document.createElement('button');
-          newStatusBtn.type = 'button';
-          newStatusBtn.className = `filter-item ${selectedStatus === 'new' ? 'active' : ''}`;
-          newStatusBtn.textContent = 'New';
-          newStatusBtn.addEventListener('click', () => { selectedStatus = selectedStatus === 'new' ? '' : 'new'; updateAndRender(); });
-          statusList.appendChild(newStatusBtn);
-
-          // Categories (tags) - derived from projects after applying faculty, status, & recruit filters
-          const tagPool = projects.filter(p => (!selectedFaculties.length || p.faculty.some(f => selectedFaculties.includes(f))) && (recruitFilter === null || p.recruiting === recruitFilter) && (!selectedStatus || p.status.toLowerCase() === selectedStatus));
-          const tags = [...new Set(tagPool.flatMap(p => p.tags))].sort();
-
-          const tagSection = document.createElement('div');
-          tagSection.className = 'filter-section';
-          tagSection.innerHTML = `<div class="filter-title">Categories</div><div class="filter-list" id="tag-list"></div>`;
-          sidebar.appendChild(tagSection);
-
-          const tagList = tagSection.querySelector('#tag-list');
-          const allTagBtn = document.createElement('button');
-          allTagBtn.type = 'button';
-          allTagBtn.className = `filter-item ${selectedTags.length ? '' : 'active'}`;
-          allTagBtn.textContent = 'All';
-          allTagBtn.addEventListener('click', () => { selectedTags = []; updateAndRender(); });
-          tagList.appendChild(allTagBtn);
-
-          tags.forEach((t) => {
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = `filter-item ${selectedTags.includes(t) ? 'active' : ''}`;
-            btn.textContent = t;
-            btn.addEventListener('click', () => {
-              if (selectedTags.includes(t)) selectedTags = selectedTags.filter(x => x !== t);
-              else selectedTags.push(t);
-              updateAndRender();
-            });
-            tagList.appendChild(btn);
-          });
-        }
-
-        function updateAndRender() {
-          renderSidebarFilters(allProjects);
-          renderProjects();
-        }
-
-      function getFilteredProjects() {
-        return allProjects.filter((project) => {
-          if (selectedTags.length && !project.tags.some(t => selectedTags.includes(t))) return false;
-          if (selectedFaculties.length && !project.faculty.some(f => selectedFaculties.includes(f))) return false;
-          if (recruitFilter !== null && project.recruiting !== recruitFilter) return false;
-          if (selectedStatus && project.status.toLowerCase() !== selectedStatus) return false;
-          return true;
-        });
-      }
-
-      function renderProjects() {
-        const filtered = getFilteredProjects();
-        projectsGrid.innerHTML = '';
-
-        if (!filtered.length) {
-          const empty = document.createElement('div');
-          empty.className = 'empty-state';
-          empty.innerHTML = '<strong>No public projects match your search yet.</strong><div>Try another keyword or tag.</div>';
-          projectsGrid.appendChild(empty);
-          return;
-        }
-
-        filtered.forEach((project) => {
-          const card = document.createElement('button');
-          card.className = 'project-card';
-          card.type = 'button';
-          card.innerHTML = `
-            <div class="project-image" style="background: linear-gradient(135deg, ${project.accent[0]}, ${project.accent[1]});">
-              <div class="card-hover"><p>${project.summary || 'See the full metadata in the popup.'}</p></div>
-              <div class="project-meta">
-                <span class="status-pill">${project.status || 'Status available'}</span>
-                <h3 class="project-title">${project.name}</h3>
-              </div>
-              <span class="open-icon">↗</span>
-            </div>
-          `;
-          card.addEventListener('click', () => openModal(project));
-          projectsGrid.appendChild(card);
-        });
-      }
-
-      function renderDetailGroup(title, items) {
-        if (!items.length) return '';
-        return `
-          <div class="detail-group">
-            <h3>${title}</h3>
-            <ul class="detail-list">
-              ${items.map((item) => `<li>${item}</li>`).join('')}
-            </ul>
-          </div>
-        `;
-      }
-
-      function renderLinks(links) {
-        if (!links.length) return '';
-        return `
-          <div class="detail-group">
-            <h3>Links</h3>
-            <div class="link-list">
-              ${links.map((link) => `<a href="${link.value}" target="_blank" rel="noreferrer">${link.label}</a>`).join('')}
-            </div>
-          </div>
-        `;
-      }
-
-      function setActiveTag(tag) {
-        activeTag = activeTag === tag ? '' : tag;
-        updateAndRender();
-        modal.hidden = true;
-      }
-
-      function toggleTagSelection(tag) {
-        if (selectedTags.includes(tag)) selectedTags = selectedTags.filter(x => x !== tag);
-        else selectedTags.push(tag);
-        updateAndRender();
-        modal.hidden = true;
-      }
-
-      function renderModalTags(tags) {
-        if (!tags || !tags.length) return '';
-        return `
-          <div class="detail-group">
-            <h3>Tags</h3>
-            <div class="link-list">
-              ${tags.map((tag) => `<button type="button" class="tag-chip" onclick="toggleTagSelection('${String(tag).replace(/'/g, "\\'" )}')">${tag}</button>`).join('')}
-            </div>
-          </div>
-        `;
-      }
-
-      function openModal(project) {
-        modal.hidden = false;
-        let summaryBlock = '';
-        if (project.summary) {
-          const paras = String(project.summary).split(/\n\s*\n/).map(p => `<p>${p}</p>`).join('');
-          summaryBlock = paras;
-        }
-        modalContent.innerHTML = `
-          <h2 id="modal-title">${project.name}</h2>
-          ${summaryBlock}
-          ${project.status ? `<div class="status-pill modal-status">${project.status}</div>` : ''}
-          ${renderDetailGroup('Faculty', project.faculty)}
-          ${renderDetailGroup('Researchers', project.researchers)}
-          ${renderDetailGroup('Advisors', project.advisors)}
-          ${renderModalTags(project.tags)}
-          ${renderLinks(project.links)}
-        `;
-      }
-
-      modal.addEventListener('click', (event) => {
-        if (event.target === modal) {
-          modal.hidden = true;
-        }
-      });
-
-      document.querySelector('.modal-close').addEventListener('click', () => {
-        modal.hidden = true;
-      });
-
-      document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
-          modal.hidden = true;
-        }
-      });
-
-      async function loadProjects() {
-        try {
-          const manifestResponse = await fetch(manifestPath);
-          if (!manifestResponse.ok) throw new Error('Manifest not found');
-          const manifest = await manifestResponse.json();
-          const projectFiles = Array.isArray(manifest.projects) ? manifest.projects : [];
-
-          const loadedProjects = await Promise.all(projectFiles.map(async (fileName) => {
-            const response = await fetch(`./projects/${fileName}`);
-            if (!response.ok) return null;
-            const yamlText = await response.text();
-            const parsed = parseSimpleYaml(yamlText);
-            return parsed;
-          }));
-
-          allProjects = loadedProjects.filter(Boolean).map(buildProject).filter(isPublicProject).sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
-          // initialize filters and render
-          selectedFaculties = [];
-          selectedTags = [];
-          selectedStatus = '';
-          recruitFilter = null;
-          activeTag = '';
-          updateAndRender();
-        } catch (error) {
-          console.error(error);
-          projectsGrid.innerHTML = '<div class="empty-state">The project explorer could not load the YAML metadata. Please confirm the repo files are available.</div>';
-        }
-      }
-
-      loadProjects();
-    </script>
-  </body>
+</body>
 </html>

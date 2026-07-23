@@ -1,0 +1,37 @@
+# HAAG Recruitment Cycle Status
+# This is the single source of truth for where HAAG currently stands in its
+# recruitment cycle. Update this file when the phase changes - the website
+# reads it directly, so no other files need to change.
+#
+# HOW TO UPDATE:
+#   1. Change `current_phase` below to the key of the phase you're now in.
+#      Valid values: applications_open | applications_closed | matching | finalized
+#   2. Update `last_updated` to today's date (YYYY-MM-DD).
+#   3. Optionally update `notes` with any extra context for this cycle.
+#   4. Commit and push. No other steps required.
+
+cycle_name: Fall 2026 Recruitment
+current_phase: applications_closed
+last_updated: 2026-07-20
+
+notes: > # Optional free-text shown under the status banner. Leave as null for none.
+  Applications are open now through August 15 on BuzzMe. Matching will begin
+  shortly after the window closes.
+
+# Do not reorder or rename these phase keys - they define the timeline shown
+# on the site. Add/edit descriptions freely, but keep `key` values stable.
+phases:
+  - key: applications_open
+    label: Applications Open
+    description: Applications are open and being accepted through BuzzMe.
+  - key: applications_closed
+    label: Applications Closed
+    description: The application window has closed and submissions are under review.
+  - key: matching
+    label: Matching In Progress
+    description: Applicants are being matched with projects, faculty, and advisors.
+  - key: finalized
+    label: Finalized
+    description: Matches have been finalized and communicated to applicants.
+
+contact: mailto:haag@gatech.edu

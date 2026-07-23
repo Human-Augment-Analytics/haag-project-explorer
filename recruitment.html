@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Recruitment Status | Human-Augmented Analytics Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+<style>
+  :root {
+    --navy: #003057;
+    --navy-light: #0C4A7A;
+    --gold: #B3A369;
+    --gold-mid: #A4925A;
+    --gold-dark: #857437;
+    --paper: #FAFAF8;
+    --ink: #1B1F23;
+    --mute: #5B6670;
+    --line: #E2E5E8;
+    --card: #FFFFFF;
+    --error-bg: #FBEAEA;
+    --error-border: #B3242C;
+    --error-ink: #7A1F1F;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+  a { color: inherit; }
+
+  .gt-utility {
+    background: var(--navy);
+    padding: 7px 24px;
+    font-size: 11.5px;
+    color: #BFD1DE;
+    display: flex;
+    justify-content: flex-end;
+    gap: 18px;
+    letter-spacing: 0.02em;
+  }
+  .gt-utility a { text-decoration: none; color: #BFD1DE; }
+  .gt-utility a:hover { color: var(--gold); }
+
+  .masthead {
+    background: linear-gradient(120deg, #002544 0%, #003057 55%, #0C4A7A 100%);
+    padding: 34px 24px 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  .masthead::after {
+    content: "";
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 260px; height: 260px;
+    border: 2px solid rgba(179,163,105,0.18);
+    border-radius: 50%;
+  }
+  .masthead-inner { max-width: 1080px; margin: 0 auto; position: relative; z-index: 1; }
+  .masthead .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .masthead h1 {
+    font-family: "Archivo", "Helvetica Neue", sans-serif;
+    font-weight: 800;
+    font-size: 30px;
+    color: #FFFFFF;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .masthead .sub {
+    color: #C7D6E0;
+    font-size: 14.5px;
+    max-width: 560px;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .nav-bar {
+    background: var(--card);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+  }
+  .nav-inner {
+    max-width: 1220px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 0 20px;
+  }
+  .nav-inner a {
+    display: block;
+    padding: 13px 11px;
+    font-size: 11.5px;
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--mute);
+    letter-spacing: 0.01em;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+  }
+  .nav-inner a:hover { color: var(--navy); }
+  .nav-inner a.current { color: var(--navy); border-bottom-color: var(--gold); }
+
+  .breadcrumb {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 14px 24px 0;
+    font-size: 12px;
+    color: var(--mute);
+  }
+  .breadcrumb a { text-decoration: none; color: var(--mute); }
+  .breadcrumb a:hover { color: var(--navy); }
+  .breadcrumb .sep { margin: 0 6px; color: #B9C1C7; }
+  .breadcrumb .here { color: var(--navy); font-weight: 700; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 24px 24px 72px; }
+  .grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+  @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
+
+  .page-title {
+    font-family: "Archivo", sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    color: var(--navy);
+    margin: 22px 0 4px;
+  }
+  .page-desc { color: var(--mute); font-size: 13.5px; margin: 0 0 20px; max-width: 640px; }
+
+  .status-banner {
+    background: var(--navy);
+    border-radius: 6px;
+    padding: 24px 26px;
+    color: #fff;
+    border-left: 6px solid var(--gold);
+    margin-bottom: 22px;
+  }
+  .status-banner .top-row {
+    display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;
+  }
+  .status-banner .label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #A9C0D1; font-weight: 600; margin-bottom: 7px;
+  }
+  .status-banner .phase { font-family: "Archivo", sans-serif; font-weight: 800; font-size: 24px; }
+  .status-banner .cycle {
+    font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--gold); font-weight: 600;
+  }
+  .status-banner .updated { margin-top: 14px; font-size: 11.5px; color: #9FB6C6; }
+
+  .notes {
+    background: #FFFFFF;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--gold-dark);
+    border-radius: 4px;
+    padding: 14px 18px;
+    font-size: 13.5px;
+    margin-bottom: 30px;
+    color: var(--ink);
+  }
+
+  .log-heading {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--mute); font-weight: 600; margin: 0 0 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .log-heading::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+  .timeline { position: relative; margin: 0 0 34px; }
+  .phase-row { display: flex; gap: 18px; position: relative; padding-bottom: 26px; }
+  .phase-row:last-child { padding-bottom: 0; }
+  .rail { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 40px; }
+  .dot {
+    width: 40px; height: 40px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px; font-weight: 700; color: #fff;
+    background: #C6CCD1; z-index: 1;
+  }
+  .dot.complete { background: var(--gold-dark); }
+  .dot.current {
+    background: var(--navy);
+    box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--gold);
+  }
+  .line {
+    width: 2px; flex: 1; background: var(--line); margin-top: 3px;
+    position: relative; overflow: hidden;
+  }
+  .line.complete::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: var(--gold-dark);
+    transform: scaleY(0);
+    transform-origin: top;
+    animation: fillLine 0.6s ease forwards;
+  }
+  @keyframes fillLine { to { transform: scaleY(1); } }
+  @media (prefers-reduced-motion: reduce) { .line.complete::after { animation: none; transform: scaleY(1); } }
+
+  .phase-content { padding-top: 5px; }
+  .phase-label { font-size: 15.5px; font-weight: 700; color: var(--mute); }
+  .phase-row.current .phase-label { color: var(--navy); }
+  .phase-row.complete .phase-label { color: var(--gold-dark); }
+  .phase-desc { font-size: 13px; color: var(--mute); margin-top: 4px; max-width: 480px; line-height: 1.45; }
+
+  .badge {
+    display: inline-block; font-family: "IBM Plex Mono", monospace;
+    font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 3px;
+    margin-left: 8px; vertical-align: middle; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .badge.current { background: var(--gold); color: var(--navy); }
+  .badge.complete { background: #F2EFE7; color: var(--gold-dark); }
+
+  .side-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 6px;
+    padding: 20px 20px 22px; margin-bottom: 18px; margin-top: 22px;
+  }
+  .side-card h3 {
+    font-family: "Archivo", sans-serif; font-size: 14px; font-weight: 800; color: var(--navy);
+    margin: 0 0 8px;
+  }
+  .side-card p { font-size: 12.5px; color: var(--mute); line-height: 1.55; margin: 0 0 12px; }
+  .side-card .cta {
+    display: inline-block; font-size: 12px; font-weight: 700; color: var(--navy);
+    text-decoration: none; border-bottom: 2px solid var(--gold); padding-bottom: 1px;
+  }
+  .side-card .cta:hover { color: var(--navy-light); }
+  .side-card.contact { background: #F2EFE7; border: none; }
+
+  .error {
+    background: var(--error-bg); border-left: 4px solid var(--error-border);
+    padding: 16px 20px; border-radius: 4px; font-size: 14px; color: var(--error-ink);
+  }
+  .loading { color: var(--mute); font-size: 14px; }
+
+  .gt-footer { background: var(--navy); color: #C7D3DB; margin-top: 40px; }
+  .gt-footer-inner { max-width: 1080px; margin: 0 auto; padding: 40px 24px 20px; display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 30px; }
+  @media (max-width: 700px) { .gt-footer-inner { grid-template-columns: 1fr; } }
+  .gt-footer h4 { font-family: "Archivo", sans-serif; color: #fff; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 12px; }
+  .gt-footer p { font-size: 12.5px; line-height: 1.7; margin: 0; color: #AFC1CE; }
+  .gt-footer ul { list-style: none; padding: 0; margin: 0; }
+  .gt-footer li { margin-bottom: 8px; }
+  .gt-footer a { font-size: 12.5px; color: #AFC1CE; text-decoration: none; }
+  .gt-footer a:hover { color: var(--gold); }
+  .gt-footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.12);
+    padding: 16px 24px; text-align: center; font-size: 11px; color: #7E97A8;
+  }
+</style>
+</head>
+<body>
+
+  <div class="gt-utility">
+    <a href="#">Georgia Institute of Technology</a>
+    <a href="#">GT Directory</a>
+  </div>
+
+  <div class="masthead">
+    <div class="masthead-inner">
+      <div class="eyebrow">HAAG &middot; Recruitment</div>
+      <h1>Human-Augmented Analytics Group</h1>
+      <p class="sub">Advancing interdisciplinary data science collaboration through applied research and education.</p>
+    </div>
+  </div>
+
+  <nav class="nav-bar">
+    <div class="nav-inner">
+      <a href="index.html">HAAG (Home)</a>
+      <a href="people.html">People</a>
+      <a href="#">Faculty Affiliates</a>
+      <a href="#">PhD / Post-Doc</a>
+      <a href="#">Data Science Research</a>
+      <a href="#">Project Management</a>
+      <a href="projects.html">HAAG Project Explorer</a>
+      <a href="recruitment.html" class="current">Recruitment Status</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumb">
+    <a href="#">HAAG</a><span class="sep">/</span><span class="here">Recruitment Status</span>
+  </div>
+
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <h2 class="page-title">Recruitment Cycle Status</h2>
+        <p class="page-desc">A live, always-current view of where HAAG stands in its recruitment cycle, from applications opening on BuzzMe through final team placements.</p>
+
+        <div id="content">
+          <p class="loading">Loading current status&hellip;</p>
+        </div>
+      </div>
+
+      <div>
+        <div class="side-card">
+          <h3>How this stays current</h3>
+          <p>This page is driven by a single structured file maintained by the recruitment team. When the phase changes, the file is updated and this page reflects it automatically, no separate system to keep in sync.</p>
+        </div>
+        <div class="side-card">
+          <h3>Once matching is finalized</h3>
+          <p>When the cycle reaches Finalized, team placements are published for the group to review.</p>
+          <a class="cta" href="team-matching.html">View sample results &rarr;</a>
+        </div>
+        <div class="side-card contact" id="contact-card"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="gt-footer">
+    <div class="gt-footer-inner">
+      <div>
+        <h4>Georgia Institute of Technology</h4>
+        <p>North Avenue<br>Atlanta, GA 30332<br>+1 404.894.2000</p>
+      </div>
+      <div>
+        <h4>General</h4>
+        <ul>
+          <li><a href="#">Directory</a></li>
+          <li><a href="#">Employment</a></li>
+          <li><a href="#">Emergency Information</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>HAAG</h4>
+        <ul>
+          <li><a href="#">About HAAG</a></li>
+          <li><a href="#">Programs</a></li>
+          <li><a href="team-matching.html">Team Matching Results</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="gt-footer-bottom">&copy; 2026 Georgia Institute of Technology &middot; Human-Augmented Analytics Group</div>
+  </footer>
+
+  <script>
+    async function loadStatus() {
+      const contentEl = document.getElementById("content");
+      const contactEl = document.getElementById("contact-card");
+      try {
+        const res = await fetch("recruitment.yml", { cache: "no-store" });
+        if (!res.ok) throw new Error("Could not load recruitment.yml (" + res.status + ")");
+        const text = await res.text();
+        const data = jsyaml.load(text);
+        render(data, contentEl, contactEl);
+      } catch (err) {
+        contentEl.innerHTML =
+          '<div class="error"><strong>Could not load recruitment status.</strong><br>' +
+          "This page needs to be served over HTTP (e.g. GitHub Pages or a local server) " +
+          "rather than opened directly as a file, since it fetches <code>recruitment.yml</code>. " +
+          "<br><br>Details: " + (err.message || err) + "</div>";
+      }
+    }
+
+    function render(data, el, contactEl) {
+      const phases = data.phases || [];
+      const currentIndex = phases.findIndex((p) => p.key === data.current_phase);
+      const currentPhase = phases[currentIndex];
+
+      let html = "";
+
+      html += '<div class="status-banner">';
+      html += '<div class="top-row"><div><div class="label">Current Phase</div>';
+      html += '<div class="phase">' + escapeHtml(currentPhase ? currentPhase.label : data.current_phase) + "</div></div>";
+      html += '<div class="cycle">' + escapeHtml(data.cycle_name || "") + "</div></div>";
+      html += '<div class="updated">Last updated ' + escapeHtml(data.last_updated || "unknown") + "</div>";
+      html += "</div>";
+
+      if (data.notes) {
+        html += '<div class="notes">' + escapeHtml(data.notes.trim()) + "</div>";
+      }
+
+      html += '<div class="log-heading">Cycle Log</div>';
+      html += '<div class="timeline">';
+      phases.forEach((p, i) => {
+        let state = "upcoming";
+        if (i < currentIndex) state = "complete";
+        else if (i === currentIndex) state = "current";
+
+        const isLast = i === phases.length - 1;
+        const code = "P" + (i + 1);
+        html += '<div class="phase-row ' + state + '">';
+        html += '<div class="rail">';
+        html += '<div class="dot ' + state + '">' + (state === "complete" ? "&#10003;" : code) + "</div>";
+        if (!isLast) html += '<div class="line ' + (state === "complete" ? "complete" : "") + '"></div>';
+        html += "</div>";
+        html += '<div class="phase-content">';
+        html += '<span class="phase-label">' + escapeHtml(p.label) + "</span>";
+        if (state === "current") html += '<span class="badge current">Current</span>';
+        if (state === "complete") html += '<span class="badge complete">Complete</span>';
+        html += '<div class="phase-desc">' + escapeHtml(p.description || "") + "</div>";
+        html += "</div></div>";
+      });
+      html += "</div>";
+
+      el.innerHTML = html;
+
+      if (data.contact && contactEl) {
+        contactEl.innerHTML =
+          '<h3>Questions about this cycle?</h3><p>Reach out and we\'ll point you in the right direction.</p>' +
+          '<a class="cta" href="' + escapeAttr(data.contact) + '">Contact HAAG &rarr;</a>';
+      }
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return "";
+      return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+    function escapeAttr(str) { return String(str).replace(/"/g, "&quot;"); }
+
+    loadStatus();
+  </script>
+</body>
+</html>
