@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Faculty Affiliates (FATE) | Human-Augmented Analytics Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #003057; --navy-light: #0C4A7A; --gold: #B3A369; --gold-mid: #A4925A; --gold-dark: #857437;
+    --paper: #FAFAF8; --ink: #1B1F23; --mute: #5B6670; --line: #E2E5E8; --card: #FFFFFF;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background: var(--paper); color: var(--ink); -webkit-font-smoothing: antialiased; }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+  a { color: inherit; }
+
+  .gt-utility { background: var(--navy); padding: 7px 24px; font-size: 11.5px; color: #BFD1DE; display: flex; justify-content: flex-end; gap: 18px; letter-spacing: 0.02em; }
+  .gt-utility a { text-decoration: none; color: #BFD1DE; }
+  .gt-utility a:hover { color: var(--gold); }
+
+  .masthead { background: linear-gradient(120deg, #002544 0%, #003057 55%, #0C4A7A 100%); padding: 34px 24px 30px; position: relative; overflow: hidden; }
+  .masthead::after { content: ""; position: absolute; right: -60px; top: -60px; width: 260px; height: 260px; border: 2px solid rgba(179,163,105,0.18); border-radius: 50%; }
+  .masthead-inner { max-width: 1080px; margin: 0 auto; position: relative; z-index: 1; }
+  .masthead .eyebrow { font-family: "IBM Plex Mono", monospace; font-size: 11.5px; letter-spacing: 0.14em; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; font-weight: 600; }
+  .masthead h1 { font-family: "Archivo", sans-serif; font-weight: 800; font-size: 28px; color: #fff; margin: 0 0 8px; letter-spacing: -0.01em; max-width: 680px; }
+  .masthead .sub { color: #C7D6E0; font-size: 14.5px; max-width: 620px; line-height: 1.5; margin: 0; }
+
+  .nav-bar { background: var(--card); border-bottom: 1px solid var(--line); box-shadow: 0 1px 0 rgba(0,0,0,0.03); }
+  .nav-inner { max-width: 1220px; margin: 0 auto; display: flex; flex-wrap: nowrap; overflow-x: auto; padding: 0 20px; }
+  .nav-inner a { display: block; padding: 13px 11px; font-size: 11.5px; font-weight: 700; text-decoration: none; color: var(--mute); letter-spacing: 0.01em; border-bottom: 3px solid transparent; white-space: nowrap; }
+  .nav-inner a:hover { color: var(--navy); }
+  .nav-inner a.current { color: var(--navy); border-bottom-color: var(--gold); }
+
+  .breadcrumb { max-width: 1080px; margin: 0 auto; padding: 14px 24px 0; font-size: 12px; color: var(--mute); }
+  .breadcrumb a { text-decoration: none; color: var(--mute); }
+  .breadcrumb a:hover { color: var(--navy); }
+  .breadcrumb .sep { margin: 0 6px; color: #B9C1C7; }
+  .breadcrumb .here { color: var(--navy); font-weight: 700; }
+
+  .wrap { max-width: 860px; margin: 0 auto; padding: 30px 24px 80px; }
+
+  .article-grid { display: grid; grid-template-columns: 1fr 260px; gap: 40px; max-width: 1080px; margin: 0 auto; padding: 30px 24px 0; align-items: start; }
+  @media (max-width: 860px) { .article-grid { grid-template-columns: 1fr; padding: 0 24px; } }
+
+  h2.h2 { font-family: "Archivo", sans-serif; font-weight: 800; font-size: 22px; color: var(--navy); margin: 40px 0 14px; }
+  h2.h2:first-child { margin-top: 0; }
+  h3.h3 { font-family: "Archivo", sans-serif; font-weight: 700; font-size: 16.5px; color: var(--navy); margin: 30px 0 10px; }
+  p.body-text { font-size: 14px; line-height: 1.7; color: var(--ink); margin: 0 0 16px; }
+  p.body-text strong { color: var(--navy); }
+  ul.body-list { margin: 0 0 16px; padding-left: 20px; font-size: 14px; line-height: 1.7; color: var(--ink); }
+  ul.body-list ul { margin: 6px 0; }
+  ul.body-list li { margin-bottom: 6px; }
+
+  .callout {
+    background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--gold-dark);
+    border-radius: 6px; padding: 16px 20px; margin: 22px 0; font-size: 13.5px; color: var(--mute); line-height: 1.6;
+  }
+
+  .service-list { display: grid; gap: 16px; margin: 20px 0 30px; }
+  .service-item { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; border-top: 3px solid var(--gold); }
+  .service-item .num {
+    display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%;
+    border: 1.5px solid var(--gold); font-family: "IBM Plex Mono", monospace; font-size: 12px; font-weight: 700;
+    color: var(--gold-dark); margin-right: 10px; flex-shrink: 0;
+  }
+  .service-item h4 { font-family: "Archivo", sans-serif; font-weight: 700; font-size: 14.5px; color: var(--navy); margin: 0 0 8px; display: flex; align-items: center; }
+  .service-item p { font-size: 13.5px; color: var(--mute); line-height: 1.6; margin: 0 0 6px; }
+
+  .step-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 22px 24px; margin-bottom: 18px; border-left: 4px solid var(--gold); }
+  .step-card .step-label { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-dark); font-weight: 700; margin-bottom: 6px; }
+  .step-card h3 { font-family: "Archivo", sans-serif; font-weight: 700; font-size: 16.5px; color: var(--navy); margin: 0 0 10px; }
+  .step-card .step-summary { font-size: 13.5px; color: var(--ink); line-height: 1.6; margin: 0 0 14px; font-style: italic; }
+  details.step-detail { font-size: 13.5px; color: var(--mute); line-height: 1.65; }
+  details.step-detail summary { cursor: pointer; font-weight: 700; color: var(--navy); font-size: 12.5px; margin-bottom: 10px; }
+  details.step-detail ul { padding-left: 20px; margin: 10px 0; }
+  details.step-detail li { margin-bottom: 8px; }
+
+  .img-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 24px 0; }
+  @media (max-width: 620px) { .img-row { grid-template-columns: 1fr; } }
+  .img-row img { width: 100%; border-radius: 8px; border: 1px solid var(--line); display: block; }
+
+  .side-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 20px; margin-bottom: 18px; }
+  .side-card h3 { font-family: "Archivo", sans-serif; font-size: 14px; font-weight: 800; color: var(--navy); margin: 0 0 8px; }
+  .side-card p { font-size: 12.5px; color: var(--mute); line-height: 1.55; margin: 0 0 12px; }
+  .side-card .cta-link { display: inline-block; font-size: 12px; font-weight: 700; color: var(--navy); text-decoration: none; border-bottom: 2px solid var(--gold); padding-bottom: 1px; }
+  .side-card.contact { background: #F2EFE7; border: none; }
+  .side-card ul { margin: 0; padding-left: 18px; font-size: 12.5px; color: var(--mute); line-height: 1.7; }
+
+  .gt-footer { background: var(--navy); color: #C7D3DB; margin-top: 40px; }
+  .gt-footer-inner { max-width: 1080px; margin: 0 auto; padding: 40px 24px 20px; display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 30px; }
+  @media (max-width: 760px) { .gt-footer-inner { grid-template-columns: 1fr 1fr; } }
+  .gt-footer h4 { font-family: "Archivo", sans-serif; color: #fff; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 12px; }
+  .gt-footer p { font-size: 12.5px; line-height: 1.7; margin: 0; color: #AFC1CE; }
+  .gt-footer ul { list-style: none; padding: 0; margin: 0; }
+  .gt-footer li { margin-bottom: 8px; }
+  .gt-footer a { font-size: 12.5px; color: #AFC1CE; text-decoration: none; }
+  .gt-footer a:hover { color: var(--gold); }
+  .gt-footer-bottom { border-top: 1px solid rgba(255,255,255,0.12); padding: 16px 24px; text-align: center; font-size: 11px; color: #7E97A8; }
+</style>
+</head>
+<body>
+
+  <div class="gt-utility">
+    <a href="#">Georgia Institute of Technology</a>
+    <a href="#">GT Directory</a>
+    <a href="#">Campus Map</a>
+  </div>
+
+  <div class="masthead">
+    <div class="masthead-inner">
+      <div class="eyebrow">HAAG &middot; Faculty Program</div>
+      <h1>Faculty Affiliates for Transdisciplinary Expansion (FATE)</h1>
+      <p class="sub">Faculty &middot; Any Global Research Institution &mdash; a community of practice for faculty advancing interdisciplinary science teams.</p>
+    </div>
+  </div>
+
+  <nav class="nav-bar">
+    <div class="nav-inner">
+      <a href="index.html">HAAG (Home)</a>
+      <a href="faculty-affiliates.html" class="current">Faculty Affiliates</a>
+      <a href="phd-postdoc.html">PhD / Post-Doc</a>
+      <a href="data-science-research.html">Data Science Research</a>
+      <a href="project-management.html">Project Management</a>
+      <a href="project-explorer.html">HAAG Project Explorer</a>
+      <a href="people.html">People</a>
+      <a href="recruitment.html">Recruitment Status</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumb">
+    <a href="index.html">HAAG</a><span class="sep">/</span><span class="here">Faculty Affiliates</span>
+  </div>
+
+  <div class="article-grid">
+    <div>
+      <h2 class="h2">Why should I become a HAAG Faculty Affiliate?</h2>
+      <p class="body-text">Faculty love training the next generation of researchers, but they often struggle to find time with the many commitments necessary to maintain and build a research group. At HAAG, we know a good research program needs to be <strong>flexible to the constraints of our faculty affiliates</strong>. We handle the burdensome logistics of running a research project, so you can focus on what you do best: sharing your ideas and expertise to guide researchers toward scientific innovation and insight.</p>
+
+      <div class="service-list">
+        <div class="service-item">
+          <h4><span class="num">1</span>Project Services</h4>
+          <p>What our talent and community can do for your research: HAAG researcher work can (and has) provided proof of concept for grant proposals, and led to high-quality publications.</p>
+        </div>
+        <div class="service-item">
+          <h4><span class="num">2</span>Recruitment Services</h4>
+          <p>We bring you researchers with big research goals. HAAG administration initiates a formal recruitment process each semester for ongoing and new contracts. Faculty can also request researchers at any point &mdash; HAAG runs fall, spring, and summer, so you never wait long.</p>
+        </div>
+        <div class="service-item">
+          <h4><span class="num">3</span>Training &amp; Resource Management</h4>
+          <p>We'll train you and your researchers to become more computationally confident. HAAG offers technical consultations to faculty affiliates and their labs on tools they'd like to adopt.</p>
+        </div>
+        <div class="service-item">
+          <h4><span class="num">4</span>Feedback &amp; Quality Control</h4>
+          <p>HAAG administration provides early-intervention for non-optimal research pairings, weekly review and guidance on projects, and best practices coaching for meeting preparation with collaborators.</p>
+        </div>
+      </div>
+
+      <div class="callout">Even though many of our student researchers are new to research projects, they are by no means novices to software development. Recruiting through the Applied Data Science Research for Social Good course gives faculty access to researchers with extensive industry careers &mdash; HAAG is good for students, and good for your lab.</div>
+
+      <div class="img-row">
+        <img src="https://sites.gatech.edu/human-augmented-analytics-group/files/2025/05/Slide6-1024x576.jpg" alt="HAAG faculty affiliate program overview slide" />
+        <img src="https://sites.gatech.edu/human-augmented-analytics-group/files/2025/05/Slide11-1024x576.jpg" alt="HAAG faculty affiliate program overview slide" />
+      </div>
+
+      <h2 class="h2">How can I mentor CS students if I'm not CS faculty?</h2>
+      <p class="body-text">We often hear from new faculty that they're hesitant to join HAAG over concerns about mentoring outside their discipline, or in an online format. Consider your own career and the variety of mentors that shaped the researcher you are today &mdash; interdisciplinary research inherently requires multiple mentors sharing knowledge across the disciplines a project draws from. HAAG provides computational advisors through our <strong>Cross-disciplinary Leadership Education for Advanced Researchers (CLEAR)</strong> program. Our CLEAR cohort serves as co-advisor on your projects.</p>
+
+      <h2 class="h2">I'm in. What's next? &mdash; The HAAG Method</h2>
+      <p class="body-text">The HAAG Method is a collaboration pipeline that centers the needs of the faculty collaborator while facilitating innovative learning experiences for every participating researcher, computational and non-computational alike.</p>
+
+      <div class="step-card">
+        <div class="step-label">Step 1</div>
+        <h3>Creating Your Project Contract</h3>
+        <p class="step-summary">Collaborators meet with project managers to define project scope, establish communication protocols, and create a formal contract outlining resources, data conditions, and work parameters.</p>
+        <details class="step-detail">
+          <summary>Read the full process &rarr;</summary>
+          <p><strong>Scope and design initiation:</strong> New or continuing faculty collaborators meet (or otherwise communicate) with a HAAG project manager to develop the interdisciplinary research project. This designates the external collaborator's preferred point of contact &mdash; themselves, their postdoc, their graduate student (with PI approval), or another academic professional or staff member.</p>
+          <p>The collaborator provides information on the project's aims and desired results. The project manager offers suggestions on: (1) computational approaches and tools to accomplish tasks, (2) recommended researcher headcount and skillset, (3) best practices from across HAAG projects &mdash; timelines, meeting frequency, past successes and failures.</p>
+          <p>Examples of past contracted projects:</p>
+          <ul>
+            <li>Analyzing text in recommendation letters for gender bias</li>
+            <li>Automating image enhancement and landmarking for lizards</li>
+            <li>A user interface for citizen scientists to analyze natural history collections</li>
+            <li>Detecting and classifying individual behavior of free-swimming cichlid fish</li>
+          </ul>
+          <p><strong>Creating your project contract:</strong> Using the information gathered, your project manager creates a 1&ndash;2 page contract outlining scope of work, number of researchers to be recruited, communication and collaboration preferences, data accessibility and use conditions, and any resources provided to complete the project.</p>
+        </details>
+      </div>
+
+      <div class="step-card">
+        <div class="step-label">Step 2</div>
+        <h3>Confirming Your Data and Resource Needs</h3>
+        <p class="step-summary">Project managers establish data safety protocols and create resource plans for computational needs, with external collaborators having the option to provide their own resources.</p>
+        <details class="step-detail">
+          <summary>Read the full process &rarr;</summary>
+          <p>One or more student researchers are assigned to the project contract based on availability and skill, receiving credit through the OMSCS research course. Selected students are introduced to their external collaborator, and communication structure is set up through the collaborator's preferred channels.</p>
+          <p><strong>Data plan creation:</strong> If researchers will work with sensitive lab data, the first step is developing a transparent data safety plan that all researchers must follow.</p>
+          <p><strong>Resource plan creation:</strong> The project manager and student researcher(s) develop a computational resource plan based on project scope. External collaborators may provide their own computational resources if preferred, but this isn't required &mdash; the plan is maintained by the HAAG administrative team, who help researchers access needed resources as the project progresses.</p>
+        </details>
+      </div>
+
+      <div class="step-card">
+        <div class="step-label">Step 3</div>
+        <h3>Delegation in the Project Cycle</h3>
+        <p class="step-summary">Masters students develop code and documentation with project manager oversight, then share results with collaborators for feedback and, potentially, new project directions.</p>
+        <details class="step-detail">
+          <summary>Read the full process &rarr;</summary>
+          <ul>
+            <li><strong>Code &amp; visualization:</strong> the masters student generates the code, requesting assistance from the project manager as needed.</li>
+            <li><strong>Generate report:</strong> the masters student documents the work done, again with project manager support available.</li>
+            <li><strong>Review &amp; revise:</strong> the project manager reviews code and documentation; a summary is sent to the collaborator for comments. The collaborator can request training from the masters student in the analysis approaches used.</li>
+            <li><strong>Generate project idea:</strong> feedback from the collaborator and project manager defines the next scope of work based on reported findings.</li>
+          </ul>
+        </details>
+      </div>
+
+      <div class="step-card">
+        <div class="step-label">Step 4</div>
+        <h3>Publication Generation</h3>
+        <p class="step-summary">Projects aim to produce shared findings through methods-focused or discipline-specific publications, with timing and format determined collaboratively.</p>
+        <details class="step-detail">
+          <summary>Read the full process &rarr;</summary>
+          <p>The external collaborator plays a role in determining when the work is ready to move to publication. Two kinds of publications typically result:</p>
+          <p><strong>Method-based publication:</strong> focuses on the computational techniques used. The project manager and masters researcher are likely primary authors; discussion with the external collaborator establishes authorship order, whether data is included, and their desired involvement.</p>
+          <p><strong>Discipline-specific publication (by request):</strong> if the collaborator wants to use HAAG's insights to support their own publication, they request a meeting with the project manager to determine contribution and delegation of work.</p>
+        </details>
+      </div>
+    </div>
+
+    <div>
+      <div class="side-card">
+        <h3>Request a researcher</h3>
+        <p>Have a project in mind? Reach out to start the HAAG Method process with a project manager.</p>
+        <a class="cta-link" href="mailto:haag@gatech.edu">Contact HAAG &rarr;</a>
+      </div>
+      <div class="side-card">
+        <h3>Related programs</h3>
+        <ul>
+          <li><a href="phd-postdoc.html">CLEAR &mdash; computational co-advisors</a></li>
+          <li><a href="data-science-research.html">FAIR-CS &mdash; the OMSCS research course</a></li>
+          <li><a href="project-explorer.html">Browse past &amp; current projects</a></li>
+        </ul>
+      </div>
+      <div class="side-card contact">
+        <h3>Questions about becoming an affiliate?</h3>
+        <p>We'll point you to the right person on the HAAG team.</p>
+        <a class="cta-link" href="mailto:haag@gatech.edu">Contact HAAG &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="gt-footer">
+    <div class="gt-footer-inner">
+      <div>
+        <h4>Georgia Institute of Technology</h4>
+        <p>North Avenue<br>Atlanta, GA 30332<br>+1 404.894.2000</p>
+      </div>
+      <div>
+        <h4>General</h4>
+        <ul>
+          <li><a href="#">Directory</a></li>
+          <li><a href="#">Employment</a></li>
+          <li><a href="#">Emergency Information</a></li>
+          <li><a href="#">Accessibility</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal &amp; Privacy</h4>
+        <ul>
+          <li><a href="#">Legal &amp; Privacy Information</a></li>
+          <li><a href="#">Human Trafficking Notice</a></li>
+          <li><a href="#">Title IX / Sexual Misconduct</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>HAAG</h4>
+        <ul>
+          <li><a href="index.html">Our Mission</a></li>
+          <li><a href="people.html">People</a></li>
+          <li><a href="recruitment.html">Recruitment Status</a></li>
+          <li><a href="team-matching.html">Team Matching Results</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="gt-footer-bottom">&copy; 2026 Georgia Institute of Technology &middot; Human-Augmented Analytics Group</div>
+  </footer>
+
+</body>
+</html>
