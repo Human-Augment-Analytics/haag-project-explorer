@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Data Science Research (FAIR-CS) | Human-Augmented Analytics Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #003057; --navy-light: #0C4A7A; --gold: #B3A369; --gold-mid: #A4925A; --gold-dark: #857437;
+    --paper: #FAFAF8; --ink: #1B1F23; --mute: #5B6670; --line: #E2E5E8; --card: #FFFFFF;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background: var(--paper); color: var(--ink); -webkit-font-smoothing: antialiased; }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+  a { color: inherit; }
+
+  .gt-utility { background: var(--navy); padding: 7px 24px; font-size: 11.5px; color: #BFD1DE; display: flex; justify-content: flex-end; gap: 18px; letter-spacing: 0.02em; }
+  .gt-utility a { text-decoration: none; color: #BFD1DE; }
+  .gt-utility a:hover { color: var(--gold); }
+
+  .masthead { background: linear-gradient(120deg, #002544 0%, #003057 55%, #0C4A7A 100%); padding: 34px 24px 30px; position: relative; overflow: hidden; }
+  .masthead::after { content: ""; position: absolute; right: -60px; top: -60px; width: 260px; height: 260px; border: 2px solid rgba(179,163,105,0.18); border-radius: 50%; }
+  .masthead-inner { max-width: 1080px; margin: 0 auto; position: relative; z-index: 1; }
+  .masthead .eyebrow { font-family: "IBM Plex Mono", monospace; font-size: 11.5px; letter-spacing: 0.14em; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; font-weight: 600; }
+  .masthead h1 { font-family: "Archivo", sans-serif; font-weight: 800; font-size: 28px; color: #fff; margin: 0 0 8px; letter-spacing: -0.01em; max-width: 680px; }
+  .masthead .sub { color: #C7D6E0; font-size: 14.5px; max-width: 620px; line-height: 1.5; margin: 0; }
+
+  .nav-bar { background: var(--card); border-bottom: 1px solid var(--line); box-shadow: 0 1px 0 rgba(0,0,0,0.03); }
+  .nav-inner { max-width: 1220px; margin: 0 auto; display: flex; flex-wrap: nowrap; overflow-x: auto; padding: 0 20px; }
+  .nav-inner a { display: block; padding: 13px 11px; font-size: 11.5px; font-weight: 700; text-decoration: none; color: var(--mute); letter-spacing: 0.01em; border-bottom: 3px solid transparent; white-space: nowrap; }
+  .nav-inner a:hover { color: var(--navy); }
+  .nav-inner a.current { color: var(--navy); border-bottom-color: var(--gold); }
+
+  .breadcrumb { max-width: 1080px; margin: 0 auto; padding: 14px 24px 0; font-size: 12px; color: var(--mute); }
+  .breadcrumb a { text-decoration: none; color: var(--mute); }
+  .breadcrumb a:hover { color: var(--navy); }
+  .breadcrumb .sep { margin: 0 6px; color: #B9C1C7; }
+  .breadcrumb .here { color: var(--navy); font-weight: 700; }
+
+  .article-grid { display: grid; grid-template-columns: 1fr 260px; gap: 40px; max-width: 1080px; margin: 0 auto; padding: 30px 24px 80px; align-items: start; }
+  @media (max-width: 860px) { .article-grid { grid-template-columns: 1fr; } }
+
+  h2.h2 { font-family: "Archivo", sans-serif; font-weight: 800; font-size: 22px; color: var(--navy); margin: 40px 0 14px; }
+  h2.h2:first-child { margin-top: 0; }
+  h3.h3 { font-family: "Archivo", sans-serif; font-weight: 700; font-size: 15.5px; color: var(--navy); margin: 24px 0 8px; }
+  p.body-text { font-size: 14px; line-height: 1.7; color: var(--ink); margin: 0 0 16px; }
+  p.body-text strong { color: var(--navy); }
+  ul.body-list { margin: 0 0 16px; padding-left: 20px; font-size: 13.5px; line-height: 1.65; color: var(--mute); }
+  ul.body-list li { margin-bottom: 5px; }
+
+  .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 18px 0 34px; }
+  @media (max-width: 760px) { .team-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 540px) { .team-grid { grid-template-columns: 1fr; } }
+  .team-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 16px; text-align: center; }
+  .team-avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--navy); color: var(--gold); font-family: "Archivo", sans-serif; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
+  .team-card h4 { font-family: "Archivo", sans-serif; font-weight: 700; font-size: 13.5px; color: var(--navy); margin: 0 0 3px; }
+  .team-card .role { font-family: "IBM Plex Mono", monospace; font-size: 10px; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 8px; }
+  .team-card p { font-size: 11.5px; color: var(--mute); line-height: 1.5; margin: 0; }
+
+  .grade-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0 30px; }
+  @media (max-width: 760px) { .grade-row { grid-template-columns: 1fr; } }
+  .grade-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; border-top: 3px solid var(--gold); }
+  .grade-card .pct { font-family: "Archivo", sans-serif; font-weight: 800; font-size: 24px; color: var(--navy); }
+  .grade-card h4 { font-family: "Archivo", sans-serif; font-weight: 700; font-size: 13.5px; color: var(--navy); margin: 4px 0 8px; }
+  .grade-card ul { margin: 0; padding-left: 16px; font-size: 12px; color: var(--mute); line-height: 1.55; }
+
+  .deliverable-item { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 16px 20px; margin-bottom: 12px; border-left: 4px solid var(--gold); }
+  .deliverable-item h4 { font-family: "Archivo", sans-serif; font-weight: 700; font-size: 14px; color: var(--navy); margin: 0 0 6px; }
+  .deliverable-item p { font-size: 12.5px; color: var(--mute); line-height: 1.55; margin: 0; }
+
+  .callout { background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--gold-dark); border-radius: 6px; padding: 16px 20px; margin: 22px 0; font-size: 13px; color: var(--mute); line-height: 1.6; }
+
+  .resource-list { columns: 2; column-gap: 30px; font-size: 12.5px; line-height: 1.9; }
+  @media (max-width: 600px) { .resource-list { columns: 1; } }
+  .resource-list a { color: var(--navy); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--gold); }
+
+  .side-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 20px; margin-bottom: 18px; }
+  .side-card h3 { font-family: "Archivo", sans-serif; font-size: 14px; font-weight: 800; color: var(--navy); margin: 0 0 8px; }
+  .side-card p { font-size: 12.5px; color: var(--mute); line-height: 1.55; margin: 0 0 12px; }
+  .side-card .cta-link { display: inline-block; font-size: 12px; font-weight: 700; color: var(--navy); text-decoration: none; border-bottom: 2px solid var(--gold); padding-bottom: 1px; }
+  .side-card.contact { background: #F2EFE7; border: none; }
+  .side-card ul { margin: 0; padding-left: 18px; font-size: 12.5px; color: var(--mute); line-height: 1.7; }
+
+  .gt-footer { background: var(--navy); color: #C7D3DB; margin-top: 40px; }
+  .gt-footer-inner { max-width: 1080px; margin: 0 auto; padding: 40px 24px 20px; display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 30px; }
+  @media (max-width: 760px) { .gt-footer-inner { grid-template-columns: 1fr 1fr; } }
+  .gt-footer h4 { font-family: "Archivo", sans-serif; color: #fff; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 12px; }
+  .gt-footer p { font-size: 12.5px; line-height: 1.7; margin: 0; color: #AFC1CE; }
+  .gt-footer ul { list-style: none; padding: 0; margin: 0; }
+  .gt-footer li { margin-bottom: 8px; }
+  .gt-footer a { font-size: 12.5px; color: #AFC1CE; text-decoration: none; }
+  .gt-footer a:hover { color: var(--gold); }
+  .gt-footer-bottom { border-top: 1px solid rgba(255,255,255,0.12); padding: 16px 24px; text-align: center; font-size: 11px; color: #7E97A8; }
+</style>
+</head>
+<body>
+
+  <div class="gt-utility">
+    <a href="#">Georgia Institute of Technology</a>
+    <a href="#">GT Directory</a>
+    <a href="#">Campus Map</a>
+  </div>
+
+  <div class="masthead">
+    <div class="masthead-inner">
+      <div class="eyebrow">HAAG &middot; OMSCS Research Course</div>
+      <h1>Applied Data Science Research for Social Good (CS 8903 &amp; CS 6999)</h1>
+      <p class="sub">Transforming master's research in data science through the Framework for Accelerating Interdisciplinary Research in Computer Science (FAIR-CS).</p>
+    </div>
+  </div>
+
+  <nav class="nav-bar">
+    <div class="nav-inner">
+      <a href="index.html">HAAG (Home)</a>
+      <a href="faculty-affiliates.html">Faculty Affiliates</a>
+      <a href="phd-postdoc.html">PhD / Post-Doc</a>
+      <a href="data-science-research.html" class="current">Data Science Research</a>
+      <a href="project-management.html">Project Management</a>
+      <a href="project-explorer.html">HAAG Project Explorer</a>
+      <a href="people.html">People</a>
+      <a href="recruitment.html">Recruitment Status</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumb">
+    <a href="index.html">HAAG</a><span class="sep">/</span><span class="here">Data Science Research (FAIR-CS)</span>
+  </div>
+
+  <div class="article-grid">
+    <div>
+      <h2 class="h2">Learning Outcomes</h2>
+      <p class="body-text"><strong>Transformative mentor-based learning:</strong> students learn to publish data science research through mentorship from subject matter experts, developing the skills to communicate complex analytical work to technical and non-technical audiences alike, and to publish reproducible, interdisciplinary research workflows.</p>
+      <p class="body-text"><strong>Teaching open access for technology:</strong> students partner with faculty and graduate students to contribute to the broader data science knowledge commons &mdash; documented code repositories, tutorials, or dataset annotations that future learners can freely access and adapt.</p>
+
+      <h3 class="h3">Master's-Centered Research</h3>
+      <p class="body-text">HAAG is unique in centering master's students as the primary researchers in interdisciplinary projects. OMSCS students are mentored both by a faculty affiliate in an applied field and by a computational advisor &mdash; a doctoral or postdoctoral researcher trained in computer science or applied math.</p>
+
+      <h3 class="h3">FAIR-CS</h3>
+      <p class="body-text">The course uses the Framework for Accelerating Interdisciplinary Research in Computer Science (FAIR-CS), first proposed at PEARC 2025, which segments the roles of faculty, PhD students, and master's researchers in pursuit of a shared tool-development and publication goal. Additional procedures live on the <a href="https://humanaugmentedanalyticsgroup.miraheze.org/wiki/Main_Page" style="color:var(--navy); font-weight:600;">course wiki</a>.</p>
+
+      <h2 class="h2">Core Instructional Team</h2>
+      <div class="team-grid">
+        <div class="team-card"><div class="team-avatar">BS</div><h4>Bree Shi</h4><div class="role">Director of HAAG</div><p>Founded HAAG in Summer 2024; leads administration, outreach, and communications.</p></div>
+        <div class="team-card"><div class="team-avatar">NL</div><h4>Nick Lytle, Ph.D</h4><div class="role">Director, OMSCS Research</div><p>HAAG's liaison for research opportunities across the OMSCS program; creator of CS 8803.</p></div>
+        <div class="team-card"><div class="team-avatar">CC</div><h4>Charlie Clark</h4><div class="role">Head Instructional Associate</div><p>Director of Open-Source Initiatives; former researcher on HAAG's Cichlid CV and Bio-Boost teams.</p></div>
+        <div class="team-card"><div class="team-avatar">JS</div><h4>Jeanette Schofield</h4><div class="role">Director of Ethical Practice</div><p>Contact for conflict resolution, project change requests, and Canvas training.</p></div>
+        <div class="team-card"><div class="team-avatar">TD</div><h4>Tom Deatherage</h4><div class="role">Director of Engagement</div><p>With HAAG since its 2024 founding; contact for communal time allocation and scholarly activities.</p></div>
+        <div class="team-card"><div class="team-avatar">TO</div><h4>Thomas Orth</h4><div class="role">Director of Retention</div><p>Contact for BaseCamp training, project support requests, and website support.</p></div>
+      </div>
+
+      <h3 class="h3">Faculty Affiliates &amp; Computational Advisors</h3>
+      <p class="body-text">Each project stems from a proposed publication by a HAAG faculty affiliate, who advises on all aspects of the project and guides it from proposal through publication. Computational advisors &mdash; volunteer PhD or postdoctoral researchers in computational fields &mdash; serve as the primary mentor to student researchers, running bi-weekly meetings and helping package completed work for publication.</p>
+
+      <h2 class="h2">Course Logistics</h2>
+      <p class="body-text">Grading is used as a tool to encourage the behaviors typical of a working researcher: building community, learning independently, and sharing knowledge. Final grades use <strong>progressive grading</strong> &mdash; smoothing during periods of improvement, maximizing scores during high grade maintenance, and grade rounding &mdash; so a student's trajectory matters as much as any single average.</p>
+
+      <div class="grade-row">
+        <div class="grade-card">
+          <div class="pct">50%</div>
+          <h4>Progress Toward Publication</h4>
+          <ul><li>Weekly reports showing progress</li><li>Meeting timeline objectives</li><li>Deliverables as requested</li><li>Responding to advisor feedback</li></ul>
+        </div>
+        <div class="grade-card">
+          <div class="pct">50%</div>
+          <h4>Engagement in Collaboration</h4>
+          <ul><li>Regular meeting attendance</li><li>24&ndash;48hr response time</li><li>Training other researchers as needed</li><li>Weekly communal time allocation</li></ul>
+        </div>
+        <div class="grade-card">
+          <div class="pct">+20%</div>
+          <h4>Scholarly Activity (bonus)</h4>
+          <ul><li>Creating an open education resource</li><li>Presenting to a non-HAAG audience</li><li>Earning a research award</li><li>Applying to PhD programs</li></ul>
+        </div>
+      </div>
+
+      <h3 class="h3">Course Deliverables</h3>
+      <div class="deliverable-item"><h4>Weekly Reports</h4><p>A time log of completed tasks, goals for the coming week, blockers, and summaries of research papers reviewed, with supporting code/data as proof of work.</p></div>
+      <div class="deliverable-item"><h4>Project Meetings</h4><p>Bi-weekly meetings facilitated by the team's computational advisor, setting long-term objectives and delegating tasks.</p></div>
+      <div class="deliverable-item"><h4>Unit Meetings</h4><p>Larger group meetings across related project types (e.g. video detection, UI, 3D vision, NLP) for cross-project knowledge sharing, guest talks, and shared resource libraries.</p></div>
+
+      <div class="callout">Attendance runs on trust: researchers report absences greater than two weekdays but are only required to disclose the dates, not the reason. Students are generally expected at 90% of meetings, tracked by meeting managers.</div>
+
+      <h3 class="h3">Course Technology</h3>
+      <p class="body-text">BaseCamp for weekly reports and documentation; Slack for announcements and informal communication; Microsoft Teams for project/unit meetings; Canvas for grades and formal feedback. Faculty advisors set their own preferred communication tools (Discord, Zoom, etc).</p>
+
+      <h3 class="h3">Ethics &amp; Professionalism</h3>
+      <p class="body-text">Plagiarism is not tolerated; AI tools may assist with code generation and phrasing, but all publications and progress reports must remain intellectually honest and are subject to review. Disrespect toward HAAG members is not tolerated and should be raised immediately to the instructional team. Students may request a project change if their expertise doesn't match their assigned group, though the instructional team has final say on placement.</p>
+
+      <h3 class="h3">Additional Student Resources</h3>
+      <div class="resource-list">
+        <a href="https://cm.maxient.com/reportingform.php?GeorgiaTech=&layout_id=4/">Dean of Students</a><br>
+        <a href="https://disabilityservices.gatech.edu/">Disability Services</a><br>
+        <a href="https://belonging.gatech.edu/studentsupport">Belonging &amp; Student Support</a><br>
+        <a href="https://veterans.gatech.edu/">Veterans Resource Center</a><br>
+        <a href="https://mentalhealth.gatech.edu/">Center for Mental Health Care &amp; Resources</a><br>
+        <a href="https://wellnesscenter.gatech.edu/node/47">Voice (Sexual &amp; Relationship Violence Prevention)</a><br>
+        <a href="https://students.gatech.edu/student-resource-guide">General Resource Guide</a>
+      </div>
+    </div>
+
+    <div>
+      <div class="side-card">
+        <h3>Related programs</h3>
+        <ul>
+          <li><a href="faculty-affiliates.html">FATE &mdash; faculty affiliates</a></li>
+          <li><a href="phd-postdoc.html">CLEAR &mdash; computational co-advisors</a></li>
+          <li><a href="project-explorer.html">Browse past &amp; current projects</a></li>
+        </ul>
+      </div>
+      <div class="side-card contact">
+        <h3>Questions about HAAG policies?</h3>
+        <p>Contact Jeanette Schofield, HAAG Director of Ethics &amp; Compliance.</p>
+        <a class="cta-link" href="mailto:haag@gatech.edu">Contact HAAG &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="gt-footer">
+    <div class="gt-footer-inner">
+      <div>
+        <h4>Georgia Institute of Technology</h4>
+        <p>North Avenue<br>Atlanta, GA 30332<br>+1 404.894.2000</p>
+      </div>
+      <div>
+        <h4>General</h4>
+        <ul>
+          <li><a href="#">Directory</a></li>
+          <li><a href="#">Employment</a></li>
+          <li><a href="#">Emergency Information</a></li>
+          <li><a href="#">Accessibility</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal &amp; Privacy</h4>
+        <ul>
+          <li><a href="#">Legal &amp; Privacy Information</a></li>
+          <li><a href="#">Human Trafficking Notice</a></li>
+          <li><a href="#">Title IX / Sexual Misconduct</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>HAAG</h4>
+        <ul>
+          <li><a href="index.html">Our Mission</a></li>
+          <li><a href="people.html">People</a></li>
+          <li><a href="recruitment.html">Recruitment Status</a></li>
+          <li><a href="team-matching.html">Team Matching Results</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="gt-footer-bottom">&copy; 2026 Georgia Institute of Technology &middot; Human-Augmented Analytics Group</div>
+  </footer>
+
+</body>
+</html>

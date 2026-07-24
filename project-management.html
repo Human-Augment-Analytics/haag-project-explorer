@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Project Management (Practicum) | Human-Augmented Analytics Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #003057; --navy-light: #0C4A7A; --gold: #B3A369; --gold-mid: #A4925A; --gold-dark: #857437;
+    --paper: #FAFAF8; --ink: #1B1F23; --mute: #5B6670; --line: #E2E5E8; --card: #FFFFFF;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background: var(--paper); color: var(--ink); -webkit-font-smoothing: antialiased; }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+  a { color: inherit; }
+
+  .gt-utility { background: var(--navy); padding: 7px 24px; font-size: 11.5px; color: #BFD1DE; display: flex; justify-content: flex-end; gap: 18px; letter-spacing: 0.02em; }
+  .gt-utility a { text-decoration: none; color: #BFD1DE; }
+  .gt-utility a:hover { color: var(--gold); }
+
+  .masthead { background: linear-gradient(120deg, #002544 0%, #003057 55%, #0C4A7A 100%); padding: 34px 24px 30px; position: relative; overflow: hidden; }
+  .masthead::after { content: ""; position: absolute; right: -60px; top: -60px; width: 260px; height: 260px; border: 2px solid rgba(179,163,105,0.18); border-radius: 50%; }
+  .masthead-inner { max-width: 1080px; margin: 0 auto; position: relative; z-index: 1; }
+  .masthead .eyebrow { font-family: "IBM Plex Mono", monospace; font-size: 11.5px; letter-spacing: 0.14em; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; font-weight: 600; }
+  .masthead h1 { font-family: "Archivo", sans-serif; font-weight: 800; font-size: 28px; color: #fff; margin: 0 0 8px; letter-spacing: -0.01em; max-width: 680px; }
+  .masthead .sub { color: #C7D6E0; font-size: 14.5px; max-width: 620px; line-height: 1.5; margin: 0; }
+
+  .nav-bar { background: var(--card); border-bottom: 1px solid var(--line); box-shadow: 0 1px 0 rgba(0,0,0,0.03); }
+  .nav-inner { max-width: 1220px; margin: 0 auto; display: flex; flex-wrap: nowrap; overflow-x: auto; padding: 0 20px; }
+  .nav-inner a { display: block; padding: 13px 11px; font-size: 11.5px; font-weight: 700; text-decoration: none; color: var(--mute); letter-spacing: 0.01em; border-bottom: 3px solid transparent; white-space: nowrap; }
+  .nav-inner a:hover { color: var(--navy); }
+  .nav-inner a.current { color: var(--navy); border-bottom-color: var(--gold); }
+
+  .breadcrumb { max-width: 1080px; margin: 0 auto; padding: 14px 24px 0; font-size: 12px; color: var(--mute); }
+  .breadcrumb a { text-decoration: none; color: var(--mute); }
+  .breadcrumb a:hover { color: var(--navy); }
+  .breadcrumb .sep { margin: 0 6px; color: #B9C1C7; }
+  .breadcrumb .here { color: var(--navy); font-weight: 700; }
+
+  .article-grid { display: grid; grid-template-columns: 1fr 260px; gap: 40px; max-width: 1080px; margin: 0 auto; padding: 30px 24px 80px; align-items: start; }
+  @media (max-width: 860px) { .article-grid { grid-template-columns: 1fr; } }
+
+  h2.h2 { font-family: "Archivo", sans-serif; font-weight: 800; font-size: 22px; color: var(--navy); margin: 40px 0 14px; }
+  h2.h2:first-child { margin-top: 0; }
+  h3.h3 { font-family: "Archivo", sans-serif; font-weight: 700; font-size: 15.5px; color: var(--navy); margin: 24px 0 8px; }
+  p.body-text { font-size: 14px; line-height: 1.7; color: var(--ink); margin: 0 0 16px; }
+  p.body-text strong { color: var(--navy); }
+  ul.body-list { margin: 0 0 16px; padding-left: 20px; font-size: 13.5px; line-height: 1.65; color: var(--mute); }
+  ul.body-list li { margin-bottom: 5px; }
+
+  .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 18px 0 34px; }
+  @media (max-width: 760px) { .team-grid { grid-template-columns: 1fr; } }
+  .team-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 16px; text-align: center; }
+  .team-avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--navy); color: var(--gold); font-family: "Archivo", sans-serif; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
+  .team-card h4 { font-family: "Archivo", sans-serif; font-weight: 700; font-size: 13.5px; color: var(--navy); margin: 0 0 3px; }
+  .team-card .role { font-family: "IBM Plex Mono", monospace; font-size: 10px; color: var(--gold-dark); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 8px; }
+  .team-card p { font-size: 11.5px; color: var(--mute); line-height: 1.5; margin: 0; }
+
+  .grade-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 20px 0 30px; }
+  @media (max-width: 620px) { .grade-row { grid-template-columns: 1fr; } }
+  .grade-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; border-top: 3px solid var(--gold); }
+  .grade-card .pct { font-family: "Archivo", sans-serif; font-weight: 800; font-size: 26px; color: var(--navy); }
+  .grade-card h4 { font-family: "Archivo", sans-serif; font-weight: 700; font-size: 13.5px; color: var(--navy); margin: 4px 0 0; }
+
+  .deliverable-item { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 16px 20px; margin-bottom: 12px; border-left: 4px solid var(--gold); }
+  .deliverable-item h4 { font-family: "Archivo", sans-serif; font-weight: 700; font-size: 14px; color: var(--navy); margin: 0 0 6px; }
+  .deliverable-item p { font-size: 12.5px; color: var(--mute); line-height: 1.55; margin: 0; }
+
+  .callout { background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--gold-dark); border-radius: 6px; padding: 16px 20px; margin: 22px 0; font-size: 13px; color: var(--mute); line-height: 1.6; }
+
+  .resource-list { columns: 2; column-gap: 30px; font-size: 12.5px; line-height: 1.9; }
+  @media (max-width: 600px) { .resource-list { columns: 1; } }
+  .resource-list a { color: var(--navy); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--gold); }
+
+  .side-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 20px; margin-bottom: 18px; }
+  .side-card h3 { font-family: "Archivo", sans-serif; font-size: 14px; font-weight: 800; color: var(--navy); margin: 0 0 8px; }
+  .side-card p { font-size: 12.5px; color: var(--mute); line-height: 1.55; margin: 0 0 12px; }
+  .side-card .cta-link { display: inline-block; font-size: 12px; font-weight: 700; color: var(--navy); text-decoration: none; border-bottom: 2px solid var(--gold); padding-bottom: 1px; }
+  .side-card.contact { background: #F2EFE7; border: none; }
+  .side-card ul { margin: 0; padding-left: 18px; font-size: 12.5px; color: var(--mute); line-height: 1.7; }
+
+  .gt-footer { background: var(--navy); color: #C7D3DB; margin-top: 40px; }
+  .gt-footer-inner { max-width: 1080px; margin: 0 auto; padding: 40px 24px 20px; display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 30px; }
+  @media (max-width: 760px) { .gt-footer-inner { grid-template-columns: 1fr 1fr; } }
+  .gt-footer h4 { font-family: "Archivo", sans-serif; color: #fff; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 12px; }
+  .gt-footer p { font-size: 12.5px; line-height: 1.7; margin: 0; color: #AFC1CE; }
+  .gt-footer ul { list-style: none; padding: 0; margin: 0; }
+  .gt-footer li { margin-bottom: 8px; }
+  .gt-footer a { font-size: 12.5px; color: #AFC1CE; text-decoration: none; }
+  .gt-footer a:hover { color: var(--gold); }
+  .gt-footer-bottom { border-top: 1px solid rgba(255,255,255,0.12); padding: 16px 24px; text-align: center; font-size: 11px; color: #7E97A8; }
+</style>
+</head>
+<body>
+
+  <div class="gt-utility">
+    <a href="#">Georgia Institute of Technology</a>
+    <a href="#">GT Directory</a>
+    <a href="#">Campus Map</a>
+  </div>
+
+  <div class="masthead">
+    <div class="masthead-inner">
+      <div class="eyebrow">HAAG &middot; MBA / OMSCS Practicum</div>
+      <h1>Research Operations Project Management Practicum (MGT 8803 &amp; CS 8803)</h1>
+      <p class="sub">Interdisciplinary research meets project management &mdash; MBA students partner with OMSCS students to manage real AI research projects.</p>
+    </div>
+  </div>
+
+  <nav class="nav-bar">
+    <div class="nav-inner">
+      <a href="index.html">HAAG (Home)</a>
+      <a href="faculty-affiliates.html">Faculty Affiliates</a>
+      <a href="phd-postdoc.html">PhD / Post-Doc</a>
+      <a href="data-science-research.html">Data Science Research</a>
+      <a href="project-management.html" class="current">Project Management</a>
+      <a href="project-explorer.html">HAAG Project Explorer</a>
+      <a href="people.html">People</a>
+      <a href="recruitment.html">Recruitment Status</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumb">
+    <a href="index.html">HAAG</a><span class="sep">/</span><span class="here">Project Management (Practicum)</span>
+  </div>
+
+  <div class="article-grid">
+    <div>
+      <h2 class="h2">Learning Objectives</h2>
+      <p class="body-text">After completing MGT 8803 / CS 8803, students should be able to:</p>
+      <ul class="body-list">
+        <li>Evaluate project management methodologies and frameworks for their effectiveness in interdisciplinary, research-driven teams spanning computer science, data science, and analytics.</li>
+        <li>Develop a structured plan incorporating project management concepts to facilitate execution of a research initiative.</li>
+        <li>Synthesize project outcomes, team dynamics, and risk management strategies into a professional report reflecting on the challenges and successes of managing interdisciplinary research.</li>
+      </ul>
+
+      <h2 class="h2">Core Instructional Team</h2>
+      <div class="team-grid">
+        <div class="team-card"><div class="team-avatar">BS</div><h4>Bree Shi</h4><div class="role">Director of HAAG</div><p>Founded HAAG in Summer 2024; leads administration and outreach.</p></div>
+        <div class="team-card"><div class="team-avatar">NL</div><h4>Nick Lytle, Ph.D</h4><div class="role">Director, OMSCS Research</div><p>Creator and instructor of the open research course CS 8803.</p></div>
+        <div class="team-card"><div class="team-avatar">CA</div><h4>Charlotte Alexander, J.D.</h4><div class="role">Professor of Law &amp; Ethics</div><p>Scheller College of Business; empirical and computational methods for court-system research.</p></div>
+      </div>
+
+      <h2 class="h2">Course Description</h2>
+      <p class="body-text">A project-driven course in which MBA students partner with OMSCS students to manage research projects involving novel data, analytics, and computer science methods &mdash; past projects have spanned computer vision, generative AI, and NLP. Working in pairs or small teams, students embed in larger ongoing HAAG research projects, combining MBA project management expertise with OMSCS subject-matter knowledge.</p>
+      <p class="body-text">Students are assessed on two components: their contribution to managing the operations of the research group, and their work on a project management initiative of their own choosing. As an option (subject to instructor approval), students may also join the authorship team on articles written about their assigned project.</p>
+      <p class="body-text">The course suits MBA students with an interest in computer science or analytics and a project management background (including those accumulating certification hours), as well as OMSCS students with computational expertise who want to build project management skills.</p>
+
+      <h2 class="h2">Course Grading</h2>
+      <div class="grade-row">
+        <div class="grade-card"><div class="pct">60%</div><h4>Course Deliverables</h4></div>
+        <div class="grade-card"><div class="pct">40%</div><h4>Attendance &amp; Participation</h4></div>
+      </div>
+      <p class="body-text">Work is documented across three staged reports &mdash; initial proposal, mid-term, and final &mdash; each covering both operations (managing the ongoing research project) and initiative (progress on the student's chosen project management focus, e.g. communication strategy, team dynamics, or tooling). Pairs or small groups receive a shared grade; attendance and participation are graded individually.</p>
+
+      <h3 class="h3">Course Deliverables</h3>
+      <div class="deliverable-item"><h4>Initial Proposal</h4><p>Students define and scope their chosen project management initiative at the start of the semester, in writing and presented in class.</p></div>
+      <div class="deliverable-item"><h4>Mid-term Report</h4><p>Covers operations role and initiative progress, with reflection on successes, challenges, and plans for the rest of the semester.</p></div>
+      <div class="deliverable-item"><h4>Final Report</h4><p>Addresses the same two topics across the full semester's work.</p></div>
+
+      <h3 class="h3">Course Policies</h3>
+      <p class="body-text">Regular attendance and engaged participation are expected, with cameras on for virtual meetings; repeated unexcused absences affect the participation grade. Students are responsible for all material posted on Canvas, Basecamp, email, or Slack. Academic honesty follows Georgia Tech's Honor Code in full; suspected violations are referred to the Office of Student Integrity. Instructors reserve the right to adjust syllabus policies as needed.</p>
+
+      <div class="callout">Disability accommodation is coordinated through Georgia Tech's Office of Disability Services (disabilityservices.gatech.edu) &mdash; students seeking accommodation should review the student guide and documentation requirements there.</div>
+
+      <h3 class="h3">Additional Student Resources</h3>
+      <div class="resource-list">
+        <a href="https://cm.maxient.com/reportingform.php?GeorgiaTech=&layout_id=4/">Dean of Students</a><br>
+        <a href="https://disabilityservices.gatech.edu/">Disability Services</a><br>
+        <a href="https://belonging.gatech.edu/studentsupport">Belonging &amp; Student Support</a><br>
+        <a href="https://veterans.gatech.edu/">Veterans Resource Center</a><br>
+        <a href="https://mentalhealth.gatech.edu/">Center for Mental Health Care &amp; Resources</a><br>
+        <a href="https://wellnesscenter.gatech.edu/node/47">Voice (Sexual &amp; Relationship Violence Prevention)</a><br>
+        <a href="https://students.gatech.edu/student-resource-guide">General Resource Guide</a>
+      </div>
+    </div>
+
+    <div>
+      <div class="side-card">
+        <h3>Related programs</h3>
+        <ul>
+          <li><a href="faculty-affiliates.html">FATE &mdash; faculty affiliates</a></li>
+          <li><a href="data-science-research.html">FAIR-CS &mdash; the OMSCS research course</a></li>
+          <li><a href="project-explorer.html">Browse past &amp; current projects</a></li>
+        </ul>
+      </div>
+      <div class="side-card contact">
+        <h3>Questions about this course?</h3>
+        <p>Contact Charlie Clark, HAAG Head TA.</p>
+        <a class="cta-link" href="mailto:haag@gatech.edu">Contact HAAG &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="gt-footer">
+    <div class="gt-footer-inner">
+      <div>
+        <h4>Georgia Institute of Technology</h4>
+        <p>North Avenue<br>Atlanta, GA 30332<br>+1 404.894.2000</p>
+      </div>
+      <div>
+        <h4>General</h4>
+        <ul>
+          <li><a href="#">Directory</a></li>
+          <li><a href="#">Employment</a></li>
+          <li><a href="#">Emergency Information</a></li>
+          <li><a href="#">Accessibility</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal &amp; Privacy</h4>
+        <ul>
+          <li><a href="#">Legal &amp; Privacy Information</a></li>
+          <li><a href="#">Human Trafficking Notice</a></li>
+          <li><a href="#">Title IX / Sexual Misconduct</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>HAAG</h4>
+        <ul>
+          <li><a href="index.html">Our Mission</a></li>
+          <li><a href="people.html">People</a></li>
+          <li><a href="recruitment.html">Recruitment Status</a></li>
+          <li><a href="team-matching.html">Team Matching Results</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="gt-footer-bottom">&copy; 2026 Georgia Institute of Technology &middot; Human-Augmented Analytics Group</div>
+  </footer>
+
+</body>
+</html>
