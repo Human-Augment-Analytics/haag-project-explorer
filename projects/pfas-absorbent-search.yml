@@ -11,16 +11,17 @@ researchers:
 advisors:
   - 
   - 
-summary: PFAS are a ubiquitous environmental contaminant. A GTRI analytical chemist is looking to
-design and test new materials to absorb this contaminant. Chemical simulation software
-exists to test properties of compounds, such as binding affinity to PFAS, which can be used
-to screen candidates for lab tests. While large libraries (10^8) of chemical compounds
-exist, this is far too many to simulate (each simulation takes hours).
-The goal of this project is to use ML predictive chemical modelling and Bayesian
-Optimization to interactively simulate and find good chemical candidates while avoiding an
-exhaustive search. The first semester will be spent building and integrating the
-experimental pipeline, designing and analyzing multiple fidelity levels of ML chemical
-modelling, and exploring related work.
+summary: >
+  PFAS are a ubiquitous environmental contaminant. A GTRI analytical chemist is looking to
+  design and test new materials to absorb this contaminant. Chemical simulation software
+  exists to test properties of compounds, such as binding affinity to PFAS, which can be used
+  to screen candidates for lab tests. While large libraries (10^8) of chemical compounds
+  exist, this is far too many to simulate (each simulation takes hours).
+  The goal of this project is to use ML predictive chemical modelling and Bayesian
+  Optimization to interactively simulate and find good chemical candidates while avoiding an
+  exhaustive search. The first semester will be spent building and integrating the
+  experimental pipeline, designing and analyzing multiple fidelity levels of ML chemical
+  modelling, and exploring related work.
 tags:
   - PFAS
 links:
