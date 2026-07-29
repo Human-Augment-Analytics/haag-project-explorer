@@ -6,8 +6,13 @@ recruiting: true
 faculty:
   - Arthur Porto
 researchers:
-  - 
-  - 
+  - Amar Cutura
+  - Jiaxuan Koh
+  - Sean Khan
+  - Eric Regina
+  - Matt Delage (former)
+  - Joshua Yu (former)
+  - Colin Sawyer (former)
 advisors:
   - Dr. Katherine Wolcott
 summary: >
@@ -19,7 +24,7 @@ tags:
   - Computer Graphics
 links:
   github: https://github.com/3D-fossils-Haag # placeholder, if public
-  docs: null # Could be README, wiki, github pages, etc.
+  docs: https://github.com/3D-fossils-Haag/nsm/wiki
   publication: null # If exists/completed
   forum: null # link to forum - @James Hennessy
-  contact: null # Contact to reach out to for interested parties (lab-level email distribution)
+  contact: k.wolcott@ufl.edu # Contact to reach out to for interested parties (lab-level email distribution)
