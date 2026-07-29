@@ -1,7 +1,7 @@
 id: pfas-absorbent-search
 name: PFAS Absorbent Search
 status: active      # active | completed | preprint | archived
-visibility:  public
+visibility: public
 recruiting: false
 faculty:
   - Steve Mussmann

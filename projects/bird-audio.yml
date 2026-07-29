@@ -1,23 +1,28 @@
 id: bird-audio
-name: Bird Audio
+name: Analysis of Hume's Leaf Warbler Audio
 status: active      # active | completed | preprint | archived
-visibility: private # public | private
+visibility: public # public | private
 recruiting: true
 faculty:
   - Benjamin Freeman
 researchers:
-  - 
-  - 
+  - Erik Dreyer
+  - Vanessa Prema
+  - Andrei Hushcha
+  - Tom Fox
+  - Steve Mussmann
+  - Le Yang Loh
+  - Haley Jou
 advisors:
-  - 
-  - 
+  - Marco Postiglione
+  - Yasha Iravantchi
 summary: >
-  Summary here.
+  We are attempting to analyze the buzzes, distinct from the calls, of the Hume's Leaf Warbler. We are detecting these buzzes through event-level spectrogram object detection. We hope to glean new ecological insights about the behavior of these birds through this analysis.
 tags:
   - 
 links:
-  github: https://github.com/org/... # placeholder, if public
-  docs: https://example.com/docs # Could be README, wiki, github pages, etc.
-  publication: https://doi.org/... # If exists/completed
+  github: https://github.com/Human-Augment-Analytics/bird-audio
+  docs: null # Could be README, wiki, github pages, etc.
+  publication: null # If exists/completed
   forum: null # link to forum - @James Hennessy
-  contact: mailto:lab@example.edu # Contact to reach out to for interested parties (lab-level email distribution)
+  contact: null # Contact to reach out to for interested parties (lab-level email distribution)
