@@ -95,7 +95,7 @@
   .chip.active { background: var(--gold); border-color: var(--gold); color: var(--navy); }
   .chip:hover:not(.active) { background: #F2EFE7; }
 
-  .result-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--mute); margin-bottom: 16px; }
+  .result-row { display: flex; justify-content: flex-start; align-items: center; font-size: 13px; color: var(--mute); margin-bottom: 16px; }
   .result-row .mono { font-size: 12px; }
 
   .log-heading {
@@ -195,12 +195,12 @@
 
   <nav class="nav-bar">
     <div class="nav-inner">
-      <a href="index.html">HAAG (Home)</a>
-      <a href="people.html" class="current">People</a>
+      <a href="index.html">Home</a>
       <a href="faculty-affiliates.html">Faculty Affiliates</a>
       <a href="phd-postdoc.html">PhD / Post-Doc</a>
-      <a href="data-science-research.html">Data Science Research</a>
+      <a href="data-science-research.html">Research</a>
       <a href="project-management.html">Project Management</a>
+      <a href="people.html" class="current">People</a>
       <a href="project-explorer.html">Project Explorer</a>
       <a href="recruitment.html">Recruitment Status</a>
     </div>
@@ -218,14 +218,13 @@
       <input class="search-input" id="search" type="text" placeholder="Search by name or research area&hellip;" />
       <button class="chip active" data-role="All">All Roles</button>
       <button class="chip" data-role="Faculty">Faculty</button>
-      <button class="chip" data-role="PhD">PhD</button>
       <button class="chip" data-role="Postdoc">Postdoc</button>
+      <button class="chip" data-role="PhD">PhD</button>
       <button class="chip" data-role="Graduate">Graduate</button>
     </div>
 
     <div class="result-row">
       <span id="result-count">Loading&hellip;</span>
-      <span class="mono">SOURCE: people.yml</span>
     </div>
 
     <div id="grid-container">

@@ -4,33 +4,50 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Project Explorer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
     <style>
       :root {
         color-scheme: light;
-        --accent: #7c5a22;
-        --accent-2: #b1864b;
-        --surface: #f4efe6;
-        --surface-muted: #e8dfd1;
-        --border: rgba(76, 63, 50, 0.18);
-        --text: #2b2722;
-        --text-muted: #6f6658;
-        --shadow: 0 24px 60px rgba(37, 31, 24, 0.12);
+        --navy: #003057;
+        --navy-light: #0C4A7A;
+        --gold: #B3A369;
+        --gold-mid: #A4925A;
+        --gold-dark: #857437;
+        --paper: #FAFAF8;
+        --ink: #1B1F23;
+        --mute: #5B6670;
+        --line: #E2E5E8;
+        --card: #FFFFFF;
+        --accent: var(--gold-dark);
+        --accent-2: var(--gold);
+        --surface: #F2EFE7;
+        --surface-muted: #EAE5D9;
+        --border: var(--line);
+        --text: var(--ink);
+        --text-muted: var(--mute);
+        --shadow: 0 20px 52px rgba(0, 48, 87, 0.12);
       }
 
       * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
       body {
         margin: 0;
-        font-family: 'Roboto', Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         color: var(--text);
-        background: #ffffff;
+        background: var(--paper);
         line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
       }
 
+      .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+      a { color: inherit; }
+
       .page {
-        max-width: 1220px;
+        max-width: 1080px;
         margin: 0 auto;
-        padding: 2.2rem 1rem 3rem;
+        padding: 0 24px 30px;
       }
 
       .toolbar {
@@ -47,7 +64,7 @@
       /* Layout for sidebar + main content */
       .explorer {
         display: flex;
-        gap: 1rem;
+        gap: 16px;
         align-items: flex-start;
       }
 
@@ -62,48 +79,53 @@
       }
 
       .filter-section {
-        background: var(--surface);
+        background: #fff;
         border: 1px solid var(--border);
-        border-radius: 0.75rem;
-        padding: 0.75rem;
+        border-radius: 8px;
+        padding: 12px;
         margin-bottom: 0.8rem;
       }
 
       .filter-title {
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
         font-weight: 700;
         margin: 0 0 0.5rem 0;
-        font-size: 0.95rem;
-        color: var(--text);
+        font-size: 11px;
+        color: var(--gold-dark);
       }
 
       .filter-list { display: flex; flex-wrap: wrap; gap: 0.45rem; }
 
       .filter-item {
-        border: 1px solid var(--border);
+        border: 1.5px solid var(--navy);
         border-radius: 999px;
-        background: var(--surface);
-        padding: 0.4rem 0.7rem;
+        background: #fff;
+        padding: 7px 12px;
         cursor: pointer;
-        color: var(--text-muted);
-        font-size: 0.9rem;
+        color: var(--navy);
+        font-size: 12px;
+        font-weight: 700;
       }
 
-      .filter-item.active { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: white; border-color: transparent; }
+      .filter-item.active { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+      .filter-item:hover:not(.active) { background: #F2EFE7; }
 
       .tag-chip {
-        border: 1px solid var(--border);
+        border: 1px solid var(--line);
         border-radius: 999px;
-        background: var(--surface);
+        background: #fff;
         padding: 0.45rem 0.8rem;
         cursor: pointer;
         color: var(--text-muted);
-        font-size: 0.9rem;
+        font-size: 12px;
       }
 
       .tag-chip.active {
-        background: linear-gradient(135deg, var(--accent), var(--accent-2));
-        color: white;
-        border-color: transparent;
+        background: var(--gold);
+        color: var(--navy);
+        border-color: var(--gold);
       }
 
       .results-meta {
@@ -113,31 +135,32 @@
 
       .project-grid {
         display: grid;
-        gap: 1rem;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       }
 
       .project-card {
-        border: none;
-        border-radius: 1.2rem;
+        border: 1px solid var(--line);
+        border-radius: 8px;
         overflow: hidden;
-        background: #16130f;
-        box-shadow: 0 30px 70px rgba(37, 31, 24, 0.12);
+        background: #fff;
+        box-shadow: 0 6px 20px rgba(0,48,87,0.08);
         cursor: pointer;
         padding: 0;
         text-align: left;
         min-height: 0;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
       }
 
       .project-card:hover {
-        transform: translateY(-4px);
-        transition: transform 220ms ease;
+        transform: translateY(-1px);
+        box-shadow: 0 10px 24px rgba(0,48,87,0.12);
       }
 
       .project-image {
         position: relative;
         width: 100%;
-        aspect-ratio: 1.05 / 1;
+        aspect-ratio: 1 / 1;
         display: flex;
         align-items: flex-end;
         padding: 1rem;
@@ -149,18 +172,18 @@
         content: "";
         position: absolute;
         inset: 0;
-        background: linear-gradient(180deg, rgba(14, 10, 7, 0.08) 0%, rgba(7, 4, 2, 0.7) 100%);
+        background: linear-gradient(180deg, rgba(14, 10, 7, 0.04) 0%, rgba(7, 4, 2, 0.64) 100%);
       }
 
       .project-title {
         position: relative;
         z-index: 1;
         color: white;
-        font-size: clamp(1.15rem, 1.9vw, 1.5rem);
+        font-size: clamp(1.02rem, 1.55vw, 1.28rem);
         font-weight: 700;
         margin: 0;
         letter-spacing: -0.02em;
-        font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+        font-family: "Archivo", sans-serif;
       }
 
       .project-meta {
@@ -180,43 +203,24 @@
         width: 2.2rem;
         height: 2.2rem;
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.16);
         color: white;
         font-size: 0.95rem;
       }
 
-      .project-body {
-        padding: 0.8rem 1rem 1rem;
-      }
-
-      .project-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.35rem;
-        margin-top: 0.9rem;
-      }
-
-      .mini-tag {
-        background: rgba(255, 255, 255, 0.12);
-        color: rgba(255, 255, 255, 0.9);
-        padding: 0.32rem 0.65rem;
-        border-radius: 999px;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-
       .status-pill {
         display: inline-block;
-        margin-top: 0.6rem;
-        margin-bottom: 0.85rem;
-        font-size: 0.8rem;
-        border-radius: 999px;
-        padding: 0.28rem 0.65rem;
+        margin-top: 0;
+        margin-bottom: 0.65rem;
+        font-size: 10px;
+        border-radius: 3px;
+        padding: 3px 9px;
+        font-family: "IBM Plex Mono", monospace;
         background: rgba(255, 255, 255, 0.12);
-        color: rgba(255, 255, 255, 0.9);
+        color: rgba(255, 255, 255, 0.95);
         font-weight: 600;
-        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
       }
 
       .card-hover {
@@ -249,34 +253,21 @@
 
       .card-hover p {
         margin: 0;
-        font-size: 0.95rem;
+        font-size: 13px;
         line-height: 1.6;
-        font-family: 'Roboto', sans-serif;
         display: -webkit-box;
         -webkit-line-clamp: 7;
         -webkit-box-orient: vertical;
         overflow: hidden;
       }
 
-      .status-pill {
-        display: inline-block;
-        margin-top: 0.6rem;
-        font-size: 0.8rem;
-        border-radius: 999px;
-        padding: 0.28rem 0.65rem;
-        background: rgba(255, 255, 255, 0.12);
-        color: rgba(255, 255, 255, 0.9);
-        font-weight: 600;
-        letter-spacing: 0.02em;
-      }
-
       .empty-state {
-        border: 1px dashed var(--border);
-        border-radius: 1rem;
+        border: 1px dashed var(--line);
+        border-radius: 8px;
         padding: 2rem;
         text-align: center;
         color: var(--text-muted);
-        background: var(--surface);
+        background: #fff;
       }
 
       .modal {
@@ -296,8 +287,8 @@
         width: min(760px, 100%);
         max-height: 85vh;
         overflow: auto;
-        background: var(--surface);
-        border-radius: 1rem;
+        background: #fff;
+        border-radius: 8px;
         padding: 1.3rem;
         box-shadow: var(--shadow);
         position: relative;
@@ -327,23 +318,47 @@
       }
 
       .modal-card h2 { margin: 0 0 0.4rem; }
-      .modal-card p { color: var(--text-muted); font-family: 'Roboto', sans-serif; }
+      .modal-card p { color: var(--text-muted); }
       .detail-list { margin: 0.6rem 0 0; padding-left: 1rem; }
       .detail-list li { margin-bottom: 0.35rem; }
       .detail-group { margin-top: 1rem; }
-      .detail-group h3 { margin-bottom: 0.35rem; font-size: 1rem; }
+      .detail-group h3 { margin-bottom: 0.35rem; font-size: 1rem; font-family: "Archivo", sans-serif; color: var(--navy); }
       .link-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.55rem; }
       .link-list a {
         text-decoration: none;
         padding: 0.45rem 0.7rem;
         border-radius: 999px;
-        background: var(--surface-muted);
-        color: var(--accent);
+        background: #F2EFE7;
+        color: var(--gold-dark);
       }
 
+      .masthead {
+        background: linear-gradient(120deg, #002544 0%, #003057 55%, #0C4A7A 100%);
+        padding: 34px 24px 30px; position: relative; overflow: hidden;
+      }
+      .masthead::after {
+        content: ""; position: absolute; right: -60px; top: -60px;
+        width: 260px; height: 260px; border: 2px solid rgba(179,163,105,0.18); border-radius: 50%;
+      }
+      .masthead-inner { max-width: 1080px; margin: 0 auto; position: relative; z-index: 1; }
+      .masthead .eyebrow {
+        font-family: "IBM Plex Mono", monospace; font-size: 11.5px; letter-spacing: 0.14em;
+        color: var(--gold); text-transform: uppercase; margin-bottom: 10px; font-weight: 600;
+      }
+      .masthead h1 { font-family: "Archivo", sans-serif; font-weight: 800; font-size: 30px; color: #fff; margin: 0 0 8px; letter-spacing: -0.01em; }
+      .masthead .sub { color: #C7D6E0; font-size: 14.5px; max-width: 720px; line-height: 1.5; margin: 0; }
+
+      .breadcrumb { max-width: 1080px; margin: 0 auto; padding: 14px 24px 0; font-size: 12px; color: var(--mute); }
+      .breadcrumb a { text-decoration: none; color: var(--mute); }
+      .breadcrumb a:hover { color: var(--navy); }
+      .breadcrumb .sep { margin: 0 6px; color: #B9C1C7; }
+      .breadcrumb .here { color: var(--navy); font-weight: 700; }
+
+      .page-title { font-family: "Archivo", sans-serif; font-weight: 800; font-size: 22px; color: var(--navy); margin: 22px 0 4px; }
+      .page-desc { color: var(--mute); font-size: 13.5px; margin: 0 0 24px; max-width: 720px; }
+
       @media (max-width: 700px) {
-        .page { padding: 1rem 0.8rem 2rem; }
-        .hero { padding: 1rem; }
+        .page { padding: 0 16px 24px; }
         #filter-sidebar { display: none; }
       }
 
@@ -364,26 +379,54 @@
       }
       .nav-inner a:hover { color: #003057; }
       .nav-inner a.current { color: #003057; border-bottom-color: #B3A369; }
+
+      .gt-footer { background: var(--navy); color: #C7D3DB; margin-top: 40px; }
+      .gt-footer-inner { max-width: 1080px; margin: 0 auto; padding: 40px 24px 20px; display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 30px; }
+      @media (max-width: 760px) { .gt-footer-inner { grid-template-columns: 1fr 1fr; } }
+      .gt-footer h4 { font-family: "Archivo", sans-serif; color: #fff; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 12px; }
+      .gt-footer p { font-size: 12.5px; line-height: 1.7; margin: 0; color: #AFC1CE; }
+      .gt-footer ul { list-style: none; padding: 0; margin: 0; }
+      .gt-footer li { margin-bottom: 8px; }
+      .gt-footer a { font-size: 12.5px; color: #AFC1CE; text-decoration: none; }
+      .gt-footer a:hover { color: var(--gold); }
+      .gt-footer-bottom { border-top: 1px solid rgba(255,255,255,0.12); padding: 16px 24px; text-align: center; font-size: 11px; color: #7E97A8; }
     </style>
   </head>
   <body>
     <div class="gt-utility">
-      <a href="https://www.gatech.edu">Georgia Tech</a>
-      <a href="mailto:haag@gatech.edu">Contact</a>
+      <a href="#">Georgia Institute of Technology</a>
+      <a href="#">GT Directory</a>
+      <a href="#">Campus Map</a>
     </div>
+
+    <div class="masthead">
+      <div class="masthead-inner">
+        <div class="eyebrow">HAAG &middot; Project Explorer</div>
+        <h1>Browse Active HAAG Research Projects</h1>
+        <p class="sub">Explore public project metadata across faculty teams, research categories, and recruiting status. Use filters to quickly find work aligned with your interests.</p>
+      </div>
+    </div>
+
     <nav class="nav-bar">
       <div class="nav-inner">
-        <a href="index.html">HAAG (Home)</a>
+        <a href="index.html">Home</a>
         <a href="people.html">People</a>
         <a href="faculty-affiliates.html">Faculty Affiliates</a>
         <a href="phd-postdoc.html">PhD / Post-Doc</a>
-        <a href="data-science-research.html">Data Science Research</a>
+        <a href="data-science-research.html">Research</a>
         <a href="project-management.html">Project Management</a>
         <a href="project-explorer.html" class="current">Project Explorer</a>
         <a href="recruitment.html">Recruitment Status</a>
       </div>
     </nav>
+
+    <div class="breadcrumb">
+      <a href="index.html">HAAG</a><span class="sep">/</span><span class="here">Project Explorer</span>
+    </div>
+
     <main class="page">
+      <h2 class="page-title">Project Directory</h2>
+      <p class="page-desc">Filter by faculty, recruitment, status, and categories to explore the research conducted under HAAG.</p>
       <div class="explorer">
         <aside id="filter-sidebar"></aside>
         <div class="main-area">
@@ -849,5 +892,41 @@
 
       loadProjects();
     </script>
+
+    <footer class="gt-footer">
+      <div class="gt-footer-inner">
+        <div>
+          <h4>Georgia Institute of Technology</h4>
+          <p>North Avenue<br>Atlanta, GA 30332<br>+1 404.894.2000</p>
+        </div>
+        <div>
+          <h4>General</h4>
+          <ul>
+            <li><a href="#">Directory</a></li>
+            <li><a href="#">Employment</a></li>
+            <li><a href="#">Emergency Information</a></li>
+            <li><a href="#">Accessibility</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal &amp; Privacy</h4>
+          <ul>
+            <li><a href="#">Legal &amp; Privacy Information</a></li>
+            <li><a href="#">Human Trafficking Notice</a></li>
+            <li><a href="#">Title IX / Sexual Misconduct</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>HAAG</h4>
+          <ul>
+            <li><a href="index.html">Our Mission</a></li>
+            <li><a href="people.html">People</a></li>
+            <li><a href="recruitment.html">Recruitment Status</a></li>
+            <li><a href="team-matching.html">Team Matching Results</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="gt-footer-bottom">&copy; 2026 Georgia Institute of Technology &middot; Human-Augmented Analytics Group</div>
+    </footer>
   </body>
 </html>
