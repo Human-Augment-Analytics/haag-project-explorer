@@ -201,7 +201,7 @@
       <a href="phd-postdoc.html">PhD / Post-Doc</a>
       <a href="data-science-research.html">Data Science Research</a>
       <a href="project-management.html">Project Management</a>
-      <a href="project-explorer.html">HAAG Project Explorer</a>
+      <a href="project-explorer.html">Project Explorer</a>
       <a href="recruitment.html">Recruitment Status</a>
     </div>
   </nav>
@@ -220,7 +220,7 @@
       <button class="chip" data-role="Faculty">Faculty</button>
       <button class="chip" data-role="PhD">PhD</button>
       <button class="chip" data-role="Postdoc">Postdoc</button>
-      <button class="chip" data-role="Undergraduate">Undergraduate</button>
+      <button class="chip" data-role="Graduate">Graduate</button>
     </div>
 
     <div class="result-row">
@@ -301,6 +301,13 @@
         </div>`;
     }
 
+    function personSortKey(person) {
+      return String(person?.name || "")
+        .replace(/^Dr\.\s*/i, "")
+        .trim()
+        .toLocaleLowerCase();
+    }
+
     function renderGrid() {
       const container = document.getElementById("grid-container");
       const q = document.getElementById("search").value.trim().toLowerCase();
@@ -309,7 +316,7 @@
         const roleMatch = activeRole === "All" || p.role === activeRole;
         const searchMatch = !q || (p.name + " " + (p.tags||[]).join(" ")).toLowerCase().includes(q);
         return roleMatch && searchMatch;
-      });
+      }).slice().sort((a, b) => personSortKey(a).localeCompare(personSortKey(b)));
 
       document.getElementById("result-count").textContent =
         `Showing ${filtered.length} of ${allPeople.length} researchers`;

@@ -4,100 +4,178 @@
 #
 # Fields:
 #   name          - full display name
-#   role          - one of: Faculty | PhD | Postdoc | Undergraduate  (used by the role filter)
+#   role          - one of: Faculty | PhD | Postdoc | Graduate  (used by the role filter)
 #   role_label    - text shown under the name (can be more descriptive than `role`)
 #   tags          - list of research-area tags shown as pills and used by search
 #   profile_url   - link for "View Profile" (use "#" if not yet published)
 
 researchers:
-  - name: Dr. Sarah Chen
+  - name: Dr. Arthur Porto
     role: Faculty
-    role_label: Faculty Advisor &middot; Computer Science
-    tags: [NLP, Human-AI Trust]
+    role_label: Faculty Advisor &middot; University of Florida
+    tags: [Biodiversity, AI, Computer Vision]
     profile_url: "#"
 
-  - name: Marcus Webb
-    role: PhD
-    role_label: PhD Researcher &middot; OMSCS
-    tags: [Computer Vision, Ethics]
-    profile_url: "#"
-
-  - name: Dr. Amara Osei
-    role: Faculty
-    role_label: Faculty Advisor &middot; HCI
-    tags: [HCI, Accessibility]
-    profile_url: "#"
-
-  - name: Priya Patel
+  - name: Dr. Heru Handika
     role: Postdoc
-    role_label: Postdoc &middot; Machine Learning
-    tags: [ML Systems, Fairness]
+    role_label: Faculty Advisor &middot; Computational Advisor &middot; University of Florida
+    tags: [Biodiversity, AI]
     profile_url: "#"
 
-  - name: Dr. James Wu
-    role: Faculty
-    role_label: Faculty Advisor &middot; Data Viz
-    tags: [Data Viz, Education]
-    profile_url: "#"
-
-  - name: Elena Rodriguez
-    role: PhD
-    role_label: PhD Researcher &middot; Robotics
-    tags: [Robotics, Human-AI]
-    profile_url: "#"
-
-  - name: Dr. Kwame Asante
-    role: Faculty
-    role_label: Faculty Advisor &middot; Public Policy
-    tags: [NLP, Social Good]
-    profile_url: "#"
-
-  - name: Olivia Brooks
-    role: PhD
-    role_label: PhD Researcher &middot; UX
-    tags: [UX Research, Trust]
-    profile_url: "#"
-
-  - name: Dr. Noah Kim
-    role: Faculty
-    role_label: Faculty Advisor &middot; Bioinformatics
-    tags: [Bioinformatics, AI]
-    profile_url: "#"
-
-  - name: Fatima Al-Sayed
+  - name: Dr. Yasha Iravantchi
     role: Postdoc
-    role_label: Postdoc &middot; Management
-    tags: [Leadership, Mgmt]
+    role_label: Computational Advisor &middot; University of Michigan
+    tags: [AI, Health]
     profile_url: "#"
 
-  - name: Dr. Liang Zhao
-    role: Faculty
-    role_label: Faculty Advisor &middot; Systems
-    tags: [Systems, Scalability]
+  - name: Dr. Tuan-Anh Vu
+    role: Postdoc
+    role_label: Computational Advisor &middot; UCLA
+    tags: [Computer Vision]
     profile_url: "#"
 
-  - name: Grace Thompson
+  - name: Dr. Katherine Wolcott
+    role: Postdoc
+    role_label: Computational Advisor &middot; University of Florida
+    tags: [Data Science, 3D Imaging, Educational Technology]
+    profile_url: "#"
+
+  - name: Ilia Jahanshahi
     role: PhD
-    role_label: PhD Researcher &middot; Education
-    tags: [Teaching, Pedagogy]
+    role_label: Computational Advisor &middot; Iowa State University
+    tags: [Topological Data Analysis, Data Science, Machine Learning]
     profile_url: "#"
 
-  - name: Dr. Rafael Torres
+  - name: Navya Annapareddy
+    role: PhD
+    role_label: Computational Advisor &middot; University of Virginia
+    tags: [Data Science, Public Good]
+    profile_url: "#"
+
+  - name: Jacqueline Carroll
+    role: PhD
+    role_label: Computational Advisor &middot; University of Delaware
+    tags: [Bioinformatics Data Science, Environmental Health]
+    profile_url: "#"
+
+  - name: Chenwei Xu
+    role: PhD
+    role_label: Computational Advisor &middot; Northwestern University
+    tags: [Statistics, AI]
+    profile_url: "#"
+
+  - name: Dr. Marco Postiglione
+    role: Postdoc
+    role_label: Faculty Advisor &middot; Computational Advisor &middot; Northwestern University
+    tags: [AI, Social Good]
+    profile_url: "#"
+
+  - name: Dr. Jeffrey Cannon
     role: Faculty
-    role_label: Faculty Advisor &middot; Community Engagement
-    tags: [Community, TOPIC]
+    role_label: Faculty Advisor &middot; The Jones Center
+    tags: [Landscape Ecology]
     profile_url: "#"
 
-  - name: Aisha Bello
-    role: Undergraduate
-    role_label: Undergraduate &middot; Certificate Program
-    tags: [Certificate, Teaching]
+  - name: Maryam Berijanian
+    role: PhD
+    role_label: Computational Advisor &middot; Michigan State University
+    tags: [AI, NLP, Computer Vision]
     profile_url: "#"
 
-  - name: Dr. Ingrid Larsen
+  - name: Samuel Ruipérez-Campillo
+    role: PhD
+    role_label: Computational Advisor &middot; ETH Zürich
+    tags: [Biomedical Engineering, AI]
+    profile_url: "#"
+
+  - name: Dr. Anind Dey
     role: Faculty
-    role_label: Faculty Advisor &middot; Research Ops
-    tags: [Research Ops, PM]
+    role_label: Faculty Advisor &middot; University of Washington
+    tags: [AI, Health]
+    profile_url: "#"
+
+  - name: Dr. Imon Banerjee
+    role: Faculty
+    role_label: Computational Advisor &middot; Northwestern University
+    tags: [Theoretical Machine Learning]
+    profile_url: "#"
+
+  - name: Dr. Shruti Motiwale
+    role: Faculty
+    role_label: Computational Advisor &middot; UT Austin
+    tags: [Deep Learning, Computational Mechanics]
+    profile_url: "#"
+
+  - name: Dr. Supratik Mukhopadhyay
+    role: Faculty
+    role_label: Computational Advisor &middot; Louisiana State University
+    tags: [Environmental Sciences, AI, Healthcare]
+    profile_url: "#"
+
+  - name: Dr. Breanna Shi
+    role: Faculty
+    role_label: Faculty Advisor &middot; Georgia Institute of Technology
+    tags: [Education, Project Management]
+    profile_url: "#"
+
+  - name: Charles Clark
+    role: PhD
+    role_label: Computational Advisor &middot; University of Florida
+    tags: [Data Science]
+    profile_url: "#"
+
+  - name: Dr. James Stroud
+    role: Faculty
+    role_label: Faculty Advisor &middot; Georgia Institute of Technology
+    tags: [Ecology, LiDAR]
+    profile_url: "#"
+
+  - name: Thomas Orth
+    role: Graduate
+    role_label: Computational Advisor &middot; Georgia Institute of Technology
+    tags: [AI]
+    profile_url: "#"
+
+  - name: Dr. Jenny McGuire
+    role: Faculty
+    role_label: Faculty Advisor &middot; Georgia Institute of Technology
+    tags: [Spatial Ecology]
+    profile_url: "#"
+
+  - name: Katherine Slenker
+    role: PhD
+    role_label: Computational Advisor &middot; Georgia Institute of Technology
+    tags: [Data Science]
+    profile_url: "#"
+
+  - name: Dr. Benjamin Freeman
+    role: Faculty
+    role_label: Faculty Advisor &middot; Georgia Institute of Technology
+    tags: [Evolutionary Ecology, Conservation Biology]
+    profile_url: "#"
+
+  - name: Raghu Mulukutla
+    role: Graduate
+    role_label: Computational Advisor &middot; Georgia Institute of Technology
+    tags: [AI, ML]
+    profile_url: "#"
+
+  - name: Dr. Steve Mussmann
+    role: Faculty
+    role_label: Faculty Advisor &middot; Georgia Institute of Technology
+    tags: [Data-Centric ML, Active Learning]
+    profile_url: "#"
+
+  - name: Arunachal Syam
+    role: Graduate
+    role_label: Computational Advisor &middot; Georgia Institute of Technology
+    tags: [ML]
+    profile_url: "#"
+
+  - name: Eric Dreyer
+    role: Graduate
+    role_label: Computational Advisor &middot; Georgia Institute of Technology
+    tags: [Computer Vision, ML, Deep Learning]
     profile_url: "#"
 
 features:
