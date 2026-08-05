@@ -485,8 +485,8 @@
       }
 
       function stripInlineComment(value) {
-        const hashIndex = value.indexOf('#');
-        return hashIndex >= 0 ? value.slice(0, hashIndex) : value;
+        const match = value.match(/(^|\s)#/);
+        return match ? value.slice(0, match.index) : value;
       }
 
       function parseScalar(value) {
@@ -534,9 +534,10 @@
 
           const indent = line.match(/^\s*/)[0].length;
           if (indent > 0 && currentObjectKey && trimmed.includes(':')) {
-            const [key, rawValue] = trimmed.split(/:\s*/, 2);
-            if (rawValue !== undefined) {
-              result[currentObjectKey][key] = parseScalar(rawValue);
+            const colonIndex = trimmed.indexOf(':');
+            const key = trimmed.slice(0, colonIndex);
+            if (key) {
+              result[currentObjectKey][key] = parseScalar(trimmed.slice(colonIndex + 1));
             }
             return;
           }
