@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HAAG Recruitment Status</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+<style>
+  :root {
+    /* Georgia Tech official brand colors */
+    --gt-navy: #003057;
+    --gt-navy-light: #0C4A7A;
+    --gt-gold: #B3A369;
+    --gt-gold-medium: #A4925A;   /* accessible for large text */
+    --gt-gold-dark: #857437;     /* accessible for small bold text */
+    --ink: #22282C;
+    --mute: #5B6670;
+    --line: #E1E4E7;
+    --card-tint: #F5F4F1;
+    --white: #FFFFFF;
+    --error-bg: #FBEAEA;
+    --error-border: #B3242C;
+    --error-ink: #7A1F1F;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: var(--white);
+    color: var(--ink);
+  }
+
+  /* Top bar - mirrors the GT site header treatment */
+  .gt-topbar {
+    background: var(--gt-navy);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .gt-topbar .site-name {
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .gt-topbar .site-tag {
+    color: var(--gt-gold);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .gt-goldbar {
+    height: 4px;
+    background: var(--gt-gold);
+  }
+
+  .wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 44px 24px 80px;
+  }
+  h1 {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--gt-navy);
+    font-size: 32px;
+    font-weight: 800;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    color: var(--mute);
+    font-size: 15px;
+    margin: 0 0 28px;
+  }
+
+  .status-banner {
+    background: var(--gt-navy);
+    border-radius: 4px;
+    padding: 26px 30px;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+    border-left: 6px solid var(--gt-gold);
+  }
+  .status-banner .label {
+    font-size: 12px;
+    color: #B7C6D3;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .status-banner .phase {
+    font-size: 25px;
+    font-weight: 800;
+  }
+  .status-banner .cycle {
+    font-size: 13px;
+    color: var(--gt-gold);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .updated {
+    font-size: 12px;
+    color: var(--mute);
+    margin-bottom: 32px;
+  }
+
+  .notes {
+    background: var(--card-tint);
+    border-radius: 4px;
+    padding: 16px 20px;
+    font-size: 14px;
+    color: var(--ink);
+    margin-bottom: 40px;
+    border-left: 4px solid var(--gt-gold-dark);
+  }
+
+  .timeline { position: relative; margin: 0 0 40px; }
+  .phase-row { display: flex; gap: 20px; position: relative; padding-bottom: 32px; }
+  .phase-row:last-child { padding-bottom: 0; }
+  .rail { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 32px; }
+  .dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+    background: #C6CCD1;
+    z-index: 1;
+  }
+  .dot.complete { background: var(--gt-gold-dark); }
+  .dot.current {
+    background: var(--gt-navy);
+    box-shadow: 0 0 0 4px var(--card-tint), 0 0 0 6px var(--gt-gold);
+  }
+  .line { width: 3px; flex: 1; background: var(--line); margin-top: 2px; }
+  .line.complete { background: var(--gt-gold-dark); }
+
+  .phase-content { padding-top: 2px; }
+  .phase-label { font-size: 16px; font-weight: 700; color: var(--mute); }
+  .phase-row.current .phase-label { color: var(--gt-navy); }
+  .phase-row.complete .phase-label { color: var(--gt-gold-dark); }
+  .phase-desc { font-size: 13px; color: var(--mute); margin-top: 4px; max-width: 560px; }
+
+  .badge {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 3px;
+    margin-left: 8px;
+    vertical-align: middle;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .badge.current { background: var(--gt-gold); color: var(--gt-navy); }
+  .badge.complete { background: var(--card-tint); color: var(--gt-gold-dark); }
+
+  .contact { border-top: 1px solid var(--line); padding-top: 20px; font-size: 13px; color: var(--mute); }
+  .contact a { color: var(--gt-navy); font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--gt-gold); }
+  .contact a:hover { color: var(--gt-navy-light); }
+
+  .error {
+    background: var(--error-bg);
+    border-left: 4px solid var(--error-border);
+    padding: 16px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: var(--error-ink);
+  }
+  .loading { color: var(--mute); font-size: 14px; }
+
+  .footer-tag {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 11.5px;
+    color: var(--mute);
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+  <div class="gt-topbar">
+    <span class="site-name">Human-Augmented Analytics Group</span>
+    <span class="site-tag">HAAG</span>
+  </div>
+  <div class="gt-goldbar"></div>
+
+  <div class="wrap">
+    <h1>Recruitment Status</h1>
+    <p class="subtitle">Where we currently stand in the recruitment cycle</p>
+    <div id="content">
+      <p class="loading">Loading current status&hellip;</p>
+    </div>
+    <div class="footer-tag">Georgia Institute of Technology &middot; HAAG</div>
+  </div>
+
+  <script>
+    async function loadStatus() {
+      const contentEl = document.getElementById("content");
+      try {
+        const res = await fetch("recruitment.yml", { cache: "no-store" });
+        if (!res.ok) throw new Error("Could not load recruitment.yml (" + res.status + ")");
+        const text = await res.text();
+        const data = jsyaml.load(text);
+        render(data, contentEl);
+      } catch (err) {
+        contentEl.innerHTML =
+          '<div class="error"><strong>Could not load recruitment status.</strong><br>' +
+          "This page needs to be served over HTTP (e.g. GitHub Pages or a local server) " +
+          "rather than opened directly as a file, since it fetches <code>recruitment.yml</code>. " +
+          "<br><br>Details: " + (err.message || err) + "</div>";
+      }
+    }
+
+    function render(data, el) {
+      const phases = data.phases || [];
+      const currentIndex = phases.findIndex((p) => p.key === data.current_phase);
+      const currentPhase = phases[currentIndex];
+
+      let html = "";
+
+      html += '<div class="status-banner">';
+      html += '<div><div class="label">Current Phase</div>';
+      html += '<div class="phase">' + escapeHtml(currentPhase ? currentPhase.label : data.current_phase) + "</div></div>";
+      html += '<div class="cycle">' + escapeHtml(data.cycle_name || "") + "</div>";
+      html += "</div>";
+
+      html += '<div class="updated">Last updated: ' + escapeHtml(data.last_updated || "unknown") + "</div>";
+
+      if (data.notes) {
+        html += '<div class="notes">' + escapeHtml(data.notes.trim()) + "</div>";
+      }
+
+      html += '<div class="timeline">';
+      phases.forEach((p, i) => {
+        let state = "upcoming";
+        if (i < currentIndex) state = "complete";
+        else if (i === currentIndex) state = "current";
+
+        const isLast = i === phases.length - 1;
+        html += '<div class="phase-row ' + state + '">';
+        html += '<div class="rail">';
+        html += '<div class="dot ' + state + '">' + (state === "complete" ? "&#10003;" : i + 1) + "</div>";
+        if (!isLast) html += '<div class="line ' + (state === "complete" ? "complete" : "") + '"></div>';
+        html += "</div>";
+        html += '<div class="phase-content">';
+        html += '<span class="phase-label">' + escapeHtml(p.label) + "</span>";
+        if (state === "current") html += '<span class="badge current">CURRENT</span>';
+        if (state === "complete") html += '<span class="badge complete">COMPLETE</span>';
+        html += '<div class="phase-desc">' + escapeHtml(p.description || "") + "</div>";
+        html += "</div></div>";
+      });
+      html += "</div>";
+
+      if (data.contact) {
+        html += '<div class="contact">Questions about this cycle? <a href="' + escapeAttr(data.contact) + '">Contact HAAG</a></div>';
+      }
+
+      el.innerHTML = html;
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+    function escapeAttr(str) {
+      return String(str).replace(/"/g, "&quot;");
+    }
+
+    loadStatus();
+  </script>
+</body>
+</html>
