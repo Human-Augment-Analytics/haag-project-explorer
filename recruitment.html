@@ -247,6 +247,15 @@
   }
   .side-card .cta:hover { color: var(--navy-light); }
   .side-card.contact { background: #F2EFE7; border: none; }
+  .side-card.apply { border-left: 4px solid var(--gold); }
+  .side-card.apply-flow { margin: 0 0 30px; }
+  .side-card.apply-flow p { font-size: 13.5px; max-width: 560px; }
+  .cta-stack { display: flex; flex-direction: column; align-items: flex-start; gap: 9px; }
+  .cta-stack .step {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px; font-weight: 600; color: var(--gold-dark);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-right: 6px;
+  }
 
   .error {
     background: var(--error-bg); border-left: 4px solid var(--error-border);
@@ -389,6 +398,14 @@
       if (data.notes) {
         html += '<div class="notes">' + escapeHtml(data.notes.trim()) + "</div>";
       }
+
+      html += '<div class="side-card apply apply-flow">';
+      html += "<h3>CS 8903 Application</h3>";
+      html += "<p>Applying for 8903 credit? You must first submit a BuzzMe application for the main project you want to use, then complete the 8903 application form.</p>";
+      html += '<div class="cta-stack">';
+      html += '<a class="cta" href="https://buzzme.cc.gatech.edu/research/project/search/?instructor_of_record=Breanna%20Shi&amp;title=&amp;description_content=&amp;recommended_skills_content=" target="_blank" rel="noopener"><span class="step">Step 1</span>Find your project on BuzzMe &rarr;</a>';
+      html += '<a class="cta" href="https://gatech.co1.qualtrics.com/jfe/form/SV_86XF2sy4ZpbOLYy" target="_blank" rel="noopener"><span class="step">Step 2</span>Submit the 8903 application &rarr;</a>';
+      html += "</div></div>";
 
       html += '<div class="log-heading">Cycle Log</div>';
       html += '<div class="timeline">';
