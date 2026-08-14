@@ -239,7 +239,7 @@
       html += '<div class="cycle">' + escapeHtml(data.cycle_name || "") + "</div>";
       html += "</div>";
 
-      html += '<div class="updated">Last updated: ' + escapeHtml(data.last_updated || "unknown") + "</div>";
+      html += '<div class="updated">Last updated: ' + escapeHtml(formatDisplayValue(data.last_updated) || "unknown") + "</div>";
 
       if (data.notes) {
         html += '<div class="notes">' + escapeHtml(data.notes.trim()) + "</div>";
@@ -282,6 +282,12 @@
     }
     function escapeAttr(str) {
       return String(str).replace(/"/g, "&quot;");
+    }
+    function formatDisplayValue(value) {
+      if (value instanceof Date && !Number.isNaN(value.getTime())) {
+        return value.toISOString().slice(0, 10);
+      }
+      return value === null || value === undefined ? "" : String(value);
     }
 
     loadStatus();

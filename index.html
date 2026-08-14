@@ -109,6 +109,7 @@
 
   /* ---------- Section shell ---------- */
   .section { max-width: 1080px; margin: 0 auto; padding: 70px 24px; }
+  #mission { scroll-margin-top: 28px; }
   .section-head { text-align: center; max-width: 640px; margin: 0 auto 46px; }
   .section .eyebrow {
     font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: 0.16em;
@@ -215,9 +216,9 @@
         <span class="pill">since May 2024</span>
       </div>
       <div class="stat-card">
-        <div class="num">733%</div>
-        <div class="lbl">Growth Since Founding</div>
-        <span class="pill">from 15 members</span>
+        <div class="num" id="project-count">29</div>
+        <div class="lbl">Research Projects</div>
+        <span class="pill">and counting</span>
       </div>
       <div class="stat-card">
         <div class="num">4</div>
@@ -334,7 +335,7 @@
         <div class="rail"><div class="dot current">Now</div></div>
         <div class="phase-content">
           <span class="phase-label">January 2025 &mdash; 125 Researchers<span class="badge">Current</span></span>
-          <div class="phase-desc">733% growth since founding &mdash; from 15 founding members to a thriving, multi-disciplinary research community.</div>
+          <div class="phase-desc">HAAG now supports a growing portfolio of <span id="timeline-project-count">29</span> research projects across a thriving, multi-disciplinary research community.</div>
         </div>
       </div>
     </div>
@@ -369,13 +370,32 @@
           <li><a href="index.html">Our Mission</a></li>
           <li><a href="people.html">People</a></li>
           <li><a href="recruitment.html">Recruitment Status</a></li>
-          <li><a href="team-matching.html">Team Matching Results</a></li>
         </ul>
       </div>
     </div>
     <div class="gt-footer-bottom">&copy; 2026 Georgia Institute of Technology &middot; Human-Augmented Analytics Group</div>
   </footer>
 
+<script>
+  async function syncProjectCounts() {
+    try {
+      const res = await fetch("projects/manifest.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("Could not load project manifest");
+      const data = await res.json();
+      const count = Array.isArray(data.projects) ? data.projects.length : null;
+      if (!count) return;
+
+      const statCount = document.getElementById("project-count");
+      const timelineCount = document.getElementById("timeline-project-count");
+      if (statCount) statCount.textContent = String(count);
+      if (timelineCount) timelineCount.textContent = String(count);
+    } catch (err) {
+      // Keep the server-rendered fallback count when the manifest is unavailable.
+    }
+  }
+
+  syncProjectCounts();
+</script>
 <script src="embed-resize.js" defer></script>
 </body>
 </html>

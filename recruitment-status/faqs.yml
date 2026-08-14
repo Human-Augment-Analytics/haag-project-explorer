@@ -1,0 +1,58 @@
+sections:
+  - key: faq-8903
+    eyebrow: FAQ for 8903
+    title: New Researchers
+    description: Guidance for first-time HAAG researchers enrolling in CS 8903.
+    items:
+      - question: Is the research statement required?
+        answer: Yes, it is a non-negotiable requirement for the CS 8903 enrollment process.
+      - question: How do I attach my statement of research to my DocuSign petition?
+        answer: There are two ways that we are aware of. The easiest way is to attach it after sending it, before it is signed by the next person after you on the signing order. This can be done by revising the submission from the dashboard UI after sending it.
+      - question: What do I do if I submitted my DocuSign petition without attaching a research statement?
+        answer: If possible, revise the submission and attach it. Otherwise, resubmit it with a research statement attached.
+      - question: Who is my faculty advisor?
+        answer: Dr. Nicholas Lytle.
+      - question: Who is my OMSCS advisor?
+        answer: Refer to the emails sent by Reina Grundhoefer. OMSCS advisors are assigned by last or surname.
+      - question: Can I register for fewer than 3 credits?
+        answer: No. If you have already hit the limit, request a credit limit expansion.
+      - question: Can I register for more than 3 credits?
+        answer: No. You must register for 3 credits in our CS 8903 course offering.
+      - question: Will I receive PACE access?
+        answer: If you enroll in CS 8903, yes. Once registration is over, the head TA will submit an access request for all enrolled CS 8903 and all enrolled CS 6999 researchers.
+      - question: What CRN number do I put in the DocuSign form?
+        answer: Put 00000.
+      - question: What method of evaluation should I select in the DocuSign form?
+        answer: Article for publication.
+      - question: In the DocuSign email, should the email subject contain only my name or add the name to the existing subject?
+        answer: Add your name to the existing subject.
+
+  - key: faq-6999
+    eyebrow: FAQ for 6999
+    title: Returning Researchers for the Project Track
+    description: Registration details for researchers continuing into CS 6999 on the project track.
+    items:
+      - question: Is the research statement required?
+        answer: Yes, it is a non-negotiable requirement for new CS 6999 students. The only exception is if you have already completed one term of CS 6999, in which case you can email your OMSCS advisor to request the CRN and mention that you have already completed one term of CS 6999.
+      - question: How do I attach my statement of research to my DocuSign petition?
+        answer: There are two ways that we are aware of. The easiest way is to attach it after sending it, before it is signed by the next person after you on the signing order. This can be done by revising the submission from the dashboard UI after sending it.
+      - question: What do I do if I submitted my DocuSign petition without attaching a research statement?
+        answer: If possible, revise the submission and attach it. Otherwise, resubmit it with a research statement attached.
+      - question: Who is my faculty advisor?
+        answer: Dr. Nicholas Lytle.
+      - question: Who is my OMSCS advisor?
+        answer: Refer to the emails sent by Reina Grundhoefer. OMSCS advisors are assigned by last or surname.
+      - question: Can I register for fewer than 3 credits?
+        answer: No. If you have already hit the limit, request a credit limit expansion.
+      - question: Can I register for more than 3 credits?
+        answer: Yes, but only in increments of 3. For example, you can enroll in 6 credits. You will be required to do double the amount of work, which means a 20-hour-per-week minimum instead of the normal 10-hour-per-week minimum. Enrolling in more than 6 credits is not recommended.
+      - question: Will I receive PACE access?
+        answer: If you enroll in CS 6999, yes. Once registration is over, the head TA will submit an access request for all enrolled CS 8903 and all enrolled CS 6999 researchers.
+      - question: How many semesters of CS 6999 do I need to complete to satisfy the master's project track requirements?
+        answer: If you have already completed 3 credits of CS 8903, you only need to complete 6 credits of CS 6999. You will also need to submit a petition to the College of Computing to request that your CS 8903 credits count toward your project track requirements. This requires an email from Dr. Lytle testifying that you have been working on the same project over the course of your 9 credits of research. This is best done in your final term in CS 6999.
+      - question: What CRN number do I put in the DocuSign form?
+        answer: Put 00000.
+      - question: What method of evaluation should I select in the DocuSign form?
+        answer: Article for publication.
+      - question: In the DocuSign email, should the email subject contain only my name or add the name to the existing subject?
+        answer: Add your name to the existing subject.

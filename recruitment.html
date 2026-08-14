@@ -232,6 +232,80 @@
   .badge.current { background: var(--gold); color: var(--navy); }
   .badge.complete { background: #F2EFE7; color: var(--gold-dark); }
 
+  .faq-shell {
+    margin-top: 34px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .faq-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 18px;
+    scroll-margin-top: 22px;
+  }
+  .faq-card h3 {
+    font-family: "Archivo", sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--navy);
+    margin: 0 0 6px;
+  }
+  .faq-card .faq-kicker {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+    margin-bottom: 8px;
+  }
+  .faq-card .faq-desc {
+    font-size: 12.5px;
+    color: var(--mute);
+    line-height: 1.55;
+    margin: 0 0 14px;
+  }
+  .faq-list { display: grid; gap: 10px; }
+  .faq-item {
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    background: #FAFAF8;
+    overflow: hidden;
+  }
+  .faq-item summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 13px 14px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 12.75px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after {
+    content: "+";
+    flex-shrink: 0;
+    font-size: 18px;
+    line-height: 1;
+    color: var(--gold-dark);
+  }
+  .faq-item[open] summary::after { content: "−"; }
+  .faq-answer {
+    padding: 0 14px 14px;
+    color: var(--mute);
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+
   .side-card {
     background: #fff; border: 1px solid var(--line); border-radius: 6px;
     padding: 20px 20px 22px; margin-bottom: 18px; margin-top: 22px;
@@ -247,6 +321,8 @@
   }
   .side-card .cta:hover { color: var(--navy-light); }
   .side-card.contact { background: #F2EFE7; border: none; }
+  .side-card.contact .cta-stack { gap: 10px; }
+  .side-card.contact .cta-stack .cta { margin: 0; }
   .side-card.apply { border-left: 4px solid var(--gold); }
   .side-card.apply-flow { margin: 0 0 30px; }
   .side-card.apply-flow p { font-size: 13.5px; max-width: 560px; }
@@ -324,12 +400,7 @@
       <div>
         <div class="side-card">
           <h3>How this stays current</h3>
-          <p>This page is driven by a single structured file maintained by the recruitment team. When the phase changes, the file is updated and this page reflects it automatically, no separate system to keep in sync.</p>
-        </div>
-        <div class="side-card">
-          <h3>Once matching is finalized</h3>
-          <p>When the cycle reaches Finalized, team placements are published for the group to review.</p>
-          <a class="cta" href="team-matching.html">View sample results &rarr;</a>
+          <p>This page is driven by a single structured file maintained by the recruitment team. When the phase changes, the file is updated and this page reflects it automatically.</p>
         </div>
         <div class="side-card contact" id="contact-card"></div>
       </div>
@@ -355,7 +426,7 @@
         <ul>
           <li><a href="#">About HAAG</a></li>
           <li><a href="#">Programs</a></li>
-          <li><a href="team-matching.html">Team Matching Results</a></li>
+          <li><a href="recruitment.html">Recruitment Status</a></li>
         </ul>
       </div>
     </div>
@@ -367,24 +438,30 @@
       const contentEl = document.getElementById("content");
       const contactEl = document.getElementById("contact-card");
       try {
-        const res = await fetch("recruitment.yml", { cache: "no-store" });
-        if (!res.ok) throw new Error("Could not load recruitment.yml (" + res.status + ")");
-        const text = await res.text();
-        const data = jsyaml.load(text);
-        render(data, contentEl, contactEl);
+        const [statusRes, faqRes] = await Promise.all([
+          fetch("recruitment.yml", { cache: "no-store" }),
+          fetch("recruitment-status/faqs.yml", { cache: "no-store" })
+        ]);
+        if (!statusRes.ok) throw new Error("Could not load recruitment.yml (" + statusRes.status + ")");
+        if (!faqRes.ok) throw new Error("Could not load recruitment-status/faqs.yml (" + faqRes.status + ")");
+        const [statusText, faqText] = await Promise.all([statusRes.text(), faqRes.text()]);
+        const data = jsyaml.load(statusText);
+        const faqData = jsyaml.load(faqText);
+        render(data, faqData, contentEl, contactEl);
       } catch (err) {
         contentEl.innerHTML =
           '<div class="error"><strong>Could not load recruitment status.</strong><br>' +
           "This page needs to be served over HTTP (e.g. GitHub Pages or a local server) " +
-          "rather than opened directly as a file, since it fetches <code>recruitment.yml</code>. " +
+          "rather than opened directly as a file, since it fetches <code>recruitment.yml</code> and <code>recruitment-status/faqs.yml</code>. " +
           "<br><br>Details: " + (err.message || err) + "</div>";
       }
     }
 
-    function render(data, el, contactEl) {
+    function render(data, faqData, el, contactEl) {
       const phases = data.phases || [];
       const currentIndex = phases.findIndex((p) => p.key === data.current_phase);
       const currentPhase = phases[currentIndex];
+      const faqSections = Array.isArray(faqData && faqData.sections) ? faqData.sections : [];
 
       let html = "";
 
@@ -392,7 +469,7 @@
       html += '<div class="top-row"><div><div class="label">Current Phase</div>';
       html += '<div class="phase">' + escapeHtml(currentPhase ? currentPhase.label : data.current_phase) + "</div></div>";
       html += '<div class="cycle">' + escapeHtml(data.cycle_name || "") + "</div></div>";
-      html += '<div class="updated">Last updated ' + escapeHtml(data.last_updated || "unknown") + "</div>";
+      html += '<div class="updated">Last updated ' + escapeHtml(formatDisplayValue(data.last_updated) || "unknown") + "</div>";
       html += "</div>";
 
       if (data.notes) {
@@ -401,7 +478,7 @@
 
       html += '<div class="side-card apply apply-flow">';
       html += "<h3>CS 8903 Application</h3>";
-      html += "<p>Applying for 8903 credit? You must first submit a BuzzMe application for the main project you want to use, then complete the 8903 application form.</p>";
+      html += "<p>Applying for 8903 credit? You must first submit a BuzzMe application for the main project you want to join, then complete the 8903 application form.</p>";
       html += '<div class="cta-stack">';
       html += '<a class="cta" href="https://buzzme.cc.gatech.edu/research/project/search/?instructor_of_record=Breanna%20Shi&amp;title=&amp;description_content=&amp;recommended_skills_content=" target="_blank" rel="noreferrer"><span class="step">Step 1</span> Find your project on BuzzMe &rarr;</a>';
       html += '<a class="cta" href="https://gatech.co1.qualtrics.com/jfe/form/SV_86XF2sy4ZpbOLYy" target="_blank" rel="noreferrer"><span class="step">Step 2</span> Submit the 8903 application &rarr;</a>';
@@ -430,12 +507,39 @@
       });
       html += "</div>";
 
+      if (faqSections.length) {
+        html += '<div class="faq-shell">';
+        html += '<div class="log-heading">Enrollment FAQs</div>';
+        html += '<div class="faq-grid">';
+        faqSections.forEach((section) => {
+          html += '<section class="faq-card" id="' + escapeAttr(section.key || "faq-section") + '">';
+          html += '<div class="faq-kicker">' + escapeHtml(section.eyebrow || "FAQ") + '</div>';
+          html += '<h3>' + escapeHtml(section.title || "") + '</h3>';
+          if (section.description) {
+            html += '<p class="faq-desc">' + escapeHtml(section.description) + '</p>';
+          }
+          html += '<div class="faq-list">';
+          (section.items || []).forEach((item) => {
+            html += '<details class="faq-item">';
+            html += '<summary>' + escapeHtml(item.question || "") + '</summary>';
+            html += '<div class="faq-answer">' + formatFaqAnswer(item.answer || "") + '</div>';
+            html += '</details>';
+          });
+          html += '</div></section>';
+        });
+        html += '</div></div>';
+      }
+
       el.innerHTML = html;
 
       if (data.contact && contactEl) {
         contactEl.innerHTML =
-          '<h3>Questions about this cycle?</h3><p>Reach out and we\'ll point you in the right direction.</p>' +
-          '<a class="cta" href="' + escapeAttr(data.contact) + '">Contact HAAG &rarr;</a>';
+          '<h3 id="contact-haag">Questions about this cycle?</h3><p>Jump to the right FAQ first, then reach out if you still need help.</p>' +
+          '<div class="cta-stack">' +
+          '<a class="cta" href="#faq-8903">8903 FAQ for New Researchers &rarr;</a>' +
+          '<a class="cta" href="#faq-6999">6999 FAQ for Returning Project Track &rarr;</a>' +
+          '<a class="cta" href="' + escapeAttr(data.contact) + '">Additional questions? Contact HAAG &rarr;</a>' +
+          '</div>';
       }
     }
 
@@ -444,6 +548,15 @@
       return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
     function escapeAttr(str) { return String(str).replace(/"/g, "&quot;"); }
+    function formatDisplayValue(value) {
+      if (value instanceof Date && !Number.isNaN(value.getTime())) {
+        return value.toISOString().slice(0, 10);
+      }
+      return value === null || value === undefined ? "" : String(value);
+    }
+    function formatFaqAnswer(str) {
+      return escapeHtml(str).replace(/\n\n+/g, "</p><p>").replace(/\n/g, "<br>").replace(/^/, "<p>").replace(/$/, "</p>");
+    }
 
     loadStatus();
   </script>

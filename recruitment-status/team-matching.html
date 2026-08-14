@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Team Matching Results | Human-Augmented Analytics Group</title>
+<title>Recruitment Status | Human-Augmented Analytics Group</title>
+<meta http-equiv="refresh" content="0; url=index.html" />
+<meta name="robots" content="noindex, nofollow" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -78,6 +80,12 @@
 
   .page-title { font-family: "Archivo", sans-serif; font-weight: 800; font-size: 22px; color: var(--navy); margin: 22px 0 4px; }
   .page-desc { color: var(--mute); font-size: 13.5px; margin: 0 0 18px; max-width: 660px; }
+
+  .hidden-card {
+    background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--gold);
+    border-radius: 6px; padding: 20px 22px; max-width: 640px;
+  }
+  .hidden-card p { color: var(--mute); font-size: 13.5px; line-height: 1.6; margin: 0; }
 
   .sample-banner {
     background: var(--amber-bg); border: 1px solid var(--amber-border);
@@ -170,27 +178,16 @@
   </nav>
 
   <div class="breadcrumb">
-    <a href="index.html">HAAG</a><span class="sep">/</span><a href="index.html">Recruitment Status</a><span class="sep">/</span><span class="here">Team Matching Results</span>
+    <a href="index.html">HAAG</a><span class="sep">/</span><span class="here">Recruitment Status</span>
   </div>
 
   <div class="wrap">
-    <h2 class="page-title">Team Matching Results</h2>
-    <p class="page-desc">Fall 2026 Recruitment: published once the cycle reaches Finalized. Each researcher below has been matched with a project, faculty lead, and computational advisor.</p>
+    <h2 class="page-title">Recruitment Status</h2>
+    <p class="page-desc">Team matching results are not published on the website.</p>
 
-    <div class="sample-banner">
-      <span class="dot"></span>
-      <span><strong>Sample data.</strong> This page shows placeholder names and projects for demonstration purposes only, not real HAAG placements.</span>
+    <div class="hidden-card">
+      <p>You are being redirected to the recruitment status page.</p>
     </div>
-
-    <div class="stat-row">
-      <div class="stat-card"><div class="num">18</div><div class="lbl">Researchers Matched</div></div>
-      <div class="stat-card"><div class="num">7</div><div class="lbl">Projects</div></div>
-      <div class="stat-card"><div class="num">9</div><div class="lbl">Faculty Leads</div></div>
-      <div class="stat-card"><div class="num">6</div><div class="lbl">Computational Advisors</div></div>
-    </div>
-
-    <div class="log-heading">Confirmed Placements</div>
-    <div class="match-grid" id="match-grid"></div>
   </div>
 
   <footer class="gt-footer">
@@ -220,38 +217,7 @@
   </footer>
 
   <script>
-    // Sample / fictional data for demonstration purposes only.
-    const matches = [
-      { name: "Jordan A.", role: "Researcher", project: "Photogrammetry for Habitat Mapping", faculty: "Dr. R. Ellison", advisor: "M. Castillo" },
-      { name: "Priya K.", role: "Researcher", project: "Photogrammetry for Habitat Mapping", faculty: "Dr. R. Ellison", advisor: "M. Castillo" },
-      { name: "Sam R.", role: "Researcher", project: "Clinical Text De-identification", faculty: "Dr. L. Fenwick", advisor: "J. Okafor" },
-      { name: "Wei T.", role: "Researcher", project: "Clinical Text De-identification", faculty: "Dr. L. Fenwick", advisor: "J. Okafor" },
-      { name: "Elena V.", role: "Researcher", project: "Wildfire Risk Forecasting", faculty: "Dr. A. Marsh", advisor: "K. Bianchi" },
-      { name: "Marcus D.", role: "Researcher", project: "Wildfire Risk Forecasting", faculty: "Dr. A. Marsh", advisor: "K. Bianchi" },
-      { name: "Aisha N.", role: "Researcher", project: "Accessible Transit Routing", faculty: "Dr. P. Nakamura", advisor: "S. Whitfield" },
-      { name: "Diego L.", role: "Researcher", project: "Accessible Transit Routing", faculty: "Dr. P. Nakamura", advisor: "S. Whitfield" },
-      { name: "Grace H.", role: "Researcher", project: "Supply Chain Anomaly Detection", faculty: "Dr. T. Reyes", advisor: "M. Castillo" },
-      { name: "Omar F.", role: "Researcher", project: "Supply Chain Anomaly Detection", faculty: "Dr. T. Reyes", advisor: "M. Castillo" },
-    ];
-
-    const initials = (name) => name.split(" ").map(p => p[0]).join("").slice(0,2).toUpperCase();
-
-    const grid = document.getElementById("match-grid");
-    grid.innerHTML = matches.map(m => `
-      <div class="match-card">
-        <div class="avatar">${initials(m.name)}</div>
-        <div class="match-info">
-          <div class="match-name">${m.name}</div>
-          <div class="match-role">${m.role}</div>
-          <div class="match-meta">
-            <strong>Project:</strong> ${m.project}<br>
-            <strong>Faculty:</strong> ${m.faculty}<br>
-            <strong>Advisor:</strong> ${m.advisor}
-          </div>
-          <div class="status-pill">Confirmed</div>
-        </div>
-      </div>
-    `).join("");
+    window.location.replace("index.html");
   </script>
 </body>
 </html>

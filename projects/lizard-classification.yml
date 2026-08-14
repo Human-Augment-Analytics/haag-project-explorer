@@ -12,12 +12,12 @@ advisors:
   - 
   - 
 summary: >
-  Summary here.
+  This project builds an image classifier for lizard species starting from the iNaturalist Species Classification and Detection dataset, a large public benchmark of 859,000 images spanning over 5,000 species, chosen because it already contains tens of thousands of coarsely-labelled reptile bounding boxes. Working from labels that only mark the broader group rather than the species, the team narrows in on the families of lizards visually similar to their targets, curates a usable training set from millions of noisy public images, and trains a deep learning classifier to make the fine-grained distinctions the original annotations couldn't. The trained model is exported for portable, framework-independent inference, so it can run outside the original training environment.
 tags:
   - 
 links:
-  github: https://github.com/wenhan9604/Anole_classifier # placeholder, if public
-  docs: https://example.com/docs # Could be README, wiki, github pages, etc.
-  publication: https://doi.org/... # If exists/completed
+  github: null # placeholder, if public
+  docs: null # Could be README, wiki, github pages, etc.
+  publication: null # If exists/completed
   forum: null # link to forum - @James Hennessy
-  contact: mailto:lab@example.edu # Contact to reach out to for interested parties (lab-level email distribution)
+  contact: null # Contact to reach out to for interested parties (lab-level email distribution)
