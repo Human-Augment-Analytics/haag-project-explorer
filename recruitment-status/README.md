@@ -8,10 +8,12 @@ website.
 ## How it works
 
 - `recruitment.yml` is the single source of truth for the current recruitment phase.
-- `index.html` reads `recruitment.yml` at page load and renders the status banner and
-  timeline. There is no build step and no backend — the page just reads the file directly.
-- To change what's shown on the site, you only ever edit `recruitment.yml`. Nothing else
-  needs to change.
+- `faqs.yml` is the source of truth for the enrollment FAQ content shown below the timeline.
+- `index.html` reads both `recruitment.yml` and `faqs.yml` at page load and renders the
+  status banner, timeline, and FAQ sections. There is no build step and no backend — the
+  page just reads the files directly.
+- To change what is shown on the site, edit `recruitment.yml` for cycle status updates and
+  `faqs.yml` for enrollment FAQ updates. Nothing else needs to change.
 
 This intentionally does **not** integrate with BuzzMe. The recruitment phase only changes
 a handful of times per cycle, so a manual update is simpler and has no dependency on
@@ -55,10 +57,38 @@ contact: mailto:haag@gatech.edu
 The site automatically reflects whatever `current_phase` is set to — phases before it show
 as complete, the matching phase shows as current, and phases after it show as upcoming.
 
+## Updating the FAQs
+
+The recruitment page includes two FAQ sections:
+
+- `FAQ for 8903` for new researchers.
+- `FAQ for 6999` for returning researchers on the project track.
+
+To update them:
+
+1. Open `faqs.yml`.
+2. Find the right section under `sections:`.
+3. Edit an existing `question` or `answer`, or add a new item under that section's `items:` list.
+4. Keep answers as plain text. The page will handle spacing and accordion behavior automatically.
+
+Template:
+
+```yaml
+sections:
+  - key: faq-8903
+    eyebrow: FAQ for 8903
+    title: New Researchers
+    description: Guidance for first-time HAAG researchers enrolling in CS 8903.
+    items:
+      - question: Is the research statement required?
+        answer: Yes, it is a non-negotiable requirement.
+```
+
 ## Running locally
 
-Because `index.html` fetches `recruitment.yml` over HTTP, opening the file directly in a
-browser (`file://`) will fail due to browser security restrictions. Serve it locally instead:
+Because `index.html` fetches `recruitment.yml` and `faqs.yml` over HTTP, opening the file
+directly in a browser (`file://`) will fail due to browser security restrictions. Serve it
+locally instead:
 
 ```bash
 python3 -m http.server 8000

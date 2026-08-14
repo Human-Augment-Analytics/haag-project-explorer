@@ -12,11 +12,10 @@
 
 cycle_name: Fall 2026 Recruitment
 current_phase: applications_open
-last_updated: 2026-07-20
+last_updated: 2026-08-14
 
 notes: > # Optional free-text shown under the status banner. Leave as null for none.
-  Applications are open now through August 15 on BuzzMe. Matching will begin
-  shortly after the window closes.
+  Applications are open now through August 15 on BuzzMe. Matching will take place on a rolling basis.
 
 # Do not reorder or rename these phase keys - they define the timeline shown
 # on the site. Add/edit descriptions freely, but keep `key` values stable.
