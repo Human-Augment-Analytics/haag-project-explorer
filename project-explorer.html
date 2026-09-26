@@ -198,7 +198,7 @@
         right: 1rem;
         z-index: 2;
         display: inline-flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: center;
         width: 2.2rem;
         height: 2.2rem;
@@ -271,11 +271,11 @@
       }
 
       .modal {
-        position: fixed;
+        position: absolute;
         inset: 0;
         background: rgba(2, 6, 23, 0.65);
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: center;
         padding: 1rem;
         z-index: 30;
@@ -773,7 +773,7 @@
               <span class="open-icon">↗</span>
             </div>
           `;
-          card.addEventListener('click', () => openModal(project));
+          card.addEventListener('click', (event) => openModal(project, event.currentTarget));
           projectsGrid.appendChild(card);
         });
       }
@@ -827,7 +827,7 @@
         `;
       }
 
-      function openModal(project) {
+      function openModal(project, triggerEl) {
         modal.hidden = false;
         let summaryBlock = '';
         if (project.summary) {
@@ -844,21 +844,43 @@
           ${renderModalTags(project.tags)}
           ${renderLinks(project.links)}
         `;
+
+        const docHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+        modal.style.height = docHeight + 'px';
+        const card = modal.querySelector('.modal-card');
+        card.style.marginTop = '0px';
+        const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+        let anchorMid = scrollY + (window.innerHeight / 2);
+        if (triggerEl) {
+          const rect = triggerEl.getBoundingClientRect();
+          anchorMid = rect.top + scrollY + (rect.height / 2);
+        }
+        const cardHeight = card.offsetHeight;
+        let top = anchorMid - (cardHeight / 2) - 16;
+        top = Math.max(0, Math.min(top, docHeight - cardHeight - 32));
+        card.style.marginTop = top + 'px';
+      }
+
+      function closeModal() {
+        modal.hidden = true;
+        modal.style.height = '';
+        const card = modal.querySelector('.modal-card');
+        if (card) card.style.marginTop = '';
       }
 
       modal.addEventListener('click', (event) => {
         if (event.target === modal) {
-          modal.hidden = true;
+          closeModal();
         }
       });
 
       document.querySelector('.modal-close').addEventListener('click', () => {
-        modal.hidden = true;
+        closeModal();
       });
 
       document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
-          modal.hidden = true;
+          closeModal();
         }
       });
 
