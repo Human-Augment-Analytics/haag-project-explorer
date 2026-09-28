@@ -587,6 +587,15 @@
         return result;
       }
 
+      function normalizeProjectLink(value) {
+        const link = normalizeText(value);
+        if (!link || /\.\.\.|example\.com|placeholder/i.test(link)) return '';
+        if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(link)) return `mailto:${link}`;
+        if (/^mailto:[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(link)) return link;
+        if (/^https?:\/\//i.test(link)) return link;
+        return '';
+      }
+
       function buildProject(projectData) {
         const summary = projectData.summary ? String(projectData.summary).trim() : '';
         const tags = toList(projectData.tags).map((tag) => normalizeText(tag));
@@ -595,8 +604,8 @@
         const advisors = toList(projectData.advisors).map((person) => normalizeText(person));
         const links = projectData.links && typeof projectData.links === 'object'
           ? Object.entries(projectData.links)
-              .filter(([, value]) => normalizeText(value).length > 0)
-              .map(([label, value]) => ({ label, value }))
+              .map(([label, value]) => ({ label, value: normalizeProjectLink(value) }))
+              .filter((link) => link.value)
           : [];
         const [startColor, endColor] = createAccent(projectData.name || 'Project');
 
