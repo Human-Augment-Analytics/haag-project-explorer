@@ -132,6 +132,7 @@
     text-decoration: none; border-bottom: 2px solid var(--gold); padding-bottom: 1px;
   }
   .cta-link:hover { color: var(--navy-light); }
+  .cta-link[hidden] { display: none; }
 
   .join-card {
     background: var(--navy); border-radius: 8px; padding: 24px 20px; border-left: 6px solid var(--gold);
@@ -232,8 +233,8 @@
       <p class="loading">Loading researcher directory&hellip;</p>
     </div>
 
-    <div class="log-heading" id="featured-heading">Recently Featured</div>
-    <div class="features-grid" id="features-grid"></div>
+    <div class="log-heading" id="featured-heading" hidden>Recently Featured</div>
+    <div class="features-grid" id="features-grid" hidden></div>
   </div>
 
   <footer class="gt-footer">
@@ -276,6 +277,7 @@
     let activeRole = "All";
     // Enable when ready; window.HAAG_PEOPLE_FEATURE_FLAGS can override before this script loads.
     const PEOPLE_FEATURE_FLAGS = {
+      profileButtons: false,
       facultyProfiles: false,
       blogPosts: false,
       ...(window.HAAG_PEOPLE_FEATURE_FLAGS || {})
@@ -288,10 +290,12 @@
     function personCard(p) {
       const tags = (p.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("");
       const isFaculty = String(p.role || "").trim().toLowerCase() === "faculty";
-      const showProfileLink = PEOPLE_FEATURE_FLAGS.facultyProfiles || !isFaculty;
-      const profileLink = showProfileLink
-        ? `<a class="cta-link" href="${escapeAttr(p.profile_url || '#')}">View Profile &rarr;</a>`
-        : "";
+      const showProfileLink = Boolean(
+        PEOPLE_FEATURE_FLAGS.profileButtons ||
+        PEOPLE_FEATURE_FLAGS.profileLinks ||
+        (PEOPLE_FEATURE_FLAGS.facultyProfiles && isFaculty)
+      );
+      const profileLink = `<a class="cta-link" href="${escapeAttr(p.profile_url || '#')}"${showProfileLink ? "" : " hidden"}>View Profile &rarr;</a>`;
       return `
         <div class="person-card" data-role="${escapeAttr(p.role)}" data-search="${escapeAttr((p.name + " " + (p.tags||[]).join(" ")).toLowerCase())}">
           <div class="avatar">${initials(p.name)}</div>
@@ -343,12 +347,13 @@
     function renderFeatures(features) {
       const grid = document.getElementById("features-grid");
       const heading = document.getElementById("featured-heading");
-      const visibleFeatures = (features || []).filter(feature =>
-        PEOPLE_FEATURE_FLAGS.blogPosts || String(feature.kind || "").trim().toLowerCase() !== "blog"
+      const showSection = Boolean(
+        PEOPLE_FEATURE_FLAGS.blogPosts ||
+        PEOPLE_FEATURE_FLAGS.blogPostsSection ||
+        PEOPLE_FEATURE_FLAGS.featuredSection
       );
-      grid.hidden = visibleFeatures.length === 0;
-      heading.hidden = visibleFeatures.length === 0;
-      grid.innerHTML = visibleFeatures.map(f => `
+
+      grid.innerHTML = (features || []).map(f => `
         <div class="feature-card">
           <span class="feature-kind">${escapeHtml(f.kind)}</span>
           <h3>${escapeHtml(f.title)}</h3>
@@ -357,6 +362,9 @@
           <a class="cta-link" href="${escapeAttr(f.url || '#')}">Read more &rarr;</a>
         </div>
       `).join("");
+
+      grid.hidden = !showSection || (features || []).length === 0;
+      heading.hidden = !showSection || (features || []).length === 0;
     }
 
     function escapeHtml(str) {
