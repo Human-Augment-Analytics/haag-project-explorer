@@ -32,13 +32,22 @@ if (!Array.isArray(manifest.projects)) {
 
 const listed = new Set();
 for (const filename of manifest.projects) {
-  if (typeof filename !== "string" || path.basename(filename) !== filename || !filename.endsWith(".yml")) {
+  if (typeof filename !== "string" || filename === "." || filename === ".." ||
+      path.basename(filename) !== filename || !filename.endsWith(".yml")) {
     fail(`invalid project filename in manifest: ${filename}`);
     continue;
   }
+
+  const projectPath = path.resolve(projectsDir, filename);
+  const relativePath = path.relative(projectsDir, projectPath);
+  if (relativePath === ".." || relativePath.startsWith(`..${path.sep}`) || path.isAbsolute(relativePath)) {
+    fail(`project path escapes projects directory: ${filename}`);
+    continue;
+  }
+
   if (listed.has(filename)) fail(`duplicate project in manifest: ${filename}`);
   listed.add(filename);
-  if (!fs.existsSync(path.join(projectsDir, filename))) fail(`missing project file: ${filename}`);
+  if (!fs.existsSync(projectPath)) fail(`missing project file: ${filename}`);
 }
 
 for (const filename of fs.readdirSync(projectsDir).filter((name) => name.endsWith(".yml"))) {

@@ -287,7 +287,8 @@
 
     function personCard(p) {
       const tags = (p.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("");
-      const showProfileLink = PEOPLE_FEATURE_FLAGS.facultyProfiles || p.role !== "Faculty";
+      const isFaculty = String(p.role || "").trim().toLowerCase() === "faculty";
+      const showProfileLink = PEOPLE_FEATURE_FLAGS.facultyProfiles || !isFaculty;
       const profileLink = showProfileLink
         ? `<a class="cta-link" href="${escapeAttr(p.profile_url || '#')}">View Profile &rarr;</a>`
         : "";
