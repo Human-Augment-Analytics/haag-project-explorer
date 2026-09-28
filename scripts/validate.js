@@ -50,20 +50,39 @@ for (const filename of manifest.projects) {
   if (!fs.existsSync(projectPath)) fail(`missing project file: ${filename}`);
 }
 
-for (const filename of fs.readdirSync(projectsDir).filter((name) => name.endsWith(".yml"))) {
+const dirFiles = fs.readdirSync(projectsDir).filter((name) => name.endsWith(".yml"));
+for (const filename of dirFiles) {
   if (!listed.has(filename)) fail(`project file is not listed in manifest: ${filename}`);
 }
 
-const peoplePath = path.join(root, "people.html");
-const peopleHtml = fs.readFileSync(peoplePath, "utf8");
-const inlineScripts = [...peopleHtml.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
-inlineScripts.forEach((match, index) => {
-  try {
-    new vm.Script(match[1], { filename: `people.html inline script ${index + 1}` });
-  } catch (error) {
-    fail(`${error.message} in people.html inline script ${index + 1}`);
+// Ensure no unedited placeholder link values exist in project files
+for (const filename of dirFiles) {
+  const projectPath = path.resolve(projectsDir, filename);
+  if (!fs.existsSync(projectPath)) continue;
+  const content = fs.readFileSync(projectPath, "utf8");
+  const lines = content.split("\n");
+  for (const line of lines) {
+    const match = line.match(/^(\s*)([a-zA-Z0-9_-]+):\s*(.*)$/);
+    if (!match) continue;
+    const val = match[3].split("#")[0].trim();
+    if (/example\.(com|edu)|github\.com\/org\/\.\.\.|doi\.org\/\.\.\./i.test(val)) {
+      fail(`${filename} contains active placeholder link value: ${val}`);
+    }
   }
-});
+}
+
+const peoplePath = path.join(root, "people.html");
+if (fs.existsSync(peoplePath)) {
+  const peopleHtml = fs.readFileSync(peoplePath, "utf8");
+  const inlineScripts = [...peopleHtml.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
+  inlineScripts.forEach((match, index) => {
+    try {
+      new vm.Script(match[1], { filename: `people.html inline script ${index + 1}` });
+    } catch (error) {
+      fail(`${error.message} in people.html inline script ${index + 1}`);
+    }
+  });
+}
 
 if (process.exitCode) process.exit();
-console.log(`✓ Manifest matches all ${listed.size} project files; people.html inline JavaScript parses.`);
+console.log(`✓ Manifest matches all ${listed.size} project files; links verified; people.html inline JavaScript parses.`);
