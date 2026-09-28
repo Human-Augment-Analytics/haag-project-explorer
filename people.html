@@ -344,7 +344,7 @@
       const grid = document.getElementById("features-grid");
       const heading = document.getElementById("featured-heading");
       const visibleFeatures = (features || []).filter(feature =>
-        PEOPLE_FEATURE_FLAGS.blogPosts || String(feature.kind || "").toLowerCase() !== "blog"
+        PEOPLE_FEATURE_FLAGS.blogPosts || String(feature.kind || "").trim().toLowerCase() !== "blog"
       );
       grid.hidden = visibleFeatures.length === 0;
       heading.hidden = visibleFeatures.length === 0;
