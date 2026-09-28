@@ -17,8 +17,9 @@
     window.parent.postMessage({ type: "haag-embed-height", height: height }, "*");
   }
 
+  // Keep internal anchor navigation scrollable when the parent expands this iframe.
   document.addEventListener("click", function (event) {
-    var link = event.target.closest('a[href^="#faq-"]');
+    var link = event.target.closest('a[href^="#"]');
     if (!link || link.getAttribute("href") === "#") return;
     var target = document.getElementById(decodeURIComponent(link.hash.slice(1)));
     if (!target) return;
