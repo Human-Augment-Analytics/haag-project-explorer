@@ -24,11 +24,11 @@ tags: # Optional for now, but will be used to categorize the projects into group
   - 
   -
 links:
-  github: null      # Public repo URL (e.g., https://github.com/...), or null if private/none
-  docs: null        # Project docs, wiki, or website URL, or null
-  publication: null # Preprint or paper DOI URL (e.g., https://doi.org/...), or null
-  forum: null       # Link to forum discussion, or null
-  contact: null     # Contact email (e.g., mailto:user@domain.edu), or null
+  github: null      # e.g. https://github.com/... (placeholder, if public)
+  docs: null        # e.g. https://example.com/docs (Could be README, wiki, github pages, project website, etc.)
+  publication: null # e.g. https://doi.org/... (If exists/preprint/completed)
+  forum: null       # link to forum - @James Hennessy - leave null for now
+  contact: null     # e.g. mailto:lab@example.edu (Contact to reach out to for interested parties, or null if none)
 ```
 
 ## Example
