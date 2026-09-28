@@ -5,6 +5,7 @@
   var lastHeight = 0;
   var embeddedViewportHeight = window.innerHeight;
   var scrollTarget = null;
+  var pendingResizeScroll = false;
 
   function send() {
     var contentHeight = Math.ceil(
@@ -21,6 +22,7 @@
     if (!link || link.getAttribute("href") === "#") return;
     var target = document.getElementById(decodeURIComponent(link.hash.slice(1)));
     if (!target) return;
+    pendingResizeScroll = embeddedViewportHeight !== lastHeight;
     scrollTarget = target;
     send();
     requestAnimationFrame(function () {
@@ -29,7 +31,8 @@
   });
 
   window.addEventListener("resize", function () {
-    if (!scrollTarget) return;
+    if (!pendingResizeScroll) return;
+    pendingResizeScroll = false;
     requestAnimationFrame(function () {
       scrollTarget.scrollIntoView({ behavior: "smooth", block: "start" });
     });
