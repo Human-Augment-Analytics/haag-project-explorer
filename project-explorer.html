@@ -587,6 +587,68 @@
         return result;
       }
 
+      function formatLinkLabel(key) {
+        const labels = {
+          github: 'GitHub',
+          docs: 'Docs',
+          publication: 'Publication',
+          forum: 'Forum',
+          contact: 'Contact'
+        };
+        const lower = String(key || '').toLowerCase();
+        return labels[lower] || (key ? key.charAt(0).toUpperCase() + key.slice(1) : 'Link');
+      }
+
+      function normalizeProjectLink(value) {
+        if (!value || typeof value !== 'string') return '';
+        const trimmed = value.trim();
+        if (!trimmed || trimmed === 'null') return '';
+
+        // 1. Handle emails (with or without 'mailto:')
+        const emailMatch = trimmed.match(/^(?:mailto:)?([^\s@]+@[^\s@]+\.[^\s@]+)$/i);
+        if (emailMatch) {
+          const email = emailMatch[1];
+          // Reject dummy / template emails
+          if (/@(?:example\.(?:com|edu|org)|domain\.com)$/i.test(email)) return '';
+          return `mailto:${email}`;
+        }
+
+        // 2. Prepend https:// if scheme is missing (e.g. 'github.com/foo/bar')
+        let candidate = trimmed;
+        if (!/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(candidate)) {
+          if (/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(candidate)) {
+            candidate = `https://${candidate}`;
+          } else {
+            return '';
+          }
+        }
+
+        // 3. Parse and validate with native URL API
+        try {
+          const url = new URL(candidate);
+          if (!['https:', 'http:'].includes(url.protocol)) return '';
+
+          const hostname = url.hostname.toLowerCase();
+          if (
+            hostname === 'localhost' ||
+            hostname === 'example.com' || hostname.endsWith('.example.com') ||
+            hostname === 'example.edu' || hostname.endsWith('.example.edu') ||
+            hostname === 'example.org' || hostname.endsWith('.example.org')
+          ) {
+            return '';
+          }
+
+          // Reject incomplete template paths
+          if (url.pathname.includes('...') || url.pathname.includes('/org/')) {
+            return '';
+          }
+
+          return url.href;
+        } catch {
+          return '';
+        }
+      }
+
       function buildProject(projectData) {
         const summary = projectData.summary ? String(projectData.summary).trim() : '';
         const tags = toList(projectData.tags).map((tag) => normalizeText(tag));
@@ -595,8 +657,8 @@
         const advisors = toList(projectData.advisors).map((person) => normalizeText(person));
         const links = projectData.links && typeof projectData.links === 'object'
           ? Object.entries(projectData.links)
-              .filter(([, value]) => normalizeText(value).length > 0)
-              .map(([label, value]) => ({ label, value }))
+              .map(([label, value]) => ({ label: formatLinkLabel(label), value: normalizeProjectLink(value) }))
+              .filter((link) => link.value)
           : [];
         const [startColor, endColor] = createAccent(projectData.name || 'Project');
 
