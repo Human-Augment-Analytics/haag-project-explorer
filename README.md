@@ -45,3 +45,105 @@ See `projects/photogrammetry.yml` as an example.
 6. Save and commit both the new YAML file and the updated `projects/manifest.json`.
 
 > The explorer reads `projects/manifest.json` first and then loads each listed YAML file. The manifest is the source of truth for which project files are included.
+
+## Feature flags (required for new features)
+
+All existing functionality is `CURRENT` by default, represented by the
+`existingSite` baseline in `feature-flags.js`. Existing unmarked UI remains visible.
+Every upcoming feature **must** have its own global registry entry and start as
+`PREVIEW`. Use exactly these two values:
+
+| Value | Default visitor | Preview enabled |
+| --- | --- | --- |
+| `CURRENT` | Enabled | Enabled |
+| `PREVIEW` | Disabled | Enabled |
+
+The registry is shared by all pages, including `recruitment-status/`. There is no
+build step or external service. Unknown names and invalid values are disabled.
+`existingSite` records the legacy baseline; it is not a master switch for the site.
+
+### Add a feature
+
+1. Add a uniquely named entry to `feature-flags.js`, for example
+   `projectComparison: 'PREVIEW',`. Use letters, digits, `_`, or `-`, beginning
+   with a letter.
+2. Gate **every** entry point and UI element for the feature:
+
+   ```html
+   <button data-feature="projectComparison">Compare projects</button>
+   <section data-feature="projectComparison">Comparison panel</section>
+   ```
+
+3. Gate its JavaScript initialization, event handlers, and data fetching too:
+
+   ```js
+   if (window.HAAGFeatures.isEnabled('projectComparison')) {
+     initializeProjectComparison();
+   }
+   ```
+
+4. Verify both modes, including navigation, direct page access, and embedded use.
+5. Change the registry value to `CURRENT` when the feature is approved for release.
+   Keep the gates so the feature can be returned to `PREVIEW` if needed.
+
+For a new HTML page, copy the `haag-feature-gates` style and the two feature script
+imports from an existing page into its head, before feature markup or scripts.
+Adjust relative paths for nested folders. Keep these scripts synchronous: gates
+are computed before content renders. Dynamic `data-feature` elements are covered
+by the same CSS automatically; nested features require all enclosing gates to be
+enabled. Do not change registry values at runtime; edit the file and reload.
+
+### Preview upcoming features locally
+
+Start the site with `make start`, open a page, and run this in its browser console:
+
+```js
+sessionStorage.setItem('haag:preview', 'PREVIEW');
+location.reload();
+```
+
+This enables all registered `PREVIEW` features in that browser tab and origin,
+including navigation to other pages. To restore the default `CURRENT` mode:
+
+```js
+sessionStorage.removeItem('haag:preview');
+location.reload();
+```
+
+Inspect `HAAGFeatures.mode`, `HAAGFeatures.flags`, or
+`HAAGFeatures.isEnabled('projectComparison')` in the console. For an iframe,
+select the embedded page's console context. When session storage is blocked,
+preview stays off. Preview settings do not change another visitor's experience.
+
+These client-side flags control rollout, not access to confidential content:
+HTML, JavaScript, and data shipped with the site remain publicly downloadable.
+
+### Required review checklist
+
+- Every new feature is registered as `PREVIEW` and gates both UI and behavior.
+- Existing functionality remains `CURRENT`.
+- Both default and preview modes are checked before merging.
+- New pages load the shared feature scripts and gate style.
+- Run `make check` to validate the registry, page integration, and toggle behavior.
+
+### Working example and browser test
+
+`projectResultCount` is a real `PREVIEW` feature on the Project Explorer. It shows
+“Showing X of Y public projects” and updates as filters change. In default mode,
+the counter is hidden and its update code does not execute. Enable preview using
+the console commands above to try it, then select a recruitment filter.
+
+The automated browser test checks default visibility, existing card/modal
+behavior, preview visibility, filter updates, disabling preview, and promotion to
+`CURRENT` (simulated without editing the registry):
+
+```sh
+npm install --no-save --package-lock=false playwright
+npx playwright install chromium
+node scripts/test-feature-browser.js
+```
+
+If Google Chrome is already installed, skip the Chromium download and run
+`BROWSER_CHANNEL=chrome node scripts/test-feature-browser.js` instead. The test
+starts and stops its own temporary localhost server. Browser tests are separate
+from the dependency-free `make check` checks.
