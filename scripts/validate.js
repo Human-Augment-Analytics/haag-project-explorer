@@ -1,54 +1,88 @@
 #!/usr/bin/env node
-const fs = require('fs');
-const path = require('path');
+const fs = require("node:fs");
+const path = require("node:path");
+const vm = require("node:vm");
 
-const manifestPath = path.join(__dirname, '..', 'projects', 'manifest.json');
-const projectsDir = path.join(__dirname, '..', 'projects');
+const root = path.resolve(__dirname, "..");
+const projectsDir = path.join(root, "projects");
+const manifestPath = path.join(projectsDir, "manifest.json");
+
+function fail(message) {
+  console.error(`✗ ${message}`);
+  process.exitCode = 1;
+}
 
 if (!fs.existsSync(manifestPath)) {
-  console.error('❌ projects/manifest.json not found');
-  process.exit(1);
+  fail("projects/manifest.json not found");
+  process.exit();
 }
 
-const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-let errors = 0;
+let manifest;
+try {
+  manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+} catch (error) {
+  fail(`projects/manifest.json is not valid JSON: ${error.message}`);
+  process.exit();
+}
 
-const dirFiles = fs.readdirSync(projectsDir).filter((f) => f.endsWith('.yml'));
+if (!Array.isArray(manifest.projects)) {
+  fail("projects/manifest.json must contain a projects array");
+  process.exit();
+}
 
-// 1. Check all manifest projects exist
-for (const file of manifest.projects) {
-  const full = path.join(projectsDir, file);
-  if (!fs.existsSync(full)) {
-    console.error(`❌ Missing file listed in manifest: ${file}`);
-    errors++;
+const listed = new Set();
+for (const filename of manifest.projects) {
+  if (typeof filename !== "string" || filename === "." || filename === ".." ||
+      path.basename(filename) !== filename || !filename.endsWith(".yml")) {
+    fail(`invalid project filename in manifest: ${filename}`);
+    continue;
   }
-}
 
-// 2. Warn if any YAML file on disk is omitted from manifest
-for (const file of dirFiles) {
-  if (!manifest.projects.includes(file)) {
-    console.warn(`⚠️ Warning: projects/${file} exists on disk but is not in manifest.json`);
+  const projectPath = path.resolve(projectsDir, filename);
+  const relativePath = path.relative(projectsDir, projectPath);
+  if (relativePath === ".." || relativePath.startsWith(`..${path.sep}`) || path.isAbsolute(relativePath)) {
+    fail(`project path escapes projects directory: ${filename}`);
+    continue;
   }
+
+  if (listed.has(filename)) fail(`duplicate project in manifest: ${filename}`);
+  listed.add(filename);
+  if (!fs.existsSync(projectPath)) fail(`missing project file: ${filename}`);
 }
 
-// 3. Ensure no unedited placeholder link values exist
-for (const file of dirFiles) {
-  const content = fs.readFileSync(path.join(projectsDir, file), 'utf8');
-  const lines = content.split('\n');
+const dirFiles = fs.readdirSync(projectsDir).filter((name) => name.endsWith(".yml"));
+for (const filename of dirFiles) {
+  if (!listed.has(filename)) fail(`project file is not listed in manifest: ${filename}`);
+}
+
+// Ensure no unedited placeholder link values exist in project files
+for (const filename of dirFiles) {
+  const projectPath = path.resolve(projectsDir, filename);
+  if (!fs.existsSync(projectPath)) continue;
+  const content = fs.readFileSync(projectPath, "utf8");
+  const lines = content.split("\n");
   for (const line of lines) {
     const match = line.match(/^(\s*)([a-zA-Z0-9_-]+):\s*(.*)$/);
     if (!match) continue;
-    const val = match[3].split('#')[0].trim();
+    const val = match[3].split("#")[0].trim();
     if (/example\.(com|edu)|github\.com\/org\/\.\.\.|doi\.org\/\.\.\./i.test(val)) {
-      console.error(`❌ ${file} contains active placeholder link value: ${val}`);
-      errors++;
+      fail(`${filename} contains active placeholder link value: ${val}`);
     }
   }
 }
 
-if (errors > 0) {
-  console.error(`\nFound ${errors} issue(s).`);
-  process.exit(1);
+const peoplePath = path.join(root, "people.html");
+if (fs.existsSync(peoplePath)) {
+  const peopleHtml = fs.readFileSync(peoplePath, "utf8");
+  const inlineScripts = [...peopleHtml.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
+  inlineScripts.forEach((match, index) => {
+    try {
+      new vm.Script(match[1], { filename: `people.html inline script ${index + 1}` });
+    } catch (error) {
+      fail(`${error.message} in people.html inline script ${index + 1}`);
+    }
+  });
 }
 
-console.log(`✅ All ${manifest.projects.length} project files valid and in sync!`);
+if (process.exitCode) process.exit();
+console.log(`✓ Manifest matches all ${listed.size} project files; links verified; people.html inline JavaScript parses.`);

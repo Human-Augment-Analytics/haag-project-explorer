@@ -132,6 +132,7 @@
     text-decoration: none; border-bottom: 2px solid var(--gold); padding-bottom: 1px;
   }
   .cta-link:hover { color: var(--navy-light); }
+  .cta-link[hidden] { display: none; }
 
   .join-card {
     background: var(--navy); border-radius: 8px; padding: 24px 20px; border-left: 6px solid var(--gold);
@@ -148,6 +149,7 @@
 
   /* ---------- Features section ---------- */
   .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
+  .features-grid[hidden], .log-heading[hidden] { display: none; }
   @media (max-width: 900px) { .features-grid { grid-template-columns: 1fr; } }
   .feature-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 20px; border-left: 4px solid var(--gold); }
   .feature-kind {
@@ -231,8 +233,8 @@
       <p class="loading">Loading researcher directory&hellip;</p>
     </div>
 
-    <div class="log-heading">Recently Featured</div>
-    <div class="features-grid" id="features-grid"></div>
+    <div class="log-heading" id="featured-heading" hidden>Recently Featured</div>
+    <div class="features-grid" id="features-grid" hidden></div>
   </div>
 
   <footer class="gt-footer">
@@ -273,6 +275,13 @@
   <script>
     let allPeople = [];
     let activeRole = "All";
+    // Enable when ready; window.HAAG_PEOPLE_FEATURE_FLAGS can override before this script loads.
+    const PEOPLE_FEATURE_FLAGS = {
+      profileButtons: false,
+      facultyProfiles: false,
+      blogPosts: false,
+      ...(window.HAAG_PEOPLE_FEATURE_FLAGS || {})
+    };
 
     function initials(name) {
       return name.replace(/^Dr\.\s*/, "").split(" ").map(p => p[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
@@ -280,13 +289,20 @@
 
     function personCard(p) {
       const tags = (p.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("");
+      const isFaculty = String(p.role || "").trim().toLowerCase() === "faculty";
+      const showProfileLink = Boolean(
+        PEOPLE_FEATURE_FLAGS.profileButtons ||
+        PEOPLE_FEATURE_FLAGS.profileLinks ||
+        (PEOPLE_FEATURE_FLAGS.facultyProfiles && isFaculty)
+      );
+      const profileLink = `<a class="cta-link" href="${escapeAttr(p.profile_url || '#')}"${showProfileLink ? "" : " hidden"}>View Profile &rarr;</a>`;
       return `
         <div class="person-card" data-role="${escapeAttr(p.role)}" data-search="${escapeAttr((p.name + " " + (p.tags||[]).join(" ")).toLowerCase())}">
           <div class="avatar">${initials(p.name)}</div>
           <div class="person-name">${escapeHtml(p.name)}</div>
           <div class="person-role">${p.role_label || p.role}</div>
           <div class="tag-row">${tags}</div>
-          <a class="cta-link" href="${escapeAttr(p.profile_url || '#')}">View Profile &rarr;</a>
+          ${profileLink}
         </div>`;
     }
 
@@ -330,6 +346,13 @@
 
     function renderFeatures(features) {
       const grid = document.getElementById("features-grid");
+      const heading = document.getElementById("featured-heading");
+      const showSection = Boolean(
+        PEOPLE_FEATURE_FLAGS.blogPosts ||
+        PEOPLE_FEATURE_FLAGS.blogPostsSection ||
+        PEOPLE_FEATURE_FLAGS.featuredSection
+      );
+
       grid.innerHTML = (features || []).map(f => `
         <div class="feature-card">
           <span class="feature-kind">${escapeHtml(f.kind)}</span>
@@ -339,6 +362,9 @@
           <a class="cta-link" href="${escapeAttr(f.url || '#')}">Read more &rarr;</a>
         </div>
       `).join("");
+
+      grid.hidden = !showSection || (features || []).length === 0;
+      heading.hidden = !showSection || (features || []).length === 0;
     }
 
     function escapeHtml(str) {
