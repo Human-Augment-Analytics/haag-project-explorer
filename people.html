@@ -301,7 +301,7 @@
       );
       const profileLink = `<a class="cta-link" href="${escapeAttr(p.profile_url || '#')}"${showProfileLink ? "" : " hidden"}>View Profile &rarr;</a>`;
       return `
-        <div class="person-card" data-role="${escapeAttr(p.role)}" data-search="${escapeAttr((p.name + " " + (p.tags||[]).join(" ")).toLowerCase())}">
+        <div class="person-card" data-role="${escapeAttr(p.role)}" data-search="${escapeAttr((p.name + " " + (p.tags||[]).join(" ")).toLowerCase())}"${p.status === 'preview' ? ' data-feature="newPeopleEntries"' : ''}>
           <div class="avatar">${initials(p.name)}</div>
           <div class="person-name">${escapeHtml(p.name)}</div>
           <div class="person-role">${p.role_label || p.role}</div>

@@ -3,4 +3,5 @@
 window.HAAG_FEATURE_FLAGS = Object.freeze({
   existingSite: 'CURRENT',
   projectResultCount: 'PREVIEW',
+  newPeopleEntries: 'PREVIEW',
 });
