@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style id="haag-feature-gates">[data-feature] { display: none !important; }</style>
+<script src="feature-flags.js"></script>
+<script src="feature-toggle.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Content Editor (Admin) | HAAG</title>
+<style>
+  :root {
+    --navy: #003057; --gold: #B3A369; --line: #E2E5E8; --mute: #5B6670; --ink: #1B1F23;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: #FAFAF8; color: var(--ink); margin: 0; padding: 2rem 1rem;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; }
+  h1 { font-size: 22px; color: var(--navy); margin-bottom: 4px; }
+  .sub { color: var(--mute); font-size: 13.5px; margin-bottom: 1.5rem; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
+  label { display: block; font-weight: 600; font-size: 13px; margin: 1rem 0 0.3rem; }
+  label:first-child { margin-top: 0; }
+  input, select, textarea {
+    width: 100%; padding: 0.55rem 0.7rem; border: 1px solid var(--line); border-radius: 6px;
+    font-size: 14px; font-family: inherit;
+  }
+  .hint { font-size: 12px; color: var(--mute); margin-top: 0.25rem; }
+  button {
+    background: var(--navy); color: #fff; border: 0; padding: 0.7rem 1.3rem;
+    border-radius: 6px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 1.2rem;
+  }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .status { margin-top: 1rem; font-size: 13.5px; white-space: pre-wrap; }
+  .status.error { color: #B3261E; }
+  .status.success { color: #146c2e; }
+  .status a { color: var(--navy); font-weight: 700; }
+  .token-warning { background: #FFF8E6; border: 1px solid #E8D28A; border-radius: 6px; padding: 0.75rem 1rem; font-size: 12.5px; color: #6b5a12; margin-top: 0.5rem; }
+  [data-feature-missing] { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div data-feature="contentEditorForm">
+    <h1>Content Editor</h1>
+    <p class="sub">Add a new person to the People directory. This creates a new branch and opens a Pull Request &mdash; nothing is written to <code>main</code> directly.</p>
+
+    <div class="card">
+      <label for="pat">GitHub Personal Access Token</label>
+      <input type="password" id="pat" placeholder="ghp_... or github_pat_..." autocomplete="off" />
+      <div class="hint">Needs write access to this repo. Your token is only kept in this browser tab and is never sent anywhere except api.github.com.</div>
+      <div class="token-warning">Don't have a token? Go to GitHub &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Fine-grained tokens, and grant "Contents: Read and write" on this repo.</div>
+    </div>
+
+    <div class="card">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" placeholder="e.g. Dr. Jane Smith" />
+
+      <label for="role">Role</label>
+      <select id="role">
+        <option value="Faculty">Faculty</option>
+        <option value="PhD">PhD</option>
+        <option value="Postdoc">Postdoc</option>
+        <option value="Graduate">Graduate</option>
+      </select>
+
+      <label for="roleLabel">Role Label</label>
+      <input type="text" id="roleLabel" placeholder="e.g. Computational Advisor &middot; Georgia Institute of Technology" />
+      <div class="hint">Use &amp;middot; (renders as &middot;) to separate parts, matching the existing style.</div>
+
+      <label for="tags">Tags (comma-separated)</label>
+      <input type="text" id="tags" placeholder="e.g. Computer Vision, Machine Learning" />
+
+      <label for="profileUrl">Profile URL</label>
+      <input type="text" id="profileUrl" placeholder="#" value="#" />
+
+      <button id="submitBtn">Create Pull Request</button>
+      <div id="status" class="status"></div>
+    </div>
+  </div>
+
+  <div data-feature-missing>
+    <h1>Content Editor</h1>
+    <p class="sub">This tool is in preview. Enable preview mode in your browser console to use it:</p>
+    <pre>sessionStorage.setItem('haag:preview', 'PREVIEW'); location.reload();</pre>
+  </div>
+</div>
+
+<script>
+(function () {
+  const OWNER = "Human-Augment-Analytics";
+  const REPO = "haag-project-explorer";
+  const FILE_PATH = "people.yml";
+  const API = `https://api.github.com/repos/${OWNER}/${REPO}`;
+
+  // Show the "preview required" message if the feature isn't enabled.
+  document.querySelectorAll("[data-feature-missing]").forEach(el => {
+    el.style.display = (window.HAAGFeatures && window.HAAGFeatures.isEnabled("contentEditorForm")) ? "none" : "block";
+  });
+
+  const statusEl = document.getElementById("status");
+  const btn = document.getElementById("submitBtn");
+  if (!btn) return;
+
+  function setStatus(msg, cls) {
+    statusEl.textContent = msg;
+    statusEl.className = "status" + (cls ? " " + cls : "");
+  }
+
+  function b64EncodeUtf8(str) {
+    const bytes = new TextEncoder().encode(str);
+    let binary = "";
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary);
+  }
+
+  function b64DecodeUtf8(b64) {
+    const binary = atob(b64);
+    const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+    return new TextDecoder("utf-8").decode(bytes);
+  }
+
+  function escapeYamlValue(str) {
+    // Wrap in quotes if it contains special YAML characters; escape internal quotes.
+    if (/[:#\[\]{}&*!|>'"%@`]/.test(str) || /^\s|\s$/.test(str)) {
+      return `"${str.replace(/"/g, '\\"')}"`;
+    }
+    return str;
+  }
+
+  function buildYamlEntry({ name, role, roleLabel, tags, profileUrl }) {
+    const tagList = tags.split(",").map(t => t.trim()).filter(Boolean);
+    const tagsYaml = tagList.length
+      ? `[${tagList.map(t => escapeYamlValue(t)).join(", ")}]`
+      : "[]";
+    return [
+      `  - name: ${escapeYamlValue(name)}`,
+      `    role: ${role}`,
+      `    role_label: ${escapeYamlValue(roleLabel)}`,
+      `    status: preview`,
+      `    tags: ${tagsYaml}`,
+      `    profile_url: ${escapeYamlValue(profileUrl)}`,
+      ``,
+    ].join("\n");
+  }
+
+  function slugify(name) {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 40);
+  }
+
+  async function ghFetch(url, token, options = {}) {
+    const res = await fetch(url, {
+      ...options,
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        ...(options.headers || {}),
+      },
+    });
+    if (!res.ok) {
+      const body = await res.text();
+      throw new Error(`GitHub API ${res.status}: ${body.slice(0, 300)}`);
+    }
+    return res.json();
+  }
+
+  btn.addEventListener("click", async () => {
+    const token = document.getElementById("pat").value.trim();
+    const name = document.getElementById("name").value.trim();
+    const role = document.getElementById("role").value;
+    const roleLabel = document.getElementById("roleLabel").value.trim();
+    const tags = document.getElementById("tags").value.trim();
+    const profileUrl = document.getElementById("profileUrl").value.trim() || "#";
+
+    if (!token) return setStatus("Please enter a GitHub token.", "error");
+    if (!name) return setStatus("Please enter a name.", "error");
+    if (!roleLabel) return setStatus("Please enter a role label.", "error");
+
+    btn.disabled = true;
+    try {
+      setStatus("Looking up main branch...");
+      const mainRef = await ghFetch(`${API}/git/ref/heads/main`, token);
+      const mainSha = mainRef.object.sha;
+
+      const branchName = `people-update-${slugify(name)}-${Date.now().toString(36)}`;
+
+      setStatus(`Creating branch ${branchName}...`);
+      await ghFetch(`${API}/git/refs`, token, {
+        method: "POST",
+        body: JSON.stringify({ ref: `refs/heads/${branchName}`, sha: mainSha }),
+      });
+
+      setStatus("Reading current people.yml...");
+      const fileData = await ghFetch(`${API}/contents/${FILE_PATH}?ref=${branchName}`, token);
+      const currentText = b64DecodeUtf8(fileData.content);
+
+      const marker = "\nfeatures:";
+      const idx = currentText.indexOf(marker);
+      if (idx === -1) throw new Error("Could not find 'features:' section in people.yml to insert before.");
+
+      const entry = buildYamlEntry({ name, role, roleLabel, tags, profileUrl });
+      const newText = currentText.slice(0, idx).replace(/\n+$/, "\n") + "\n" + entry + currentText.slice(idx);
+
+      setStatus("Committing new entry...");
+      await ghFetch(`${API}/contents/${FILE_PATH}`, token, {
+        method: "PUT",
+        body: JSON.stringify({
+          message: `Add ${name} to people.yml (preview)`,
+          content: b64EncodeUtf8(newText),
+          sha: fileData.sha,
+          branch: branchName,
+        }),
+      });
+
+      const compareUrl = `https://github.com/${OWNER}/${REPO}/compare/main...${branchName}?expand=1`;
+      setStatus("");
+      statusEl.innerHTML = `Done! <a href="${compareUrl}" target="_blank" rel="noopener">Open Pull Request &rarr;</a>`;
+      statusEl.className = "status success";
+    } catch (err) {
+      setStatus("Error: " + err.message, "error");
+    } finally {
+      btn.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>
