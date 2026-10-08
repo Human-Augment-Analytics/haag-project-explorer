@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+<style id="haag-feature-gates">[data-feature] { display: none !important; }</style>
+<script src="feature-flags.js"></script>
+<script src="feature-toggle.js"></script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Project Explorer</title>
@@ -430,6 +434,7 @@
       <div class="explorer">
         <aside id="filter-sidebar"></aside>
         <div class="main-area">
+          <p id="project-result-count" data-feature="projectResultCount" role="status" aria-live="polite"></p>
           <div id="project-grid" class="project-grid"></div>
         </div>
       </div>
@@ -811,6 +816,10 @@
 
       function renderProjects() {
         const filtered = getFilteredProjects();
+        if (window.HAAGFeatures.isEnabled('projectResultCount')) {
+          document.getElementById('project-result-count').textContent =
+            `Showing ${filtered.length} of ${allProjects.length} public projects`;
+        }
         projectsGrid.innerHTML = '';
 
         if (!filtered.length) {
