@@ -1,0 +1,92 @@
+{
+  "page": "faculty-affiliates",
+  "intro": {
+    "heading": "Why should I become a HAAG Faculty Affiliate?",
+    "body_html": "Faculty love training the next generation of researchers, but they often struggle to find time with the many commitments necessary to maintain and build a research group. At HAAG, we know a good research program needs to be <strong>flexible to the constraints of our faculty affiliates</strong>. We handle the burdensome logistics of running a research project, so you can focus on what you do best: sharing your ideas and expertise to guide researchers toward scientific innovation and insight."
+  },
+  "services": [
+    {
+      "title": "Project Services",
+      "text": "What our talent and community can do for your research: HAAG researcher work can (and has) provided proof of concept for grant proposals, and led to high-quality publications."
+    },
+    {
+      "title": "Recruitment Services",
+      "text": "We bring you researchers with big research goals. HAAG administration initiates a formal recruitment process each semester for ongoing and new contracts. Faculty can also request researchers at any point &mdash; HAAG runs fall, spring, and summer, so you never wait long."
+    },
+    {
+      "title": "Training &amp; Resource Management",
+      "text": "We'll train you and your researchers to become more computationally confident. HAAG offers technical consultations to faculty affiliates and their labs on tools they'd like to adopt."
+    },
+    {
+      "title": "Feedback &amp; Quality Control",
+      "text": "HAAG administration provides early-intervention for non-optimal research pairings, weekly review and guidance on projects, and best practices coaching for meeting preparation with collaborators."
+    }
+  ],
+  "callout_html": "Even though many of our student researchers are new to research projects, they are by no means novices to software development. Recruiting through the Applied Data Science Research for Social Good course gives faculty access to researchers with extensive industry careers &mdash; HAAG is good for students, and good for your lab.",
+  "images": [
+    {
+      "src": "https://sites.gatech.edu/human-augmented-analytics-group/files/2025/05/Slide6-1024x576.jpg",
+      "alt": "HAAG faculty affiliate program overview slide"
+    },
+    {
+      "src": "https://sites.gatech.edu/human-augmented-analytics-group/files/2025/05/Slide11-1024x576.jpg",
+      "alt": "HAAG faculty affiliate program overview slide"
+    }
+  ],
+  "mentoring": {
+    "heading": "How can I mentor CS students if I'm not CS faculty?",
+    "body_html": "We often hear from new faculty that they're hesitant to join HAAG over concerns about mentoring outside their discipline, or in an online format. Consider your own career and the variety of mentors that shaped the researcher you are today &mdash; interdisciplinary research inherently requires multiple mentors sharing knowledge across the disciplines a project draws from. HAAG provides computational advisors through our <strong>Cross-disciplinary Leadership Education for Advanced Researchers (CLEAR)</strong> program. Our CLEAR cohort serves as co-advisor on your projects."
+  },
+  "method": {
+    "heading": "I'm in. What's next? &mdash; The HAAG Method",
+    "intro_html": "The HAAG Method is a collaboration pipeline that centers the needs of the faculty collaborator while facilitating innovative learning experiences for every participating researcher, computational and non-computational alike.",
+    "steps": [
+      {
+        "label": "Step 1",
+        "title": "Creating Your Project Contract",
+        "summary": "Collaborators meet with project managers to define project scope, establish communication protocols, and create a formal contract outlining resources, data conditions, and work parameters.",
+        "detail_html": "<p><strong>Scope and design initiation:</strong> New or continuing faculty collaborators meet (or otherwise communicate) with a HAAG project manager to develop the interdisciplinary research project. This designates the external collaborator's preferred point of contact &mdash; themselves, their postdoc, their graduate student (with PI approval), or another academic professional or staff member.</p><p>The collaborator provides information on the project's aims and desired results. The project manager offers suggestions on: (1) computational approaches and tools to accomplish tasks, (2) recommended researcher headcount and skillset, (3) best practices from across HAAG projects &mdash; timelines, meeting frequency, past successes and failures.</p><p>Examples of past contracted projects:</p><ul><li>Analyzing text in recommendation letters for gender bias</li><li>Automating image enhancement and landmarking for lizards</li><li>A user interface for citizen scientists to analyze natural history collections</li><li>Detecting and classifying individual behavior of free-swimming cichlid fish</li></ul><p><strong>Creating your project contract:</strong> Using the information gathered, your project manager creates a 1&ndash;2 page contract outlining scope of work, number of researchers to be recruited, communication and collaboration preferences, data accessibility and use conditions, and any resources provided to complete the project.</p>"
+      },
+      {
+        "label": "Step 2",
+        "title": "Confirming Your Data and Resource Needs",
+        "summary": "Project managers establish data safety protocols and create resource plans for computational needs, with external collaborators having the option to provide their own resources.",
+        "detail_html": "<p>One or more student researchers are assigned to the project contract based on availability and skill, receiving credit through the OMSCS research course. Selected students are introduced to their external collaborator, and communication structure is set up through the collaborator's preferred channels.</p><p><strong>Data plan creation:</strong> If researchers will work with sensitive lab data, the first step is developing a transparent data safety plan that all researchers must follow.</p><p><strong>Resource plan creation:</strong> The project manager and student researcher(s) develop a computational resource plan based on project scope. External collaborators may provide their own computational resources if preferred, but this isn't required &mdash; the plan is maintained by the HAAG administrative team, who help researchers access needed resources as the project progresses.</p>"
+      },
+      {
+        "label": "Step 3",
+        "title": "Delegation in the Project Cycle",
+        "summary": "Masters students develop code and documentation with project manager oversight, then share results with collaborators for feedback and, potentially, new project directions.",
+        "detail_html": "<ul><li><strong>Code &amp; visualization:</strong> the masters student generates the code, requesting assistance from the project manager as needed.</li><li><strong>Generate report:</strong> the masters student documents the work done, again with project manager support available.</li><li><strong>Review &amp; revise:</strong> the project manager reviews code and documentation; a summary is sent to the collaborator for comments. The collaborator can request training from the masters student in the analysis approaches used.</li><li><strong>Generate project idea:</strong> feedback from the collaborator and project manager defines the next scope of work based on reported findings.</li></ul>"
+      },
+      {
+        "label": "Step 4",
+        "title": "Publication Generation",
+        "summary": "Projects aim to produce shared findings through methods-focused or discipline-specific publications, with timing and format determined collaboratively.",
+        "detail_html": "<p>The external collaborator plays a role in determining when the work is ready to move to publication. Two kinds of publications typically result:</p><p><strong>Method-based publication:</strong> focuses on the computational techniques used. The project manager and masters researcher are likely primary authors; discussion with the external collaborator establishes authorship order, whether data is included, and their desired involvement.</p><p><strong>Discipline-specific publication (by request):</strong> if the collaborator wants to use HAAG's insights to support their own publication, they request a meeting with the project manager to determine contribution and delegation of work.</p>"
+      }
+    ]
+  },
+  "sidebar": [
+    {
+      "heading": "Request a researcher",
+      "text": "Have a project in mind? Reach out to start the HAAG Method process with a project manager.",
+      "link_text": "Contact HAAG &rarr;",
+      "link_href": "mailto:haag@gatech.edu"
+    },
+    {
+      "heading": "Related programs",
+      "links": [
+        { "text": "CLEAR &mdash; computational co-advisors", "href": "phd-postdoc.html" },
+        { "text": "FAIR-CS &mdash; the OMSCS research course", "href": "data-science-research.html" },
+        { "text": "Browse past &amp; current projects", "href": "project-explorer.html" }
+      ]
+    },
+    {
+      "heading": "Questions about becoming an affiliate?",
+      "text": "We'll point you to the right person on the HAAG team.",
+      "link_text": "Contact HAAG &rarr;",
+      "link_href": "mailto:haag@gatech.edu"
+    }
+  ]
+}
