@@ -61,7 +61,30 @@
   var main = {
     heading: function (b) { return '<h2 class="h2">' + esc(b.text) + '</h2>'; },
     rich_text: function (b) { return '<div class="body-text">' + sanitize(b.body_html) + '</div>'; },
-    paragraph: function (b) { return '<p class="body-text">' + esc(b.text) + '</p>'; },
+    // "text" is plain text (escaped). "body_html" is inline HTML (sanitised).
+    paragraph: function (b) {
+      return '<p class="body-text">' + (b.body_html !== undefined ? sanitize(b.body_html) : esc(b.text)) + '</p>';
+    },
+    numbered_list: function (b) {
+      return '<div class="service-list">' + each(b.items, function (it, i) {
+        return '<div class="service-item"><h4><span class="num">' + (i + 1) + '</span>' + esc(it.title) +
+          '</h4><p>' + esc(it.text) + '</p></div>';
+      }) + '</div>';
+    },
+    callout: function (b) { return '<div class="callout">' + esc(b.text) + '</div>'; },
+    images: function (b) {
+      return '<div class="img-row">' + each(b.items, function (im) {
+        return '<img src="' + esc(safeHref(im.src)) + '" alt="' + esc(im.alt) + '" />';
+      }) + '</div>';
+    },
+    // Step cards with a collapsible "more_html" section (sanitised).
+    expandable_steps: function (b) {
+      return each(b.items, function (s) {
+        return '<div class="step-card"><div class="step-label">' + esc(s.label) + '</div><h3>' + esc(s.title) +
+          '</h3><p class="step-summary">' + esc(s.text) + '</p><details class="step-detail"><summary>' +
+          esc(b.more_label) + '</summary>' + sanitize(s.more_html) + '</details></div>';
+      });
+    },
     pills: function (b) {
       return '<div class="audience-row">' + each(b.items, function (t) {
         return '<span class="audience-pill">' + esc(t) + '</span>';
@@ -92,6 +115,17 @@
     }
   };
   var side = {
+    // Generic sidebar card: heading, optional text, optional link list, optional call-to-action link.
+    // variant "contact" gives the highlighted contact style.
+    card: function (b) {
+      return '<div class="side-card' + (b.variant === 'contact' ? ' contact' : '') + '"><h3>' + esc(b.heading) + '</h3>' +
+        (b.text !== undefined ? '<p>' + esc(b.text) + '</p>' : '') +
+        (b.items ? '<ul>' + each(b.items, function (l) {
+          return '<li><a href="' + esc(safeHref(l.href)) + '">' + esc(l.text) + '</a></li>';
+        }) + '</ul>' : '') +
+        (b.link_href !== undefined ? '<a class="cta-link" href="' + esc(safeHref(b.link_href)) + '">' + esc(b.link_text) + '</a>' : '') +
+        '</div>';
+    },
     links: function (b) {
       return '<div class="side-card"><h3>' + esc(b.heading) + '</h3><ul>' + each(b.items, function (l) {
         return '<li><a href="' + esc(safeHref(l.href)) + '">' + esc(l.text) + '</a></li>';
