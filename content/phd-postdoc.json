@@ -1,0 +1,152 @@
+{
+  "page": "phd-postdoc",
+  "masthead": {
+    "eyebrow": "HAAG · PhD / Post-Doc Program",
+    "title": "Cross-Disciplinary Leadership Education for Advanced Researchers (CLEAR)",
+    "sub": "HAAG's premier leadership program, where PhDs and postdocs practice advising skills in a live research environment — training participants in the MENTOR-CS framework proposed by Shi et al."
+  },
+  "main": [
+    {
+      "type": "heading",
+      "text": "What is HAAG?"
+    },
+    {
+      "type": "paragraph",
+      "text": "HAAG is a virtual research initiative that bridges the gap between computational expertise and research needs — connecting online CS master's students, adult learners with professional experience new to research, and big data-collecting labs that need computational talent. The goal: develop and publish research tools through 3-semester collaborative projects."
+    },
+    {
+      "type": "pills",
+      "items": [
+        "Post-Doctoral Fellows",
+        "PhD Students",
+        "Research Staff"
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "The Challenge"
+    },
+    {
+      "type": "cards",
+      "variant": "challenge",
+      "items": [
+        {
+          "icon": "🧪",
+          "title": "Non-Computational PIs",
+          "text": "Non-computational labs can struggle to advise computational projects, lacking the technical expertise to guide students in analyzing their data."
+        },
+        {
+          "icon": "👨‍🏫",
+          "title": "Overloaded CS Faculty",
+          "text": "Computer science professors, already managing full teaching and research loads, cannot commit time to short-term advising opportunities."
+        },
+        {
+          "icon": "💡",
+          "title": "Solution: Early-Career Advisors",
+          "text": "CLEAR trains PhDs and postdocs to fill the advising gap — gaining leadership experience while solving a real capacity problem."
+        }
+      ]
+    },
+    {
+      "type": "cards",
+      "variant": "fact",
+      "items": [
+        {
+          "icon": "📅",
+          "title": "Time Commitment",
+          "text": "~5 hours/week participating in structured reviews for ongoing student projects."
+        },
+        {
+          "icon": "📝",
+          "title": "Your Role",
+          "text": "Mirrors that of a conference or journal reviewer — guiding students toward higher-quality submissions."
+        },
+        {
+          "icon": "🏆",
+          "title": "Recognition",
+          "text": "Be credited as co-author on the resulting publication."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "How It Works"
+    },
+    {
+      "type": "steps",
+      "items": [
+        {
+          "number": "1",
+          "title": "Project Matching",
+          "text": "You'll be matched with an interdisciplinary project led by faculty affiliates who share their research goals."
+        },
+        {
+          "number": "2",
+          "title": "Training & Goal Setting",
+          "text": "Receive training in research project management and develop your own objectives for the project."
+        },
+        {
+          "number": "3",
+          "title": "Regular Meetings",
+          "text": "Meet with students bi-weekly and faculty affiliates monthly to ensure progress toward research goals."
+        },
+        {
+          "number": "4",
+          "title": "Publication Support",
+          "text": "Two weeks before submission, provide additional feedback rounds and virtual meetings as needed."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Frequently Asked Questions"
+    },
+    {
+      "type": "faq",
+      "items": [
+        {
+          "question": "How is authorship determined?",
+          "answer": "Leadership reviews authorship order based on: contribution of ideas that remain in the final work, and execution of work included in the final submission. The proposed order is shared with all contributors, with an opportunity to appeal if needed."
+        },
+        {
+          "question": "How will I know if my feedback is effective?",
+          "answer": "The admin team reaches out if there are concerns about review quality. HAAG also hosts workshops and shares best practices based on insights gathered across projects."
+        }
+      ]
+    },
+    {
+      "type": "cta",
+      "title": "Join us today",
+      "text": "Grow your publication record while gaining valuable advising experience. Reach out to our Director of Talent Management with any questions.",
+      "link_href": "mailto:arai91@gatech.edu",
+      "link_text": "Contact HAAG Talent Management →"
+    }
+  ],
+  "sidebar": [
+    {
+      "type": "links",
+      "heading": "Related programs",
+      "items": [
+        {
+          "text": "FATE — faculty affiliates",
+          "href": "faculty-affiliates.html"
+        },
+        {
+          "text": "FAIR-CS — the OMSCS research course",
+          "href": "data-science-research.html"
+        },
+        {
+          "text": "Browse past & current projects",
+          "href": "project-explorer.html"
+        }
+      ]
+    },
+    {
+      "type": "contact",
+      "heading": "Questions about CLEAR?",
+      "text": "Reach our Director of Talent Management directly.",
+      "link_href": "mailto:arai91@gatech.edu",
+      "link_text": "Contact HAAG →"
+    }
+  ]
+}
