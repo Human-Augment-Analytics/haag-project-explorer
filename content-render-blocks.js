@@ -1,22 +1,66 @@
 // Generic renderer: fills a page's masthead, main column and sidebar from a JSON file.
 // Usage (before </body>):
 //   <script src="content-render-blocks.js" data-flag="dynamicPhdContent" data-src="content/phd-postdoc.json"></script>
-// Does nothing unless the feature flag is enabled. If the fetch fails, the original HTML stays.
+// Optional: data-endpoint="https://..." is tried first; if it fails, data-src (the committed JSON) is used.
+// Does nothing unless the feature flag is enabled. If everything fails, the original HTML stays.
 (function () {
   var script = document.currentScript;
   if (!script) return;
   var flag = script.getAttribute('data-flag');
   var src = script.getAttribute('data-src');
+  var endpoint = script.getAttribute('data-endpoint');
   var F = window.HAAGFeatures;
   if (!flag || !src || !F || !F.isEnabled(flag)) return;
 
+  // Missing fields render as empty text, never "undefined".
   function esc(s) {
+    if (s === undefined || s === null) return '';
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
   function each(list, fn) { return (list || []).map(fn).join(''); }
+  function has(o, k) { return Object.prototype.hasOwnProperty.call(o, k); }
+
+  // Only http, https, mailto and relative links are allowed. Anything else becomes ''.
+  function safeHref(h) {
+    h = String(h === undefined || h === null ? '' : h).trim();
+    var probe = h.replace(/[\u0000-\u0020\u007f]/g, '');
+    if (!probe || /^\/\//.test(probe)) return '';
+    if (/^(https?:|mailto:)/i.test(probe)) return h;
+    if (/^[a-z][a-z0-9+.\-]*:/i.test(probe)) return '';
+    return h;
+  }
+
+  // Allow-list sanitiser for *_html fields. Unknown tags are unwrapped (text kept),
+  // script-like tags are dropped with their content, attributes are removed except a[href].
+  var ALLOWED = { A: 1, P: 1, STRONG: 1, EM: 1, B: 1, I: 1, BR: 1, UL: 1, OL: 1, LI: 1 };
+  var DROP = { SCRIPT: 1, STYLE: 1, IFRAME: 1, OBJECT: 1, EMBED: 1, TEMPLATE: 1, NOSCRIPT: 1 };
+  function copyClean(from, to) {
+    Array.prototype.forEach.call(from.childNodes, function (n) {
+      if (n.nodeType === 3) { to.appendChild(document.createTextNode(n.nodeValue)); return; }
+      if (n.nodeType !== 1 || has(DROP, n.tagName)) return;
+      if (!has(ALLOWED, n.tagName)) { copyClean(n, to); return; }
+      var el = document.createElement(n.tagName);
+      if (n.tagName === 'A') {
+        var href = safeHref(n.getAttribute('href'));
+        if (href) {
+          el.setAttribute('href', href);
+          if (/^https?:/i.test(href)) el.setAttribute('rel', 'noopener noreferrer');
+        }
+      }
+      copyClean(n, el);
+      to.appendChild(el);
+    });
+  }
+  function sanitize(html) {
+    var doc = new DOMParser().parseFromString('<body>' + (html === undefined || html === null ? '' : html), 'text/html');
+    var out = document.createElement('div');
+    copyClean(doc.body, out);
+    return out.innerHTML;
+  }
 
   var main = {
     heading: function (b) { return '<h2 class="h2">' + esc(b.text) + '</h2>'; },
+    rich_text: function (b) { return '<div class="body-text">' + sanitize(b.body_html) + '</div>'; },
     paragraph: function (b) { return '<p class="body-text">' + esc(b.text) + '</p>'; },
     pills: function (b) {
       return '<div class="audience-row">' + each(b.items, function (t) {
@@ -44,26 +88,38 @@
     },
     cta: function (b) {
       return '<div class="callout-cta"><h3>' + esc(b.title) + '</h3><p>' + esc(b.text) + '</p><a class="btn-gold" href="' +
-        esc(b.link_href) + '">' + esc(b.link_text) + '</a></div>';
+        esc(safeHref(b.link_href)) + '">' + esc(b.link_text) + '</a></div>';
     }
   };
   var side = {
     links: function (b) {
       return '<div class="side-card"><h3>' + esc(b.heading) + '</h3><ul>' + each(b.items, function (l) {
-        return '<li><a href="' + esc(l.href) + '">' + esc(l.text) + '</a></li>';
+        return '<li><a href="' + esc(safeHref(l.href)) + '">' + esc(l.text) + '</a></li>';
       }) + '</ul></div>';
     },
     contact: function (b) {
       return '<div class="side-card contact"><h3>' + esc(b.heading) + '</h3><p>' + esc(b.text) +
-        '</p><a class="cta-link" href="' + esc(b.link_href) + '">' + esc(b.link_text) + '</a></div>';
+        '</p><a class="cta-link" href="' + esc(safeHref(b.link_href)) + '">' + esc(b.link_text) + '</a></div>';
     }
   };
   function build(blocks, table) {
-    return each(blocks, function (b) { return table[b.type] ? table[b.type](b) : ''; });
+    return each(blocks, function (b) {
+      if (b && has(table, b.type)) return table[b.type](b);
+      console.warn('[HAAG] ' + flag + ': unknown block type "' + (b && b.type) + '" skipped');
+      return '';
+    });
   }
 
-  fetch(src)
-    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+  function getJson(url) {
+    return fetch(url).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+  }
+  function valid(d) { return d && d.main && d.sidebar; }
+  var data = endpoint
+    ? getJson(endpoint).then(function (d) { if (!valid(d)) throw new Error('bad endpoint shape'); return d; })
+        .catch(function (e) { console.warn('[HAAG] ' + flag + ': endpoint failed (' + e.message + '), using ' + src); return getJson(src); })
+    : getJson(src);
+
+  data
     .then(function (d) {
       var cols = document.querySelectorAll('.article-grid > div');
       if (cols.length < 2 || !d.main || !d.sidebar) throw new Error('unexpected page or content shape');
