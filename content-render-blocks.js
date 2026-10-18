@@ -31,8 +31,9 @@
   }
 
   // Allow-list sanitiser for *_html fields. Unknown tags are unwrapped (text kept),
-  // script-like tags are dropped with their content, attributes are removed except a[href].
+  // script-like tags are dropped with their content, attributes are removed except a[href] and an allow-listed a[class].
   var ALLOWED = { A: 1, P: 1, STRONG: 1, EM: 1, B: 1, I: 1, BR: 1, UL: 1, OL: 1, LI: 1 };
+  var LINK_CLASSES = { 'link-strong': 1 };
   var DROP = { SCRIPT: 1, STYLE: 1, IFRAME: 1, OBJECT: 1, EMBED: 1, TEMPLATE: 1, NOSCRIPT: 1 };
   function copyClean(from, to) {
     Array.prototype.forEach.call(from.childNodes, function (n) {
@@ -46,6 +47,9 @@
           el.setAttribute('href', href);
           if (/^https?:/i.test(href)) el.setAttribute('rel', 'noopener noreferrer');
         }
+        // Only these class names survive on links (styled by the page's own CSS).
+        var cls = n.getAttribute('class');
+        if (cls && has(LINK_CLASSES, cls)) el.setAttribute('class', cls);
       }
       copyClean(n, el);
       to.appendChild(el);
@@ -59,7 +63,11 @@
   }
 
   var main = {
-    heading: function (b) { return '<h2 class="h2">' + esc(b.text) + '</h2>'; },
+    // level 2 (default) or 3
+    heading: function (b) {
+      var t = b.level === 3 ? 'h3' : 'h2';
+      return '<' + t + ' class="' + t + '">' + esc(b.text) + '</' + t + '>';
+    },
     rich_text: function (b) { return '<div class="body-text">' + sanitize(b.body_html) + '</div>'; },
     // "text" is plain text (escaped). "body_html" is inline HTML (sanitised).
     paragraph: function (b) {
@@ -84,6 +92,28 @@
           '</h3><p class="step-summary">' + esc(s.text) + '</p><details class="step-detail"><summary>' +
           esc(b.more_label) + '</summary>' + sanitize(s.more_html) + '</details></div>';
       });
+    },
+    people_cards: function (b) {
+      return '<div class="team-grid">' + each(b.items, function (p) {
+        return '<div class="team-card"><div class="team-avatar">' + esc(p.initials) + '</div><h4>' + esc(p.name) +
+          '</h4><div class="role">' + esc(p.role) + '</div><p>' + esc(p.text) + '</p></div>';
+      }) + '</div>';
+    },
+    grade_cards: function (b) {
+      return '<div class="grade-row">' + each(b.items, function (g) {
+        return '<div class="grade-card"><div class="pct">' + esc(g.value) + '</div><h4>' + esc(g.title) + '</h4><ul>' +
+          each(g.bullets, function (x) { return '<li>' + esc(x) + '</li>'; }) + '</ul></div>';
+      }) + '</div>';
+    },
+    item_list: function (b) {
+      return each(b.items, function (it) {
+        return '<div class="deliverable-item"><h4>' + esc(it.title) + '</h4><p>' + esc(it.text) + '</p></div>';
+      });
+    },
+    link_list: function (b) {
+      return '<div class="resource-list">' + (b.items || []).map(function (l) {
+        return '<a href="' + esc(safeHref(l.href)) + '">' + esc(l.text) + '</a>';
+      }).join('<br>') + '</div>';
     },
     pills: function (b) {
       return '<div class="audience-row">' + each(b.items, function (t) {

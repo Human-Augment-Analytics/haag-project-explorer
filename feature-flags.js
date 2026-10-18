@@ -5,4 +5,5 @@ window.HAAG_FEATURE_FLAGS = Object.freeze({
   projectResultCount: 'PREVIEW',
   dynamicFacultyContent: 'PREVIEW',
   dynamicPhdContent: 'PREVIEW',
+  dynamicResearchContent: 'PREVIEW',
 });
