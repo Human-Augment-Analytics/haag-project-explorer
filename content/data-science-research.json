@@ -1,0 +1,251 @@
+{
+  "page": "data-science-research",
+  "masthead": {
+    "eyebrow": "HAAG · OMSCS Research Course",
+    "title": "Applied Data Science Research for Social Good (CS 8903 & CS 6999)",
+    "sub": "Transforming master's research in data science through the Framework for Accelerating Interdisciplinary Research in Computer Science (FAIR-CS)."
+  },
+  "main": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Learning Outcomes"
+    },
+    {
+      "type": "paragraph",
+      "body_html": "<strong>Transformative mentor-based learning:</strong> students learn to publish data science research through mentorship from subject matter experts, developing the skills to communicate complex analytical work to technical and non-technical audiences alike, and to publish reproducible, interdisciplinary research workflows."
+    },
+    {
+      "type": "paragraph",
+      "body_html": "<strong>Teaching open access for technology:</strong> students partner with faculty and graduate students to contribute to the broader data science knowledge commons — documented code repositories, tutorials, or dataset annotations that future learners can freely access and adapt."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Master's-Centered Research"
+    },
+    {
+      "type": "paragraph",
+      "text": "HAAG is unique in centering master's students as the primary researchers in interdisciplinary projects. OMSCS students are mentored both by a faculty affiliate in an applied field and by a computational advisor — a doctoral or postdoctoral researcher trained in computer science or applied math."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "FAIR-CS"
+    },
+    {
+      "type": "paragraph",
+      "body_html": "The course uses the Framework for Accelerating Interdisciplinary Research in Computer Science (FAIR-CS), first proposed at PEARC 2025, which segments the roles of faculty, PhD students, and master's researchers in pursuit of a shared tool-development and publication goal. Additional procedures live on the <a href=\"https://humanaugmentedanalyticsgroup.miraheze.org/wiki/Main_Page\" class=\"link-strong\">course wiki</a>."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Core Instructional Team"
+    },
+    {
+      "type": "people_cards",
+      "items": [
+        {
+          "initials": "BS",
+          "name": "Bree Shi",
+          "role": "Director of HAAG",
+          "text": "Founded HAAG in Summer 2024; leads administration, outreach, and communications."
+        },
+        {
+          "initials": "NL",
+          "name": "Nick Lytle, Ph.D",
+          "role": "Director, OMSCS Research",
+          "text": "HAAG's liaison for research opportunities across the OMSCS program; creator of CS 8803."
+        },
+        {
+          "initials": "CC",
+          "name": "Charlie Clark",
+          "role": "Head Instructional Associate",
+          "text": "Director of Open-Source Initiatives; former researcher on HAAG's Cichlid CV and Bio-Boost teams."
+        },
+        {
+          "initials": "JS",
+          "name": "Jeanette Schofield",
+          "role": "Director of Ethical Practice",
+          "text": "Contact for conflict resolution, project change requests, and Canvas training."
+        },
+        {
+          "initials": "TD",
+          "name": "Tom Deatherage",
+          "role": "Director of Engagement",
+          "text": "With HAAG since its 2024 founding; contact for communal time allocation and scholarly activities."
+        },
+        {
+          "initials": "TO",
+          "name": "Thomas Orth",
+          "role": "Director of Retention",
+          "text": "Contact for BaseCamp training, project support requests, and website support."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Faculty Affiliates & Computational Advisors"
+    },
+    {
+      "type": "paragraph",
+      "text": "Each project stems from a proposed publication by a HAAG faculty affiliate, who advises on all aspects of the project and guides it from proposal through publication. Computational advisors — volunteer PhD or postdoctoral researchers in computational fields — serve as the primary mentor to student researchers, running bi-weekly meetings and helping package completed work for publication."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Course Logistics"
+    },
+    {
+      "type": "paragraph",
+      "body_html": "Grading is used as a tool to encourage the behaviors typical of a working researcher: building community, learning independently, and sharing knowledge. Final grades use <strong>progressive grading</strong> — smoothing during periods of improvement, maximizing scores during high grade maintenance, and grade rounding — so a student's trajectory matters as much as any single average."
+    },
+    {
+      "type": "grade_cards",
+      "items": [
+        {
+          "value": "50%",
+          "title": "Progress Toward Publication",
+          "bullets": [
+            "Weekly reports showing progress",
+            "Meeting timeline objectives",
+            "Deliverables as requested",
+            "Responding to advisor feedback"
+          ]
+        },
+        {
+          "value": "50%",
+          "title": "Engagement in Collaboration",
+          "bullets": [
+            "Regular meeting attendance",
+            "24–48hr response time",
+            "Training other researchers as needed",
+            "Weekly communal time allocation"
+          ]
+        },
+        {
+          "value": "+20%",
+          "title": "Scholarly Activity (bonus)",
+          "bullets": [
+            "Creating an open education resource",
+            "Presenting to a non-HAAG audience",
+            "Earning a research award",
+            "Applying to PhD programs"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Course Deliverables"
+    },
+    {
+      "type": "item_list",
+      "items": [
+        {
+          "title": "Weekly Reports",
+          "text": "A time log of completed tasks, goals for the coming week, blockers, and summaries of research papers reviewed, with supporting code/data as proof of work."
+        },
+        {
+          "title": "Project Meetings",
+          "text": "Bi-weekly meetings facilitated by the team's computational advisor, setting long-term objectives and delegating tasks."
+        },
+        {
+          "title": "Unit Meetings",
+          "text": "Larger group meetings across related project types (e.g. video detection, UI, 3D vision, NLP) for cross-project knowledge sharing, guest talks, and shared resource libraries."
+        }
+      ]
+    },
+    {
+      "type": "callout",
+      "text": "Attendance runs on trust: researchers report absences greater than two weekdays but are only required to disclose the dates, not the reason. Students are generally expected at 90% of meetings, tracked by meeting managers."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Course Technology"
+    },
+    {
+      "type": "paragraph",
+      "text": "BaseCamp for weekly reports and documentation; Slack for announcements and informal communication; Microsoft Teams for project/unit meetings; Canvas for grades and formal feedback. Faculty advisors set their own preferred communication tools (Discord, Zoom, etc)."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Ethics & Professionalism"
+    },
+    {
+      "type": "paragraph",
+      "text": "Plagiarism is not tolerated; AI tools may assist with code generation and phrasing, but all publications and progress reports must remain intellectually honest and are subject to review. Disrespect toward HAAG members is not tolerated and should be raised immediately to the instructional team. Students may request a project change if their expertise doesn't match their assigned group, though the instructional team has final say on placement."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Additional Student Resources"
+    },
+    {
+      "type": "link_list",
+      "items": [
+        {
+          "text": "Dean of Students",
+          "href": "https://cm.maxient.com/reportingform.php?GeorgiaTech=&layout_id=4/"
+        },
+        {
+          "text": "Disability Services",
+          "href": "https://disabilityservices.gatech.edu/"
+        },
+        {
+          "text": "Belonging & Student Support",
+          "href": "https://belonging.gatech.edu/studentsupport"
+        },
+        {
+          "text": "Veterans Resource Center",
+          "href": "https://veterans.gatech.edu/"
+        },
+        {
+          "text": "Center for Mental Health Care & Resources",
+          "href": "https://mentalhealth.gatech.edu/"
+        },
+        {
+          "text": "Voice (Sexual & Relationship Violence Prevention)",
+          "href": "https://wellnesscenter.gatech.edu/node/47"
+        },
+        {
+          "text": "General Resource Guide",
+          "href": "https://students.gatech.edu/student-resource-guide"
+        }
+      ]
+    }
+  ],
+  "sidebar": [
+    {
+      "type": "card",
+      "variant": "default",
+      "heading": "Related programs",
+      "items": [
+        {
+          "text": "FATE — faculty affiliates",
+          "href": "faculty-affiliates.html"
+        },
+        {
+          "text": "CLEAR — computational co-advisors",
+          "href": "phd-postdoc.html"
+        },
+        {
+          "text": "Browse past & current projects",
+          "href": "project-explorer.html"
+        }
+      ]
+    },
+    {
+      "type": "card",
+      "variant": "contact",
+      "heading": "Questions about HAAG policies?",
+      "text": "Contact Jeanette Schofield, HAAG Director of Ethics & Compliance.",
+      "link_href": "mailto:haag@gatech.edu",
+      "link_text": "Contact HAAG →"
+    }
+  ]
+}
