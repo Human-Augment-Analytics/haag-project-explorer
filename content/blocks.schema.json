@@ -1,0 +1,792 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Human-Augment-Analytics/haag-project-explorer/content/blocks.schema.json",
+  "title": "HAAG page content",
+  "description": "Content of one HAAG program page, rendered by content-render-blocks.js. A page has a masthead, a main column and a sidebar, each made of typed blocks. The renderer skips unknown block types with a console warning, so this schema is the contract the editor should produce. Plain-text fields are escaped by the renderer; only fields ending in _html accept (sanitised) HTML.",
+  "type": "object",
+  "properties": {
+    "page": {
+      "type": "string",
+      "description": "Page identifier, e.g. 'data-science-research'. Informational."
+    },
+    "masthead": {
+      "type": "object",
+      "properties": {
+        "eyebrow": {
+          "type": "string",
+          "description": "Small uppercase line above the title."
+        },
+        "title": {
+          "type": "string"
+        },
+        "sub": {
+          "type": "string",
+          "description": "Subtitle under the title."
+        }
+      },
+      "required": [],
+      "additionalProperties": false,
+      "description": "Page header. Any missing field keeps the page's existing text."
+    },
+    "main": {
+      "type": "array",
+      "description": "Blocks of the main (left, wide) column, rendered in order. An empty or all-unknown list keeps the page's original column.",
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/main_heading"
+          },
+          {
+            "$ref": "#/$defs/main_paragraph"
+          },
+          {
+            "$ref": "#/$defs/main_rich_text"
+          },
+          {
+            "$ref": "#/$defs/main_numbered_list"
+          },
+          {
+            "$ref": "#/$defs/main_callout"
+          },
+          {
+            "$ref": "#/$defs/main_images"
+          },
+          {
+            "$ref": "#/$defs/main_expandable_steps"
+          },
+          {
+            "$ref": "#/$defs/main_people_cards"
+          },
+          {
+            "$ref": "#/$defs/main_grade_cards"
+          },
+          {
+            "$ref": "#/$defs/main_item_list"
+          },
+          {
+            "$ref": "#/$defs/main_link_list"
+          },
+          {
+            "$ref": "#/$defs/main_pills"
+          },
+          {
+            "$ref": "#/$defs/main_cards"
+          },
+          {
+            "$ref": "#/$defs/main_steps"
+          },
+          {
+            "$ref": "#/$defs/main_faq"
+          },
+          {
+            "$ref": "#/$defs/main_cta"
+          }
+        ]
+      }
+    },
+    "sidebar": {
+      "type": "array",
+      "description": "Blocks of the sidebar (right) column, rendered in order.",
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/side_card"
+          },
+          {
+            "$ref": "#/$defs/side_links"
+          },
+          {
+            "$ref": "#/$defs/side_contact"
+          }
+        ]
+      }
+    }
+  },
+  "required": [
+    "main",
+    "sidebar"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "main_heading": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "heading"
+        },
+        "text": {
+          "type": "string"
+        },
+        "level": {
+          "enum": [
+            2,
+            3
+          ],
+          "default": 2
+        }
+      },
+      "required": [
+        "type",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "Section heading. level 2 is a large section title, level 3 a smaller sub-heading."
+    },
+    "main_paragraph": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "paragraph"
+        },
+        "text": {
+          "type": "string",
+          "description": "Plain text. Shown exactly as typed."
+        },
+        "body_html": {
+          "type": "string",
+          "description": "Inline HTML, sanitised by the renderer. Allowed tags: a, p, strong, em, b, i, br, ul, ol, li. On links only href (and class=\"link-strong\") is kept. Everything else (script, style, iframe, other tags' attributes) is removed. "
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false,
+      "description": "Body paragraph. Give either plain text (escaped, safest) or body_html when you need bold, links or lists inside the paragraph.",
+      "oneOf": [
+        {
+          "properties": {
+            "text": true
+          },
+          "required": [
+            "text"
+          ]
+        },
+        {
+          "properties": {
+            "body_html": true
+          },
+          "required": [
+            "body_html"
+          ]
+        }
+      ]
+    },
+    "main_rich_text": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "rich_text"
+        },
+        "body_html": {
+          "type": "string",
+          "description": "Inline HTML, sanitised by the renderer. Allowed tags: a, p, strong, em, b, i, br, ul, ol, li. On links only href (and class=\"link-strong\") is kept. Everything else (script, style, iframe, other tags' attributes) is removed. "
+        }
+      },
+      "required": [
+        "type",
+        "body_html"
+      ],
+      "additionalProperties": false,
+      "description": "Free-form formatted text block (sanitised HTML). Prefer paragraph unless you need several paragraphs or lists in one block."
+    },
+    "main_numbered_list": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "numbered_list"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "text"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "type",
+        "items"
+      ],
+      "additionalProperties": false,
+      "description": "Numbered service cards. Numbers 1, 2, 3 are generated from the order, do not type them."
+    },
+    "main_callout": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "callout"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "Highlighted note box."
+    },
+    "main_images": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "images"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "src": {
+                "type": "string",
+                "pattern": "^(?![\\s\\\\]*[/\\\\][\\s\\\\]*[/\\\\])(?:(?:https?|mailto):|[^:]*$)",
+                "description": "Image path or URL (same rules as links)."
+              },
+              "alt": {
+                "type": "string",
+                "description": "Alternative text for screen readers."
+              }
+            },
+            "required": [
+              "src",
+              "alt"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "type",
+        "items"
+      ],
+      "additionalProperties": false,
+      "description": "A row of images."
+    },
+    "main_expandable_steps": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "expandable_steps"
+        },
+        "more_label": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "Small label above the title, e.g. 'Step 1'."
+              },
+              "title": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string",
+                "description": "Always-visible summary."
+              },
+              "more_html": {
+                "type": "string",
+                "description": "Inline HTML, sanitised by the renderer. Allowed tags: a, p, strong, em, b, i, br, ul, ol, li. On links only href (and class=\"link-strong\") is kept. Everything else (script, style, iframe, other tags' attributes) is removed. Content of the collapsible section."
+              }
+            },
+            "required": [
+              "label",
+              "title",
+              "text",
+              "more_html"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "type",
+        "more_label",
+        "items"
+      ],
+      "additionalProperties": false,
+      "description": "Step cards, each with a collapsible section. more_label is the shared text of the toggle."
+    },
+    "main_people_cards": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "people_cards"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "initials": {
+                "type": "string",
+                "description": "1-3 letters shown in the avatar circle."
+              },
+              "name": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "initials",
+              "name",
+              "role",
+              "text"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "type",
+        "items"
+      ],
+      "additionalProperties": false,
+      "description": "Grid of people with initials avatar, name, role and a short description."
+    },
+    "main_grade_cards": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "grade_cards"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string",
+                "description": "e.g. '50%' or '+20%'."
+              },
+              "title": {
+                "type": "string"
+              },
+              "bullets": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              }
+            },
+            "required": [
+              "value",
+              "title",
+              "bullets"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "type",
+        "items"
+      ],
+      "additionalProperties": false,
+      "description": "Grid of grading cards: a big value (e.g. 50%), a title and a bullet list."
+    },
+    "main_item_list": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "item_list"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "text"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "type",
+        "items"
+      ],
+      "additionalProperties": false,
+      "description": "Stacked cards with a bold title and a description (e.g. course deliverables)."
+    },
+    "main_link_list": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "link_list"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string"
+              },
+              "href": {
+                "type": "string",
+                "pattern": "^(?![\\s\\\\]*[/\\\\][\\s\\\\]*[/\\\\])(?:(?:https?|mailto):|[^:]*$)",
+                "description": "http(s) URL, mailto: address, or a relative link such as page.html or #section. Other schemes (javascript:, data:), protocol-relative //host and backslash tricks are rejected here and ignored by the renderer."
+              }
+            },
+            "required": [
+              "text",
+              "href"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "type",
+        "items"
+      ],
+      "additionalProperties": false,
+      "description": "List of links, shown in two columns."
+    },
+    "main_pills": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "pills"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "type",
+        "items"
+      ],
+      "additionalProperties": false,
+      "description": "Row of short tags/labels."
+    },
+    "main_cards": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "cards"
+        },
+        "variant": {
+          "enum": [
+            "challenge",
+            "fact"
+          ],
+          "default": "challenge"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "icon": {
+                "type": "string",
+                "description": "An emoji or short symbol."
+              },
+              "title": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "icon",
+              "title",
+              "text"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "type",
+        "items"
+      ],
+      "additionalProperties": false,
+      "description": "Icon cards. variant 'challenge' (default) is the challenge grid, 'fact' is the compact facts row."
+    },
+    "main_steps": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "steps"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "number": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "number",
+              "title",
+              "text"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "type",
+        "items"
+      ],
+      "additionalProperties": false,
+      "description": "Numbered process steps. The number is typed by the editor (e.g. '1')."
+    },
+    "main_faq": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "faq"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "question": {
+                "type": "string"
+              },
+              "answer": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "question",
+              "answer"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "type",
+        "items"
+      ],
+      "additionalProperties": false,
+      "description": "Question and answer pairs."
+    },
+    "main_cta": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "cta"
+        },
+        "title": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "link_href": {
+          "type": "string",
+          "pattern": "^(?![\\s\\\\]*[/\\\\][\\s\\\\]*[/\\\\])(?:(?:https?|mailto):|[^:]*$)",
+          "description": "http(s) URL, mailto: address, or a relative link such as page.html or #section. Other schemes (javascript:, data:), protocol-relative //host and backslash tricks are rejected here and ignored by the renderer."
+        },
+        "link_text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "title",
+        "text",
+        "link_href",
+        "link_text"
+      ],
+      "additionalProperties": false,
+      "description": "Call-to-action panel with a button link."
+    },
+    "side_card": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "card"
+        },
+        "variant": {
+          "enum": [
+            "default",
+            "contact"
+          ],
+          "default": "default"
+        },
+        "heading": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string"
+              },
+              "href": {
+                "type": "string",
+                "pattern": "^(?![\\s\\\\]*[/\\\\][\\s\\\\]*[/\\\\])(?:(?:https?|mailto):|[^:]*$)",
+                "description": "http(s) URL, mailto: address, or a relative link such as page.html or #section. Other schemes (javascript:, data:), protocol-relative //host and backslash tricks are rejected here and ignored by the renderer."
+              }
+            },
+            "required": [
+              "text",
+              "href"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "link_href": {
+          "type": "string",
+          "pattern": "^(?![\\s\\\\]*[/\\\\][\\s\\\\]*[/\\\\])(?:(?:https?|mailto):|[^:]*$)",
+          "description": "http(s) URL, mailto: address, or a relative link such as page.html or #section. Other schemes (javascript:, data:), protocol-relative //host and backslash tricks are rejected here and ignored by the renderer."
+        },
+        "link_text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "heading"
+      ],
+      "additionalProperties": false,
+      "description": "Generic sidebar card: heading, optional text, optional list of links, optional call-to-action link. variant 'contact' gives the highlighted contact style.",
+      "dependentRequired": {
+        "link_href": [
+          "link_text"
+        ],
+        "link_text": [
+          "link_href"
+        ]
+      }
+    },
+    "side_links": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "links"
+        },
+        "heading": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string"
+              },
+              "href": {
+                "type": "string",
+                "pattern": "^(?![\\s\\\\]*[/\\\\][\\s\\\\]*[/\\\\])(?:(?:https?|mailto):|[^:]*$)",
+                "description": "http(s) URL, mailto: address, or a relative link such as page.html or #section. Other schemes (javascript:, data:), protocol-relative //host and backslash tricks are rejected here and ignored by the renderer."
+              }
+            },
+            "required": [
+              "text",
+              "href"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "type",
+        "heading",
+        "items"
+      ],
+      "additionalProperties": false,
+      "description": "Sidebar card with a heading and a list of links (same as card with items)."
+    },
+    "side_contact": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "contact"
+        },
+        "heading": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "link_href": {
+          "type": "string",
+          "pattern": "^(?![\\s\\\\]*[/\\\\][\\s\\\\]*[/\\\\])(?:(?:https?|mailto):|[^:]*$)",
+          "description": "http(s) URL, mailto: address, or a relative link such as page.html or #section. Other schemes (javascript:, data:), protocol-relative //host and backslash tricks are rejected here and ignored by the renderer."
+        },
+        "link_text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "heading",
+        "text",
+        "link_href",
+        "link_text"
+      ],
+      "additionalProperties": false,
+      "description": "Highlighted sidebar contact card (same as card with variant 'contact')."
+    }
+  }
+}
