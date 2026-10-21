@@ -46,6 +46,52 @@ See `projects/photogrammetry.yml` as an example.
 
 > The explorer reads `projects/manifest.json` first and then loads each listed YAML file. The manifest is the source of truth for which project files are included.
 
+## Page content (JSON blocks)
+
+Some pages render their content from JSON instead of hardcoded HTML. The
+generic renderer (`content-render-blocks.js`) fills a page's masthead, main
+column and sidebar from a `content/*.json` file. Pages using it:
+`phd-postdoc.html`, `faculty-affiliates.html`, `data-science-research.html`.
+
+### File shape
+
+```json
+{
+  "page": "faculty-affiliates",
+  "masthead": { "eyebrow": "HAAG · Faculty Program", "title": "...", "sub": "..." },
+  "main": [ { "type": "heading", "text": "..." }, ... ],
+  "sidebar": [ { "type": "card", "heading": "...", "text": "..." }, ... ]
+}
+```
+
+`main` and `sidebar` are lists of blocks; every block has a `type`. Fields
+ending in `_html` accept inline HTML, which the renderer sanitises (only
+simple formatting tags like `a`, `p`, `strong`, `em`, `ul`, `ol`, `li`
+survive). All other text fields are plain text and escaped. Links allow
+`http(s)`, `mailto` and relative URLs only — anything else is dropped.
+
+### Block types
+
+Main column (16): `heading` (level 2 or 3), `paragraph`, `rich_text`,
+`numbered_list`, `callout`, `images`, `expandable_steps`, `people_cards`,
+`grade_cards`, `item_list`, `link_list`, `pills`, `cards`, `steps`, `faq`,
+`cta`. Sidebar (3): `card`, `links`, `contact`. See an existing
+`content/*.json` file for the fields each block takes.
+
+### Wiring a page
+
+Add this before `</body>`, with a feature flag registered as `PREVIEW` in
+`feature-flags.js`:
+
+```html
+<script src="content-render-blocks.js" data-flag="dynamicMyContent" data-src="content/my-page.json"></script>
+```
+
+The renderer does nothing unless the flag is enabled. If the JSON fails to
+load, or a column has no known blocks, the page keeps its original hardcoded
+HTML. An optional `data-endpoint` URL is tried first and falls back to the
+committed JSON file.
+
 ## Feature flags (required for new features)
 
 All existing functionality is `CURRENT` by default, represented by the
