@@ -21,9 +21,10 @@
   function has(o, k) { return Object.prototype.hasOwnProperty.call(o, k); }
 
   // Only http, https, mailto and relative links are allowed. Anything else becomes ''.
+  // Backslashes are treated as slashes because browsers do the same (/\evil.com is protocol-relative).
   function safeHref(h) {
     h = String(h === undefined || h === null ? '' : h).trim();
-    var probe = h.replace(/[\u0000-\u0020\u007f]/g, '');
+    var probe = h.replace(/[\u0000-\u0020\u007f]/g, '').replace(/\\/g, '/');
     if (!probe || /^\/\//.test(probe)) return '';
     if (/^(https?:|mailto:)/i.test(probe)) return h;
     if (/^[a-z][a-z0-9+.\-]*:/i.test(probe)) return '';
@@ -45,7 +46,6 @@
         var href = safeHref(n.getAttribute('href'));
         if (href) {
           el.setAttribute('href', href);
-          if (/^https?:/i.test(href)) el.setAttribute('rel', 'noopener noreferrer');
         }
         // Only these class names survive on links (styled by the page's own CSS).
         var cls = n.getAttribute('class');
@@ -174,12 +174,24 @@
     });
   }
 
-  function getJson(url) {
-    return fetch(url).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+  // The directory endpoint gets this long to answer before the committed JSON is used instead.
+  var ENDPOINT_TIMEOUT_MS = 3500;
+  function getJson(url, ms) {
+    var ctl = ms && typeof AbortController === 'function' ? new AbortController() : null;
+    var req = fetch(url, ctl ? { signal: ctl.signal } : undefined)
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+    if (!ms) return req;
+    return new Promise(function (resolve, reject) {
+      var timer = setTimeout(function () {
+        if (ctl) ctl.abort();
+        reject(new Error('timed out after ' + ms + 'ms'));
+      }, ms);
+      req.then(function (v) { clearTimeout(timer); resolve(v); }, function (e) { clearTimeout(timer); reject(e); });
+    });
   }
   function valid(d) { return d && d.main && d.sidebar; }
   var data = endpoint
-    ? getJson(endpoint).then(function (d) { if (!valid(d)) throw new Error('bad endpoint shape'); return d; })
+    ? getJson(endpoint, ENDPOINT_TIMEOUT_MS).then(function (d) { if (!valid(d)) throw new Error('bad endpoint shape'); return d; })
         .catch(function (e) { console.warn('[HAAG] ' + flag + ': endpoint failed (' + e.message + '), using ' + src); return getJson(src); })
     : getJson(src);
 
@@ -196,8 +208,10 @@
         if (h && m.title) h.textContent = m.title;
         if (s && m.sub) s.textContent = m.sub;
       }
-      cols[0].innerHTML = build(d.main, main);
-      cols[1].innerHTML = build(d.sidebar, side);
+      // A column that renders empty (no blocks, or only unknown ones) keeps its original HTML.
+      var mainHtml = build(d.main, main), sideHtml = build(d.sidebar, side);
+      if (mainHtml.trim()) cols[0].innerHTML = mainHtml;
+      if (sideHtml.trim()) cols[1].innerHTML = sideHtml;
     })
     .catch(function (err) { console.warn('[HAAG] ' + flag + ': keeping original content (' + err.message + ')'); });
 })();
