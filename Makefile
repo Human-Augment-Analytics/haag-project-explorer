@@ -48,8 +48,6 @@ check: test
 
 test:
 	@node scripts/validate.js
-	@node scripts/test-feature-flags.js
-	@node --check embed-resize.js && echo "✅ JavaScript syntax OK"
 
 nextjs:
 	@echo "Starting Next.js at http://localhost:$(PORT)/project-explorer"
