@@ -84,5 +84,63 @@ if (fs.existsSync(peoplePath)) {
   });
 }
 
+// Page content JSON files (content/*.json) rendered by content-render-blocks.js
+const contentDir = path.join(root, "content");
+const mainBlockTypes = new Set([
+  "heading", "paragraph", "rich_text", "numbered_list", "callout", "images",
+  "expandable_steps", "people_cards", "grade_cards", "item_list", "link_list",
+  "pills", "cards", "steps", "faq", "cta",
+]);
+const sideBlockTypes = new Set(["card", "links", "contact"]);
+
+let contentCount = 0;
+if (fs.existsSync(contentDir)) {
+  const contentFiles = fs
+    .readdirSync(contentDir)
+    .filter((name) => name.endsWith(".json") && !name.endsWith(".schema.json"));
+  // data-src wiring is only checked while the legacy .html pages exist. Pages that
+  // load content through a framework (the Next.js port) have no data-src attributes.
+  const htmlPages = fs.readdirSync(root).filter((name) => name.endsWith(".html"));
+  const checkWiring = htmlPages.length > 0;
+  const referenced = new Set();
+  for (const page of htmlPages) {
+    const html = fs.readFileSync(path.join(root, page), "utf8");
+    // Note: only double-quoted data-src attributes are matched (every page uses them today).
+    for (const match of html.matchAll(/data-src="(content\/[^"]+\.json)"/g)) {
+      referenced.add(match[1]);
+    }
+  }
+  for (const filename of contentFiles) {
+    const rel = `content/${filename}`;
+    let doc;
+    try {
+      doc = JSON.parse(fs.readFileSync(path.join(contentDir, filename), "utf8"));
+    } catch (error) {
+      fail(`${rel} is not valid JSON: ${error.message}`);
+      continue;
+    }
+    contentCount += 1;
+    if (typeof doc.page !== "string" || !doc.page) fail(`${rel} needs a "page" name`);
+    if (!Array.isArray(doc.main) || doc.main.length === 0) fail(`${rel} needs a non-empty "main" block list`);
+    if (!Array.isArray(doc.sidebar)) fail(`${rel} needs a "sidebar" block list`);
+    for (const [column, known] of [["main", mainBlockTypes], ["sidebar", sideBlockTypes]]) {
+      for (const block of doc[column] || []) {
+        if (!block || typeof block.type !== "string") {
+          fail(`${rel}: block without a "type" in "${column}"`);
+        } else if (!known.has(block.type)) {
+          fail(`${rel}: unknown block type "${block.type}" in "${column}" (the renderer would skip it)`);
+        }
+      }
+    }
+    if (checkWiring && !referenced.has(rel)) fail(`${rel} is not referenced by any page's data-src`);
+  }
+  for (const rel of checkWiring ? referenced : []) {
+    if (!fs.existsSync(path.join(root, rel))) fail(`data-src points at a missing file: ${rel}`);
+  }
+}
+
 if (process.exitCode) process.exit();
 console.log(`✓ Manifest matches all ${listed.size} project files; links verified; people.html inline JavaScript parses.`);
+if (contentCount > 0) {
+  console.log(`✓ ${contentCount} content/*.json page files validated (required keys, known block types, data-src wiring when .html pages exist).`);
+}
