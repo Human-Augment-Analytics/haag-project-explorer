@@ -1,3 +1,4 @@
+import { withBase } from '../../lib/links';
 import './page.css';
 import { UtilityBar, Nav, Masthead, Breadcrumb, FooterA } from '../../components/Chrome';
 
@@ -105,9 +106,9 @@ export default function ProjectManagementPage() {
           <div className="side-card">
             <h3>Related programs</h3>
             <ul>
-              <li><a href="/faculty-affiliates">FATE — faculty affiliates</a></li>
-              <li><a href="/data-science-research">FAIR-CS — the OMSCS research course</a></li>
-              <li><a href="/project-explorer">Browse past &amp; current projects</a></li>
+              <li><a href={withBase('/faculty-affiliates')}>FATE — faculty affiliates</a></li>
+              <li><a href={withBase('/data-science-research')}>FAIR-CS — the OMSCS research course</a></li>
+              <li><a href={withBase('/project-explorer')}>Browse past &amp; current projects</a></li>
             </ul>
           </div>
           <div className="side-card contact">

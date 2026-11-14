@@ -1,54 +1,29 @@
-PORT ?= 8000
+PORT ?= 3000
 
-.PHONY: help start serve open check test nextjs
+.PHONY: help nextjs start check test
 
 help:
 	@echo "HAAG Project Explorer - Developer Commands"
 	@echo ""
 	@echo "Usage:"
-	@echo "  make nextjs       Start the Next.js app at http://localhost:$(PORT)"
-	@echo "  make start        Start local static server at http://localhost:$(PORT)"
-	@echo "  make open         Start server and automatically open Project Explorer in browser"
-	@echo "  make check        Validate project files, manifest, and script syntax"
+	@echo "  make nextjs   Start the Next.js dev server at http://localhost:$(PORT)"
+	@echo "  make start    Build the static site and serve out/ at http://localhost:$(PORT)"
+	@echo "  make check    Run the project, content, and sanitizer checks (npm test)"
+	@echo ""
+	@echo "Run 'npm install' once before using these commands."
 	@echo ""
 	@echo "Options:"
-	@echo "  PORT=3000 make nextjs  Specify custom port (default: 8000)"
-	@echo "  PORT=3000 make start   Specify custom port (default: 8000)"
+	@echo "  PORT=8000 make nextjs  Specify a custom port (default: 3000)"
 
-start: serve
+nextjs:
+	npm run dev -- -p $(PORT)
 
-serve:
-	@echo "============================================================"
-	@echo "  Starting HAAG Project Explorer local server"
-	@echo "============================================================"
-	@echo "  Project Explorer: http://localhost:$(PORT)/project-explorer.html"
-	@echo "  Home Page:        http://localhost:$(PORT)/index.html"
-	@echo "  People:           http://localhost:$(PORT)/people.html"
-	@echo "  Recruitment:      http://localhost:$(PORT)/recruitment.html"
-	@echo "============================================================"
-	@echo "  Press Ctrl+C to stop."
-	@echo "============================================================"
-	@if command -v python3 >/dev/null 2>&1; then \
-		python3 -m http.server $(PORT); \
-	elif command -v npx >/dev/null 2>&1; then \
-		npx -y serve -p $(PORT) .; \
-	else \
-		echo "Error: python3 or npx is required to serve files locally." && exit 1; \
-	fi
-
-open:
-	@if [ "$$(uname)" = "Darwin" ]; then \
-		(sleep 1 && open "http://localhost:$(PORT)/project-explorer.html") & \
-	elif command -v xdg-open >/dev/null 2>&1; then \
-		(sleep 1 && xdg-open "http://localhost:$(PORT)/project-explorer.html") & \
-	fi
-	@$(MAKE) serve
+start:
+	npm run build
+	@echo "Serving out/ at http://localhost:$(PORT)  (Ctrl+C to stop)"
+	python3 -m http.server -d out $(PORT)
 
 check: test
 
 test:
-	@node scripts/validate.js
-
-nextjs:
-	@echo "Starting Next.js at http://localhost:$(PORT)/project-explorer"
-	npm run dev
+	npm test

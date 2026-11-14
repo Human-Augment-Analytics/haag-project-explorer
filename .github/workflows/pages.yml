@@ -1,9 +1,17 @@
-name: Deploy static site to GitHub Pages
+name: Build and deploy site to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    # Pilot branch only for now. Add `main` here at cutover, once the Next.js
+    # site replaces the old root-level HTML files on the live site.
+    branches: [Sai/nextjs-pilot]
   workflow_dispatch:
+  # The Directory sends this when a project, person, or recruitment entry is published.
+  repository_dispatch:
+    types: [content-published]
+  # Nightly rebuild as a backup in case a publish event is missed.
+  schedule:
+    - cron: '17 6 * * *'
 
 permissions:
   contents: read
@@ -20,6 +28,11 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    env:
+      # URL prefix for the site. The default serves it at
+      # https://<owner>.github.io/haag-project-explorer/. Set the repository
+      # variable BASE_PATH to "/" to serve it from the root of a domain.
+      BASE_PATH: ${{ vars.BASE_PATH || '/haag-project-explorer' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,6 +45,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Run checks
+        run: npm test
 
       - name: Build static export
         run: npm run build

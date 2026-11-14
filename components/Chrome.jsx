@@ -1,3 +1,4 @@
+import { withBase } from '../lib/links';
 // Shared site chrome, ported 1:1 from the original pages' markup.
 // Two families exist on the current site:
 //   Variant A (most pages): 3-link utility bar, nav order Home/Faculty/PhD/
@@ -46,7 +47,7 @@ export function Nav({ current, variant = 'A' }) {
     <nav className="nav-bar">
       <div className="nav-inner">
         {items.map(([key, href, label]) => (
-          <a key={key} href={href} className={key === current ? 'current' : undefined}>
+          <a key={key} href={withBase(href)} className={key === current ? 'current' : undefined}>
             {label}
           </a>
         ))}
@@ -70,7 +71,7 @@ export function Masthead({ eyebrow, title, sub }) {
 export function Breadcrumb({ here }) {
   return (
     <div className="breadcrumb">
-      <a href="/">HAAG</a>
+      <a href={withBase('/')}>HAAG</a>
       <span className="sep">/</span>
       <span className="here">{here}</span>
     </div>
@@ -109,9 +110,9 @@ export function FooterA() {
         <div>
           <h4>HAAG</h4>
           <ul>
-            <li><a href="/">Our Mission</a></li>
-            <li><a href="/people">People</a></li>
-            <li><a href="/recruitment">Recruitment Status</a></li>
+            <li><a href={withBase('/')}>Our Mission</a></li>
+            <li><a href={withBase('/people')}>People</a></li>
+            <li><a href={withBase('/recruitment')}>Recruitment Status</a></li>
           </ul>
         </div>
       </div>
@@ -147,7 +148,7 @@ export function FooterB() {
           <ul>
             <li><a href="#">About HAAG</a></li>
             <li><a href="#">Programs</a></li>
-            <li><a href="/recruitment">Recruitment Status</a></li>
+            <li><a href={withBase('/recruitment')}>Recruitment Status</a></li>
           </ul>
         </div>
       </div>

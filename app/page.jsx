@@ -1,3 +1,4 @@
+import { withBase } from '../lib/links';
 import './home.css';
 import { UtilityBar, Nav, FooterA } from '../components/Chrome';
 import { getProjectCount } from '../lib/data';
@@ -22,7 +23,7 @@ export default function HomePage() {
             democratize AI implementation across disciplines.
           </p>
           <div className="hero-ctas">
-            <a className="btn btn-gold" href="/recruitment">Become a Researcher →</a>
+            <a className="btn btn-gold" href={withBase('/recruitment')}>Become a Researcher →</a>
             <a className="btn btn-outline" href="#mission">Explore Our Mission</a>
           </div>
         </div>
@@ -96,25 +97,25 @@ export default function HomePage() {
             <span className="eyebrow2">OMSCS Students · CS 8903 &amp; CS 6999</span>
             <h3>Interdisciplinary Data Science Research for Social Good</h3>
             <p>HAAG&apos;s flagship program. Earn up to 3 semesters of academic credit for interdisciplinary projects.</p>
-            <a className="cta-link" href="/data-science-research">Learn more →</a>
+            <a className="cta-link" href={withBase('/data-science-research')}>Learn more →</a>
           </div>
           <div className="program-card">
             <span className="eyebrow2">Faculty · Any Global Institution</span>
             <h3>Faculty Affiliates for Transdisciplinary Expansion (FATE)</h3>
             <p>A community of practice for faculty advancing interdisciplinary science teams.</p>
-            <a className="cta-link" href="/faculty-affiliates">Learn more →</a>
+            <a className="cta-link" href={withBase('/faculty-affiliates')}>Learn more →</a>
           </div>
           <div className="program-card">
             <span className="eyebrow2">OMSCS Students · MGT 8803 &amp; CS 8903</span>
             <h3>Research Operations Project Management Practicum</h3>
             <p>MBA and computing students partner to manage real AI research projects.</p>
-            <a className="cta-link" href="/project-management">Learn more →</a>
+            <a className="cta-link" href={withBase('/project-management')}>Learn more →</a>
           </div>
           <div className="program-card">
             <span className="eyebrow2">PhD &amp; Postdoc · Any Global Institute</span>
             <h3>Cross-Disciplinary Leadership Education for Advanced Researchers (CLEAR)</h3>
             <p>HAAG&apos;s premier leadership program for PhDs and postdocs in a live research environment.</p>
-            <a className="cta-link" href="/phd-postdoc">Learn more →</a>
+            <a className="cta-link" href={withBase('/phd-postdoc')}>Learn more →</a>
           </div>
           <div className="program-card">
             <span className="eyebrow2">Certificate Program · Graduate</span>

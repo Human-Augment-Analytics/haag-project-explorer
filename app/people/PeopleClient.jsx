@@ -10,6 +10,7 @@
 // port: profile links render hidden and the "Recently Featured" section
 // stays hidden, matching the default visitor experience exactly.
 
+import { withBase } from '../../lib/links';
 import { useMemo, useState } from 'react';
 
 const ROLES = [
@@ -113,7 +114,7 @@ export default function PeopleClient({ researchers, features }) {
             <div className="join-card">
               <h3>Interested in joining HAAG?</h3>
               <p>We welcome faculty, students, and postdocs year-round.</p>
-              <a className="btn-gold" href="/recruitment">Become a Researcher →</a>
+              <a className="btn-gold" href={withBase('/recruitment')}>Become a Researcher →</a>
             </div>
           </div>
         )}

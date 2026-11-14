@@ -1,6 +1,8 @@
 # HAAG Project Explorer
 The goal of this project explorer is to provide visibility into the projects under HAAG. This repository holds the metadata for HAAG research projects that will be displayed on the HAAG website.
 
+> Contributing guide: see [CONTRIBUTING.md](CONTRIBUTING.md). It covers every common content change.
+
 ## Template
 This is the template to be used to structure the metadata. For fields (such as links) that you want to leave blank, please populate with `null`.
 
@@ -46,14 +48,18 @@ See `projects/photogrammetry.yml` as an example.
 
 > The explorer reads `projects/manifest.json` first and then loads each listed YAML file. The manifest is the source of truth for which project files are included.
 
-## Page content (JSON blocks)
+## Page content and contributing
 
-Some pages render their content from JSON instead of hardcoded HTML. The
-generic renderer (`content-render-blocks.js`) fills a page's masthead, main
-column and sidebar from a `content/*.json` file. Pages using it:
-`phd-postdoc.html`, `faculty-affiliates.html`, `data-science-research.html`.
+The website is built with Next.js. Start with [CONTRIBUTING.md](CONTRIBUTING.md)
+for how to update recruitment status, add projects or people, edit page text,
+change the navigation, or add a page.
 
-### File shape
+### Article page content (`content/*.json`)
+
+The article pages (`/faculty-affiliates`, `/phd-postdoc`, `/data-science-research`)
+are rendered from `content/<page>.json`. Each file has a masthead, a main column,
+and a sidebar. `content/blocks.schema.json` is the contract, and `npm test`
+checks every file against it.
 
 ```json
 {
@@ -64,132 +70,14 @@ column and sidebar from a `content/*.json` file. Pages using it:
 }
 ```
 
-`main` and `sidebar` are lists of blocks; every block has a `type`. Fields
-ending in `_html` accept inline HTML, which the renderer sanitises (only
-simple formatting tags like `a`, `p`, `strong`, `em`, `ul`, `ol`, `li`
-survive). All other text fields are plain text and escaped. Links allow
-`http(s)`, `mailto` and relative URLs only — anything else is dropped.
+`main` and `sidebar` are lists of blocks, and every block has a `type`. Fields
+ending in `_html` accept inline HTML, which is sanitised (only simple formatting
+tags such as `a`, `p`, `strong`, `em`, `ul`, `ol`, `li` survive). Other text
+fields are plain text and escaped. Links allow `http(s)`, `mailto`, and relative
+URLs only.
 
-### Block types
-
-Main column (16): `heading` (level 2 or 3), `paragraph`, `rich_text`,
+Main column (16 types): `heading` (level 2 or 3), `paragraph`, `rich_text`,
 `numbered_list`, `callout`, `images`, `expandable_steps`, `people_cards`,
 `grade_cards`, `item_list`, `link_list`, `pills`, `cards`, `steps`, `faq`,
-`cta`. Sidebar (3): `card`, `links`, `contact`. See an existing
-`content/*.json` file for the fields each block takes.
-
-### Wiring a page
-
-Add this before `</body>`, with a feature flag registered as `PREVIEW` in
-`feature-flags.js`:
-
-```html
-<script src="content-render-blocks.js" data-flag="dynamicMyContent" data-src="content/my-page.json"></script>
-```
-
-The renderer does nothing unless the flag is enabled. If the JSON fails to
-load, or a column has no known blocks, the page keeps its original hardcoded
-HTML. An optional `data-endpoint` URL is tried first and falls back to the
-committed JSON file.
-
-## Feature flags (required for new features)
-
-All existing functionality is `CURRENT` by default, represented by the
-`existingSite` baseline in `feature-flags.js`. Existing unmarked UI remains visible.
-Every upcoming feature **must** have its own global registry entry and start as
-`PREVIEW`. Use exactly these two values:
-
-| Value | Default visitor | Preview enabled |
-| --- | --- | --- |
-| `CURRENT` | Enabled | Enabled |
-| `PREVIEW` | Disabled | Enabled |
-
-The registry is shared by all pages, including `recruitment-status/`. There is no
-build step or external service. Unknown names and invalid values are disabled.
-`existingSite` records the legacy baseline; it is not a master switch for the site.
-
-### Add a feature
-
-1. Add a uniquely named entry to `feature-flags.js`, for example
-   `projectComparison: 'PREVIEW',`. Use letters, digits, `_`, or `-`, beginning
-   with a letter.
-2. Gate **every** entry point and UI element for the feature:
-
-   ```html
-   <button data-feature="projectComparison">Compare projects</button>
-   <section data-feature="projectComparison">Comparison panel</section>
-   ```
-
-3. Gate its JavaScript initialization, event handlers, and data fetching too:
-
-   ```js
-   if (window.HAAGFeatures.isEnabled('projectComparison')) {
-     initializeProjectComparison();
-   }
-   ```
-
-4. Verify both modes, including navigation, direct page access, and embedded use.
-5. Change the registry value to `CURRENT` when the feature is approved for release.
-   Keep the gates so the feature can be returned to `PREVIEW` if needed.
-
-For a new HTML page, copy the `haag-feature-gates` style and the two feature script
-imports from an existing page into its head, before feature markup or scripts.
-Adjust relative paths for nested folders. Keep these scripts synchronous: gates
-are computed before content renders. Dynamic `data-feature` elements are covered
-by the same CSS automatically; nested features require all enclosing gates to be
-enabled. Do not change registry values at runtime; edit the file and reload.
-
-### Preview upcoming features locally
-
-Start the site with `make start`, open a page, and run this in its browser console:
-
-```js
-sessionStorage.setItem('haag:preview', 'PREVIEW');
-location.reload();
-```
-
-This enables all registered `PREVIEW` features in that browser tab and origin,
-including navigation to other pages. To restore the default `CURRENT` mode:
-
-```js
-sessionStorage.removeItem('haag:preview');
-location.reload();
-```
-
-Inspect `HAAGFeatures.mode`, `HAAGFeatures.flags`, or
-`HAAGFeatures.isEnabled('projectComparison')` in the console. For an iframe,
-select the embedded page's console context. When session storage is blocked,
-preview stays off. Preview settings do not change another visitor's experience.
-
-These client-side flags control rollout, not access to confidential content:
-HTML, JavaScript, and data shipped with the site remain publicly downloadable.
-
-### Required review checklist
-
-- Every new feature is registered as `PREVIEW` and gates both UI and behavior.
-- Existing functionality remains `CURRENT`.
-- Both default and preview modes are checked before merging.
-- New pages load the shared feature scripts and gate style.
-- Run `make check` to validate the registry, page integration, and toggle behavior.
-
-### Working example and browser test
-
-`projectResultCount` is a real `PREVIEW` feature on the Project Explorer. It shows
-“Showing X of Y public projects” and updates as filters change. In default mode,
-the counter is hidden and its update code does not execute. Enable preview using
-the console commands above to try it, then select a recruitment filter.
-
-The automated browser test checks default visibility, existing card/modal
-behavior, preview visibility, filter updates, disabling preview, and promotion to
-`CURRENT` (simulated without editing the registry):
-
-```sh
-npm install --no-save --package-lock=false playwright
-npx playwright install chromium
-node scripts/test-feature-browser.js
-```
-
-If Google Chrome is already installed, skip the Chromium download and run
-`BROWSER_CHANNEL=chrome node scripts/test-feature-browser.js` instead. The test
-starts and stops its own temporary localhost server. Browser tests are separate
-from the dependency-free `make check` checks.
+`cta`. Sidebar (3 types): `card`, `links`, `contact`. See an existing
+`content/*.json` file for the fields each type takes.

@@ -1,3 +1,4 @@
+import { withBase } from '../../../lib/links';
 import './page.css';
 import Redirect from '../../../components/Redirect';
 
@@ -32,18 +33,18 @@ export default function RecruitmentStatusTeamMatchingPage() {
 
       <nav className="nav-bar">
         <div className="nav-inner">
-          <a href="/recruitment-status">HAAG (Home)</a>
+          <a href={withBase('/recruitment-status')}>HAAG (Home)</a>
           <a href="#">Faculty Affiliates</a>
           <a href="#">PhD / Post-Doc</a>
           <a href="#">Data Science Research</a>
           <a href="#">Project Management</a>
           <a href="#">HAAG Project Explorer</a>
-          <a href="/recruitment-status">Recruitment Status</a>
+          <a href={withBase('/recruitment-status')}>Recruitment Status</a>
         </div>
       </nav>
 
       <div className="breadcrumb">
-        <a href="/recruitment-status">HAAG</a>
+        <a href={withBase('/recruitment-status')}>HAAG</a>
         <span className="sep">/</span>
         <span className="here">Recruitment Status</span>
       </div>
@@ -79,7 +80,7 @@ export default function RecruitmentStatusTeamMatchingPage() {
             <ul>
               <li><a href="#">About HAAG</a></li>
               <li><a href="#">Programs</a></li>
-              <li><a href="/recruitment-status">Recruitment Status</a></li>
+              <li><a href={withBase('/recruitment-status')}>Recruitment Status</a></li>
             </ul>
           </div>
         </div>
