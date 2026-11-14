@@ -10,7 +10,7 @@ or code changes, read [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Requirements
 
-- Node.js 20.10 or newer (the test script uses a Node flag added in 20.10)
+- Node.js 20 or newer (tested on Node 20, 22, and 24)
 - npm (comes with Node)
 
 ## Run it locally
