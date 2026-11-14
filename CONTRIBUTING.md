@@ -1,159 +1,89 @@
-# Contributing
+# Contributing to the HAAG site
 
-This is the single guide for changing the HAAG website. It covers the Next.js
-site in `app/` and the data files it reads. For setup and deployment, see
-[PILOT.md](PILOT.md). For the project-explorer metadata template, see
-[README.md](README.md).
+The site is **Next.js (App Router) with a static export**. Pages are React
+components under `app/`, and the content still comes from the same data files
+the old site used — most updates are data edits, not code.
 
-Most changes are content edits to YAML or JSON files. You do not need to touch
-code for those. Each task below says which file to edit, whether it needs a
-code change, and how to check the result.
+This file is the single source of truth for how to make changes. If README.md,
+PILOT.md, or any other doc says something different, this file wins.
 
-## Before you start
+## Setup
+
+You need Node.js 20 or newer.
 
 ```bash
 npm install     # once
-npm run dev     # http://localhost:3000, reloads as you edit
-npm test        # checks the manifest, content JSON, and sanitizer
-npm run build   # writes the static site to out/
+npm run dev     # dev server at http://localhost:3000 (or: make nextjs)
+npm run build   # static export to out/
+make check      # validate the data files (projects, people, content)
 ```
 
-Run `npm test` and `npm run build` before opening a PR. CI runs the same checks
-and will fail the build on a malformed data file.
-
-## Tasks
+## Common tasks
 
 ### Update the recruitment phase
 
-There are two recruitment pages. Each reads its own file, so update both when
-the phase changes.
+- **Edit:** `recruitment-status/recruitment.yml` for the `/recruitment-status`
+  page, or `recruitment.yml` at the repo root for `/recruitment`. Change
+  `current_phase` (one of `applications_open`, `applications_closed`,
+  `matching`, `finalized`) and set `last_updated` to today.
+- **Code change:** no.
+- **Check:** open the page locally and confirm the banner and timeline show
+  the new phase.
+- Recruitment FAQs live in `recruitment-status/faqs.yml` — same pattern, edit
+  and reload.
 
-| Page | File | Code change? |
-|---|---|---|
-| `/recruitment-status` (status timeline) | `recruitment-status/recruitment.yml` | No |
-| `/recruitment` (recruitment page) | `recruitment.yml` | No |
+### Add a project
 
-1. Set `current_phase` to one of `applications_open`, `applications_closed`,
-   `matching`, or `finalized`. Do not rename these keys.
-2. Set `last_updated` to today's date (`YYYY-MM-DD`).
-3. Optionally edit `notes` (use `null` for none).
-4. Check: `npm run dev`, then open `/recruitment-status` and `/recruitment`.
-   Phases before the current one show as complete.
+- **Edit:** create `projects/<your-project>.yml` using the template in
+  README.md, then add the filename to the `projects` array in
+  `projects/manifest.json`. Set `visibility: public` for it to appear.
+- **Code change:** no.
+- **Check:** run `make check` (it validates the manifest and the YAML), then
+  open `/project-explorer` and find the project.
 
-### Edit the recruitment FAQs
+### Add a person
 
-Both recruitment pages share one FAQ file.
+- **Edit:** `people.yml` — add an entry under `researchers` with `name`,
+  `role` (Faculty | PhD | Postdoc | Graduate), `role_label`, `tags`, and
+  `profile_url` (`#` if there is no profile yet).
+- **Code change:** no.
+- **Check:** open `/people`, find the person, and test the role filter.
 
-1. Edit `recruitment-status/faqs.yml`. Each section has `items:` with a
-   `question` and an `answer`.
-2. Keep answers as plain text.
-3. Check: open `/recruitment` and `/recruitment-status` and expand the FAQ.
+### Edit page text
 
-### Add or edit a project
+- **Program pages** (`/faculty-affiliates`, `/phd-postdoc`,
+  `/data-science-research`): edit `content/<page>.json`. The file must
+  validate against `content/blocks.schema.json` — `make check` enforces this.
+  A content editor tool is planned and will replace this process later; these
+  are the current steps.
+- **All other pages:** the text is in the page component,
+  `app/<route>/page.jsx` (the home page is `app/page.jsx`).
+- **Code change:** no for the three program pages, yes for the rest.
+- **Check:** reload the page locally and read it through.
 
-Projects appear in the Project Explorer only when `visibility: public`.
+### Change the nav
 
-1. Create `projects/<project-id>.yml`. Copy the template in
-   [README.md](README.md#template). Use a unique, lowercase, hyphenated
-   filename.
-2. Add the filename to the `projects` array in `projects/manifest.json`.
-   Files that are not listed are rejected by `npm test`.
-3. Leave links you do not have as `null`. Placeholder values such as
-   `example.com` are rejected.
-4. Check: `npm test`, then open `/project-explorer` and confirm the project
-   appears with its name, status, and links.
-
-To edit a project, change its YAML file. To hide one, set `visibility: private`.
-
-### Add or edit a person
-
-People are listed on `/people`.
-
-1. Edit `people.yml` under `researchers:`. Each entry has `name`, `role`
-   (one of `Faculty`, `PhD`, `Postdoc`, `Graduate`), `role_label`, `tags`, and
-   `profile_url` (use `"#"` if there is no profile yet).
-2. Use `&middot;` in `role_label` for the separator. Common HTML entities
-   are decoded at build time (see `decodeEntities` in `lib/sanitize.js`).
-3. Features and blog posts on the same page are under `features:`.
-4. Check: open `/people` and search for the new name.
-
-### Edit text on an article page
-
-Article pages (`/faculty-affiliates`, `/phd-postdoc`,
-`/data-science-research`) are built from `content/<page>.json`. They have a
-masthead, a main column, and a sidebar, each made of typed blocks.
-
-1. Edit the matching `content/<page>.json`. Each block has a `type`; see
-   `content/blocks.schema.json` for the fields each type takes.
-2. Fields ending in `_html` accept simple inline HTML (`a`, `p`, `strong`,
-   `em`, `ul`, `ol`, `li`). Other text fields are plain text.
-3. Links accept `http(s)`, `mailto:`, and relative paths. Other schemes are
-   dropped.
-4. Check: `npm test` (it validates the file against the schema), then open the
-   page in `npm run dev`.
-
-### Edit text on any other page
-
-The home page, project management, recruitment, and team matching pages keep
-their text in code. These are code changes.
-
-1. Find the page in `app/<route>/page.jsx`. Home is `app/page.jsx`.
-2. Edit the text in the JSX. Keep the existing class names so the styling
-   still applies.
-3. Check: `npm run dev`, then review the page at the desktop and mobile widths.
-
-### Change the navigation or footer
-
-The header and footer are shared by every page, in `components/Chrome.jsx`.
-
-1. Edit `NAV_A` (most pages) or `NAV_B` (recruitment pages). Each entry is
-   `[key, '/route', 'Label']`.
-2. Footer links are plain `<a>` tags in the same file.
-3. Every internal `href` in this file must be wrapped in `withBase()`. Do not
-   write a bare `href="/..."`.
-4. Check: click through the nav on `npm run dev`.
+- **Edit:** `components/Chrome.jsx` and the nav items each page passes to it.
+  Note the recruitment pages use a different nav order (People second) — check
+  both variants.
+- **Code change:** yes.
+- **Check:** click through every page and confirm the order and the highlighted
+  current item are right on each one.
 
 ### Add a page
 
-1. Create `app/<route>/page.jsx`. For a standard article page, copy
-   `app/faculty-affiliates/page.jsx`, which uses `ArticlePage` and a
-   `content/<route>.json` file. Otherwise copy `app/people/page.jsx` and build
-   the page from `Chrome` components.
-2. Add a `page.css` next to it if the page needs styles.
-3. If the page is an article page, add `content/<route>.json` and make sure it
-   passes `npm test`.
-4. Add the link to `NAV_A` or `NAV_B` in `components/Chrome.jsx` if it should
-   appear in the navigation.
-5. Check: `npm run build`. The new route should appear in the build output,
-   and the page should load in `npm run dev`.
+- **Edit:** create `app/<route>/page.jsx` and `app/<route>/page.css`, and add
+  the route to the nav (see above). The static export picks the new route up
+  at build time — there is no route registry to update.
+- **Code change:** yes.
+- **Check:** `npm run build`, then open the new route from `out/` or the dev
+  server.
 
-### Remove an old redirect
+## Before opening a PR
 
-Old `.html` paths are rewritten to clean routes automatically (see
-`lib/links.js`). Redirect stubs live in `app/<route>/page.jsx` and use the
-`Redirect` component. Remove the stub and its route folder only after you
-confirm nothing links to it.
-
-## Deploying
-
-Changes are published by `.github/workflows/pages.yml`. It runs `npm test` and
-`npm run build`, then deploys `out/`. The workflow runs on pushes to the pilot
-branch, on a publish event from the Directory, nightly, and on demand. Until
-the cutover to `main`, the live site is not rebuilt from `main`.
-
-The site URL prefix comes from `BASE_PATH`. The default is
-`/haag-project-explorer`. To check a build with that prefix, run
-`BASE_PATH=/haag-project-explorer npm run build` and confirm the internal links
-in `out/*.html` start with it. Use `npm run build` with no prefix to check a
-root-domain build.
-
-## Rules that apply to every change
-
-- Keep content in data files. Do not hard-code a person, project, or
-  recruitment date in the page code.
-- Use `withBase()` for internal links. Route raw HTML through
-  `lib/sanitize.js`.
-- A malformed data file must fail the build. Do not add a silent fallback that
-  hides bad data.
-- When you add a block type, update `components/Blocks.jsx`,
-  `content/blocks.schema.json`, and this file together.
+1. `make check` passes.
+2. `npm run build` passes.
+3. You clicked through every page you changed.
+4. Branch from your fork, PR against `main` in
+   `Human-Augment-Analytics/haag-project-explorer`. Say in the PR what you
+   changed and how you checked it.
