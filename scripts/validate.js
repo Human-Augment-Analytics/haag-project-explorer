@@ -98,8 +98,12 @@ if (fs.existsSync(contentDir)) {
   const contentFiles = fs
     .readdirSync(contentDir)
     .filter((name) => name.endsWith(".json") && !name.endsWith(".schema.json"));
+  // data-src wiring is only checked while the legacy .html pages exist. Pages that
+  // load content through a framework (the Next.js port) have no data-src attributes.
+  const htmlPages = fs.readdirSync(root).filter((name) => name.endsWith(".html"));
+  const checkWiring = htmlPages.length > 0;
   const referenced = new Set();
-  for (const page of fs.readdirSync(root).filter((name) => name.endsWith(".html"))) {
+  for (const page of htmlPages) {
     const html = fs.readFileSync(path.join(root, page), "utf8");
     // Note: only double-quoted data-src attributes are matched (every page uses them today).
     for (const match of html.matchAll(/data-src="(content\/[^"]+\.json)"/g)) {
@@ -128,9 +132,9 @@ if (fs.existsSync(contentDir)) {
         }
       }
     }
-    if (!referenced.has(rel)) fail(`${rel} is not referenced by any page's data-src`);
+    if (checkWiring && !referenced.has(rel)) fail(`${rel} is not referenced by any page's data-src`);
   }
-  for (const rel of referenced) {
+  for (const rel of checkWiring ? referenced : []) {
     if (!fs.existsSync(path.join(root, rel))) fail(`data-src points at a missing file: ${rel}`);
   }
 }
@@ -138,5 +142,5 @@ if (fs.existsSync(contentDir)) {
 if (process.exitCode) process.exit();
 console.log(`✓ Manifest matches all ${listed.size} project files; links verified; people.html inline JavaScript parses.`);
 if (contentCount > 0) {
-  console.log(`✓ ${contentCount} content/*.json page files validated (required keys, known block types, data-src wiring).`);
+  console.log(`✓ ${contentCount} content/*.json page files validated (required keys, known block types, data-src wiring when .html pages exist).`);
 }

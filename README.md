@@ -64,7 +64,8 @@ column and sidebar from a `content/*.json` file. Pages using it:
 }
 ```
 
-`main` and `sidebar` are lists of blocks; every block has a `type`. Fields
+`page` is required by `make check` as a house rule, even though
+`content/blocks.schema.json` treats it as optional. `main` and `sidebar` are lists of blocks; every block has a `type`. Fields
 ending in `_html` accept inline HTML, which the renderer sanitises (only
 simple formatting tags like `a`, `p`, `strong`, `em`, `ul`, `ol`, `li`
 survive). All other text fields are plain text and escaped. Links allow
