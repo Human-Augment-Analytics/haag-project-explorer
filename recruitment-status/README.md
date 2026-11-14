@@ -1,25 +1,21 @@
 # HAAG Recruitment Status
 
-The goal of this page is to give everyone — prospective researchers, faculty, advisors — a
-clear, always-current answer to "where is HAAG right now in the recruitment cycle?"
-This repository holds the single YAML file that drives that status display on the HAAG
-website.
+This folder holds the data for the `/recruitment-status` page: where HAAG is in
+the recruitment cycle, and the FAQ answers shown on the recruitment pages.
 
-## How it works
+- `recruitment.yml` drives the status banner and timeline on `/recruitment-status`.
+- `faqs.yml` drives the FAQ sections on `/recruitment` and `/recruitment-status`.
 
-- `recruitment.yml` is the single source of truth for the current recruitment phase.
-- `faqs.yml` is the source of truth for the enrollment FAQ content shown below the timeline.
-- `index.html` reads both `recruitment.yml` and `faqs.yml` at page load and renders the
-  status banner, timeline, and FAQ sections. There is no build step and no backend — the
-  page just reads the files directly.
-- To change what is shown on the site, edit `recruitment.yml` for cycle status updates and
-  `faqs.yml` for enrollment FAQ updates. Nothing else needs to change.
+The site reads both files at build time. There is no backend and no external
+service. This intentionally does **not** integrate with BuzzMe. The phase
+changes a few times per cycle, so a manual update is simpler.
 
-This intentionally does **not** integrate with BuzzMe. The recruitment phase only changes
-a handful of times per cycle, so a manual update is simpler and has no dependency on
-BuzzMe's system staying accessible to us.
+For the steps to update the phase or the FAQs, see the
+[contributing guide](../CONTRIBUTING.md#update-the-recruitment-phase). The
+`/recruitment` page has its own copy of the phase in the root `recruitment.yml`.
+Update both files when the phase changes.
 
-## Template
+## Phase template
 
 ```yaml
 cycle_name: Fall 2026 Recruitment
@@ -46,32 +42,10 @@ phases:
 contact: mailto:haag@gatech.edu
 ```
 
-## Updating the current phase
+Phase `key` values should stay stable once in use. The timeline logic depends on
+`current_phase` matching one of the `phases[].key` values, in order.
 
-1. Open `recruitment.yml`.
-2. Change `current_phase` to the key of the phase you're now in.
-3. Update `last_updated` to today's date.
-4. Optionally update `notes` with anything applicants should know right now.
-5. Commit and push (or open a PR, if this gets folded into HAAG's broader review workflow).
-
-The site automatically reflects whatever `current_phase` is set to — phases before it show
-as complete, the matching phase shows as current, and phases after it show as upcoming.
-
-## Updating the FAQs
-
-The recruitment page includes two FAQ sections:
-
-- `FAQ for 8903` for new researchers.
-- `FAQ for 6999` for returning researchers on the project track.
-
-To update them:
-
-1. Open `faqs.yml`.
-2. Find the right section under `sections:`.
-3. Edit an existing `question` or `answer`, or add a new item under that section's `items:` list.
-4. Keep answers as plain text. The page will handle spacing and accordion behavior automatically.
-
-Template:
+## FAQ template
 
 ```yaml
 sections:
@@ -84,24 +58,12 @@ sections:
         answer: Yes, it is a non-negotiable requirement.
 ```
 
-## Running locally
+Keep answers as plain text. The page handles spacing and the accordion.
 
-Because `index.html` fetches `recruitment.yml` and `faqs.yml` over HTTP, opening the file
-directly in a browser (`file://`) will fail due to browser security restrictions. Serve it
-locally instead:
+## Checking changes
 
 ```bash
-python3 -m http.server 8000
-# then visit http://localhost:8000
+npm install
+npm test         # validates the project files and content
+npm run dev      # then open http://localhost:3000/recruitment-status
 ```
-
-Or deploy it via GitHub Pages, same as the Project Explorer repo, and it'll work without
-any extra setup.
-
-## Notes for future integration
-
-- This currently stands alone as a prototype. If it gets folded into the main HAAG site
-  redesign (see the "Understand" / site structure work), this same `recruitment.yml`
-  pattern can likely be embedded directly rather than rebuilt.
-- Phase `key` values should stay stable once in use — the timeline logic depends on
-  `current_phase` matching one of the `phases[].key` values in order.
