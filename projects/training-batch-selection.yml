@@ -1,6 +1,6 @@
 id: training-batch-selection
 name: Training Batch Selection
-status: active      # active | completed | preprint | archived
+status: Active      # Proposed | New | Active | Wrapping up | Writing publication | Closed
 visibility: private # public | private
 recruiting: false
 faculty:

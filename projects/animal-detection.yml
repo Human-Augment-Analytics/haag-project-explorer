@@ -1,6 +1,6 @@
 id: animal-detection
 name: Animal Detection - Stone Mountain
-status: active      # active | completed | preprint | archived
+status: Active      # Proposed | New | Active | Wrapping up | Writing publication | Closed
 visibility: private # public | private
 recruiting: false
 faculty:

@@ -1,6 +1,6 @@
 id: ai-for-mental-health
 name: AI for Mental Health
-status: active      # active | completed | preprint | archived
+status: Active      # Proposed | New | Active | Wrapping up | Writing publication | Closed
 visibility: public # public | private
 recruiting: false
 faculty:

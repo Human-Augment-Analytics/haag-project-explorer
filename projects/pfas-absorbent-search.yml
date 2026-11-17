@@ -1,6 +1,6 @@
 id: pfas-absorbent-search
 name: PFAS Absorbent Search
-status: active      # active | completed | preprint | archived
+status: Active      # Proposed | New | Active | Wrapping up | Writing publication | Closed
 visibility: public
 recruiting: false
 faculty:
