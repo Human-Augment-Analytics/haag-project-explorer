@@ -1,6 +1,6 @@
 id: lizard-toe-pad
 name: Lizard Toe Pad
-status: Active      # Proposed | New | Active | Wrapping up | Writing publication | Closed
+status: Wrapping up      # Proposed | New | Active | Wrapping up | Writing publication | Closed
 visibility: private # public | private
 recruiting: true
 faculty:
