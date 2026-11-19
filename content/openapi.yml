@@ -1,0 +1,86 @@
+openapi: 3.1.0
+info:
+  title: HAAG page content endpoint
+  version: 0.1.0
+  summary: Read-only endpoint the public HAAG site uses to load page content from the directory.
+  description: |
+    How the public site reads the content of a program page from the directory.
+
+    This file is the source of truth for the request, the response and the status codes.
+    The response body is described by [`blocks.schema.json`](blocks.schema.json), the same
+    schema the committed files in `content/` follow. The human-readable context (how the site
+    wires a page to the endpoint, what happens when the endpoint is down, and the open
+    questions) is in [`ENDPOINT.md`](ENDPOINT.md).
+
+    This is a proposal for discussion with the directory team. The server URL is a
+    placeholder, not a real address. Only the read side that the public site uses is
+    described here; editing endpoints are not part of this contract.
+servers:
+  - url: https://example.invalid/api
+    description: Placeholder. The final address is an open question.
+tags:
+  - name: Pages
+    description: Content of the program pages.
+paths:
+  /pages/{page}:
+    get:
+      tags:
+        - Pages
+      operationId: getPageContent
+      summary: Get the content of one page
+      description: |
+        Returns the content of one page in the same shape as the committed file
+        `content/<page>.json`.
+
+        Public and read only, with no authentication. The site only calls this endpoint
+        and never talks to the database directly. If the call fails for any reason, returns
+        a status other than 200, returns invalid JSON or takes longer than 3.5 seconds, the
+        site falls back to the committed file (see `ENDPOINT.md`).
+      security: []
+      parameters:
+        - name: page
+          in: path
+          required: true
+          description: >-
+            Page name. It is the same name as the file in `content/`, without `.json`.
+          schema:
+            type: string
+            pattern: '^[a-z0-9]+(-[a-z0-9]+)*$'
+          examples:
+            facultyAffiliates:
+              value: faculty-affiliates
+            phdPostdoc:
+              value: phd-postdoc
+            dataScienceResearch:
+              value: data-science-research
+      responses:
+        '200':
+          description: The page content.
+          headers:
+            Access-Control-Allow-Origin:
+              description: >-
+                Must allow the origin of the public site (CORS), otherwise the browser
+                will not let the site read the response.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: 'blocks.schema.json'
+              example:
+                page: faculty-affiliates
+                masthead:
+                  eyebrow: HAAG - Faculty Program
+                  title: Faculty Affiliates
+                  sub: A community of practice for faculty.
+                main:
+                  - type: heading
+                    level: 2
+                    text: Why become a faculty affiliate?
+                  - type: paragraph
+                    body_html: HAAG handles the <strong>logistics</strong> of a research project.
+                sidebar: []
+        '404':
+          description: There is no page with this name. The site uses its committed file.
+        5XX:
+          description: The directory could not answer. The site uses its committed file.
